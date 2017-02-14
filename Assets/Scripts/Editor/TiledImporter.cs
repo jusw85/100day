@@ -50,7 +50,8 @@ public class TiledImporter : ICustomTiledImporter {
             removeCollider = Convert.ToBoolean(removeColliderStr);
         }
         if (spawnType != null) {
-            var spawnedObject = SpawnGeneric(spawnType, gameObject, removeCollider);
+            SpawnGeneric(spawnType, gameObject, removeCollider);
+            //var spawnedObject = SpawnGeneric(spawnType, gameObject, removeCollider);
             //if (spawnType.Equals("Powerup")) {
             //    var powerup = customProperties["powerup"];
             //    spawnedObject.GetComponent<PowerupController>().powerup = powerup;

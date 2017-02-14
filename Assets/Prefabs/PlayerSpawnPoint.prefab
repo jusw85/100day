@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4670774148758088}
   - component: {fileID: 114087886494779672}
   m_Layer: 0
-  m_Name: SpawnPoint
+  m_Name: PlayerSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,3 +52,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnType: {fileID: 1063345978255250, guid: 75e981157cfec654a85161d26d5230f6, type: 2}
+  runForever: 0
+  spawnInstances: 1
+  spawnInterval: 5

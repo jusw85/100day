@@ -6,6 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(AnimationController))]
 public class PlayerController : MonoBehaviour {
 
+    private static PlayerController instance;
+    public static PlayerController Instance { get { return instance; } }
+
     public GameObject projectile;
     public float shotDelay = 0.05f;
     public float shotSpeed = 20f;
@@ -25,6 +28,12 @@ public class PlayerController : MonoBehaviour {
     private bool canShoot = true;
 
     private void Awake() {
+        if (instance != null && instance != this) {
+            Destroy(gameObject);
+        } else {
+            instance = this;
+        }
+
         moverController = GetComponent<MoverController>();
         animationController = GetComponent<AnimationController>();
         lineRenderer = GetComponent<LineRenderer>();
