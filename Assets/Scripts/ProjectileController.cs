@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ProjectileController : PoolObject {
 
+    public float projectileForce = 10f;
+
     [System.NonSerialized]
     public float movementSpeed;
     public float destroyTime;
@@ -25,14 +27,13 @@ public class ProjectileController : PoolObject {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        string tag = other.gameObject.tag;
-        if (tag == "enemy") {
-            PoolObject poolObject = other.gameObject.GetComponent<PoolObject>();
-            if (poolObject != null) {
-                poolObject.Destroy();
-            } else {
-                Destroy(other.gameObject);
-            }
+        MoverController movable = other.gameObject.GetComponent<MoverController>();
+        if (movable != null) {
+            movable.externalForce = transform.up * projectileForce;
+        }
+        IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
+        if (damageable != null) {
+            damageable.Damage();
         }
         Destroy();
     }

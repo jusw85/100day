@@ -244,6 +244,8 @@ MonoBehaviour:
   shotSpeed: 20
   shotSpread: 7.5
   controllerAimLength: 5
+  shootSound: {fileID: 8300000, guid: 0464712381e4d944488c6e5c50016ddd, type: 3}
+  swordSound: {fileID: 8300000, guid: f148ff97167a7704090c670e15c641e0, type: 3}
 --- !u!120 &120118775654496644
 LineRenderer:
   m_ObjectHideFlags: 1

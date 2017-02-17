@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MoverController))]
@@ -15,13 +14,19 @@ public class PlayerController : MonoBehaviour {
     public float shotSpread = 7.5f;
     public float controllerAimLength = 5f;
 
+    public AudioClip shootSound;
+    public AudioClip swordSound;
+
+    [System.NonSerialized]
+    public bool isPaused = false;
+
     private MoverController moverController;
     private AnimationController animationController;
     private LineRenderer lineRenderer;
     private GameObject playerFace;
 
     private Vector2 moveInput;
-    private Vector3 lookPosition;
+    private Vector3 lookPosition = Vector3.zero;
     private Vector3 lookVector;
     private bool mouseActive = true;
     private bool gamepadActive = false;
@@ -48,6 +53,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Update() {
+        if (isPaused)
+            return;
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         moverController.MoveDirection = moveInput;
 
@@ -64,8 +71,6 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (mouseActive) {
-            var rawMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            lookPosition = new Vector3(rawMousePosition.x, rawMousePosition.y, 0);
             lookVector = (lookPosition - transform.position).normalized;
         }
         if (gamepadActive) {
@@ -75,9 +80,6 @@ public class PlayerController : MonoBehaviour {
             lookPosition = transform.position + lookVector;
         }
 
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, lookPosition);
-        Debug.DrawLine(transform.position, lookPosition, Color.red);
 
         // update face direction only if not attacking
         if (animationController.isIdle()) {
@@ -89,11 +91,20 @@ public class PlayerController : MonoBehaviour {
         bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0.1f);
 
         animationController.doAttack(isSwordAttack);
+        if (animationController.isIdle() && isSwordAttack) {
+            AudioManager.Instance.PlaySfx(swordSound);
+        }
 
         if (canShoot && isShootAttack) {
             StartCoroutine(Shoot());
         }
     }
+
+    private void UpdateLookPosition() {
+        var rawMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        lookPosition = new Vector3(rawMousePosition.x, rawMousePosition.y, 0);
+    }
+
 
     public IEnumerator Shoot() {
         Vector3 dir = playerFace.transform.up.normalized;
@@ -107,12 +118,20 @@ public class PlayerController : MonoBehaviour {
         GameObject newprojectile = PoolManager.instance.ReuseObject(projectile, spawnLoc, newRot);
         newprojectile.GetComponent<ProjectileController>().movementSpeed = shotSpeed;
 
+        AudioManager.Instance.PlaySfx(shootSound);
+
         canShoot = false;
         yield return new WaitForSeconds(shotDelay);
         canShoot = true;
     }
 
     private void LateUpdate() {
+        UpdateLookPosition();
+
+        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(1, lookPosition);
+        Debug.DrawLine(transform.position, lookPosition, Color.red);
+
         animationController.SetIsFacingRight(lookPosition.x > transform.position.x);
     }
 
