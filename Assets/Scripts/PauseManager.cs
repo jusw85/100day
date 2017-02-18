@@ -9,4 +9,14 @@ public class PauseManager : MonoBehaviour {
         PlayerController.Instance.isPaused = !PlayerController.Instance.isPaused;
     }
 
+    public void Pause() {
+        Time.timeScale = 0f;
+        PlayerController.Instance.isPaused = true;
+    }
+
+    public void Unpause() {
+        Time.timeScale = 1f;
+        PlayerController.Instance.isPaused = false;
+    }
+
 }

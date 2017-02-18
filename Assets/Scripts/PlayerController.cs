@@ -177,6 +177,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
         AudioManager.Instance.PlaySfx(owSounds[Random.Range(0, owSounds.Length)]);
         if (currentHp <= 0) {
+            MenuManager.Instance.GameOver();
             AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
         }
     }
