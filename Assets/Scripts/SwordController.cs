@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class SwordController : MonoBehaviour {
 
-    private void Start() {
-
-    }
-
-    private void Update() {
-
-    }
+    public float projectileForce = 10f;
 
     private void OnTriggerEnter2D(Collider2D other) {
-        IDamageable obj = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
-        if (obj != null) {
-            obj.Damage();
+        string tag = other.gameObject.tag;
+        if (tag != "Player") {
+            MoverController movable = other.gameObject.GetComponent<MoverController>();
+            if (movable != null) {
+                movable.externalForce = transform.up * projectileForce;
+            }
+            IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
+            if (damageable != null) {
+                damageable.Damage();
+            }
         }
         //string tag = other.gameObject.tag;
         //if (tag == "enemy") {

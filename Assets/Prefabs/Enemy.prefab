@@ -101,14 +101,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 606f012ffdccc74488607458eb1c7147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pushbackForce: 40
   maxHp: 20
   followTarget: {fileID: 0}
-  hitsounds:
+  hitSounds:
   - {fileID: 8300000, guid: c18f58f588b6c5149b08795a2c5a2e44, type: 3}
   - {fileID: 8300000, guid: 9630bf6dd7100194b81f9c4d5e89ca72, type: 3}
   - {fileID: 8300000, guid: 19137ebae68f38644a4aceda4e7f0fd1, type: 3}
   - {fileID: 8300000, guid: b63caf0b5cad6f143b0d90b2f252cdc5, type: 3}
-  deathsounds:
+  deathSounds:
   - {fileID: 8300000, guid: 84c89ff23749b6b409721c4c79551a4f, type: 3}
   - {fileID: 8300000, guid: 11cc181ebb0fef542beb02b41a48766e, type: 3}
   - {fileID: 8300000, guid: de5fa85ad25be034da56d82db3ba7c88, type: 3}

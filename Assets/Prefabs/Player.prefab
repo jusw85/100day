@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1396fe3bef61934e841bb32a865056d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileForce: 10
 --- !u!114 &114463622701243276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -239,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8fe63dbb3ed4b4c88d581296b2f205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHp: 10
   projectile: {fileID: 1674808963288928, guid: 444a56b1153db714aad41cd0bcea094a, type: 2}
   shotDelay: 0.05
   shotSpeed: 20
@@ -246,6 +248,22 @@ MonoBehaviour:
   controllerAimLength: 5
   shootSound: {fileID: 8300000, guid: 0464712381e4d944488c6e5c50016ddd, type: 3}
   swordSound: {fileID: 8300000, guid: f148ff97167a7704090c670e15c641e0, type: 3}
+  owSounds:
+  - {fileID: 8300000, guid: d1690333e3a9ff849bf199c4b15c73b6, type: 3}
+  - {fileID: 8300000, guid: 19bfeb033a7ab55449758a2caefa5855, type: 3}
+  - {fileID: 8300000, guid: 4413209020d79d24db32ba0b9b482bda, type: 3}
+  - {fileID: 8300000, guid: 2674807f64d8a944d947f57517f3f1e5, type: 3}
+  deathSounds:
+  - {fileID: 8300000, guid: 822715b1f5860814eac3a83c282e57b0, type: 3}
+  - {fileID: 8300000, guid: 80f3f4824a2ad4d4a9e982c6c259cfc6, type: 3}
+  - {fileID: 8300000, guid: d8c5b76fa1dc8994ca1e34569fc5bf7d, type: 3}
+  - {fileID: 8300000, guid: e7bf097acb05f384893657ec3788622b, type: 3}
+  - {fileID: 8300000, guid: ad8a60bdfe0dd914b857a1a2edbcba7f, type: 3}
+  - {fileID: 8300000, guid: 306c13f4192d1cb4b8dbc316cbfc6fd2, type: 3}
+  - {fileID: 8300000, guid: 7484772f9a99aad47b6d502284d72126, type: 3}
+  - {fileID: 8300000, guid: 928c83b6e9682fd40ab0c78d0c6e4f8d, type: 3}
+  heartsPanel: {fileID: 1190908831339288, guid: 8b8fd545dfda73f45994cd0057a9dff6,
+    type: 2}
 --- !u!120 &120118775654496644
 LineRenderer:
   m_ObjectHideFlags: 1

@@ -13,6 +13,8 @@ public class CameraShake : MonoBehaviour {
     public float duration = 0f;
 
     private void LateUpdate() {
+        if (Time.deltaTime <= 0)
+            return;
         if (runForever) {
             Shake();
         } else if (duration > 0f) {

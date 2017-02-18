@@ -8,7 +8,8 @@ public class AudioManager : MonoBehaviour {
     private static AudioManager instance;
     public static AudioManager Instance { get { return instance; } }
 
-    private AudioSource audioSource;
+    private AudioSource bgmAudioSource;
+    private AudioSource sfxAudioSource;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -17,10 +18,19 @@ public class AudioManager : MonoBehaviour {
             instance = this;
         }
 
-        audioSource = GetComponents<AudioSource>()[1];
+        bgmAudioSource = GetComponents<AudioSource>()[0];
+        sfxAudioSource = GetComponents<AudioSource>()[1];
     }
 
     public void PlaySfx(AudioClip clip) {
-        audioSource.PlayOneShot(clip);
+        sfxAudioSource.PlayOneShot(clip);
+    }
+
+    public void SetBgmVolume(float volume) {
+        bgmAudioSource.volume = volume;
+    }
+
+    public void SetSfxVolume(float volume) {
+        sfxAudioSource.volume = volume;
     }
 }

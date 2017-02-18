@@ -1,12 +1,16 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(MoverController))]
 [RequireComponent(typeof(AnimationController))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour, IDamageable {
 
     private static PlayerController instance;
     public static PlayerController Instance { get { return instance; } }
+
+    public int maxHp = 6;
+    private int currentHp;
 
     public GameObject projectile;
     public float shotDelay = 0.05f;
@@ -16,6 +20,8 @@ public class PlayerController : MonoBehaviour {
 
     public AudioClip shootSound;
     public AudioClip swordSound;
+    public AudioClip[] owSounds;
+    public AudioClip[] deathSounds;
 
     [System.NonSerialized]
     public bool isPaused = false;
@@ -32,6 +38,15 @@ public class PlayerController : MonoBehaviour {
     private bool gamepadActive = false;
     private bool canShoot = true;
 
+    public GameObject heartsPanel;
+    public delegate void HpChangeEvent(int hp);
+    public static event HpChangeEvent HpChangedEvent;
+
+    private bool tookDamageThisFrame = false;
+    private float flashSpeed = 1.5f;
+    private Image damageFlashImage;
+    private Color damageFlashColour = new Color(1f, 1f, 1f, 0.6f);
+
     private void Awake() {
         if (instance != null && instance != this) {
             Destroy(gameObject);
@@ -43,13 +58,20 @@ public class PlayerController : MonoBehaviour {
         animationController = GetComponent<AnimationController>();
         lineRenderer = GetComponent<LineRenderer>();
         playerFace = transform.Find("PlayerFace").gameObject;
+
+        currentHp = maxHp;
     }
 
     private void Start() {
+        GameObject damageFlash = GameObject.Find("DamageFlash");
+        damageFlashImage = damageFlash.GetComponent<Image>();
+
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         cameraFollow.target = gameObject;
 
         PoolManager.instance.CreatePool(projectile, 50);
+
+        CreateHeartPanel();
     }
 
     private void Update() {
@@ -98,6 +120,13 @@ public class PlayerController : MonoBehaviour {
         if (canShoot && isShootAttack) {
             StartCoroutine(Shoot());
         }
+
+        if (tookDamageThisFrame) {
+            damageFlashImage.color = damageFlashColour;
+        } else {
+            damageFlashImage.color = Color.Lerp(damageFlashImage.color, Color.clear, flashSpeed * Time.deltaTime);
+        }
+        tookDamageThisFrame = false;
     }
 
     private void UpdateLookPosition() {
@@ -133,6 +162,30 @@ public class PlayerController : MonoBehaviour {
         Debug.DrawLine(transform.position, lookPosition, Color.red);
 
         animationController.SetIsFacingRight(lookPosition.x > transform.position.x);
+    }
+
+    public void Damage() {
+        currentHp--;
+        tookDamageThisFrame = true;
+        if (HpChangedEvent != null) {
+            HpChangedEvent(currentHp);
+        }
+
+        CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
+        cameraShake.shakeIntensity = 0.1f;
+        cameraShake.duration = 0.25f;
+
+        AudioManager.Instance.PlaySfx(owSounds[Random.Range(0, owSounds.Length)]);
+        if (currentHp <= 0) {
+            AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
+        }
+    }
+
+    private void CreateHeartPanel() {
+        GameObject hud = GameObject.Find("HUDCanvas");
+        GameObject heartPanel = Instantiate(heartsPanel);
+        heartPanel.transform.SetParent(hud.transform);
+        heartPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
     }
 
 }

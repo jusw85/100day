@@ -10,6 +10,15 @@ public class SpawnPointController : MonoBehaviour {
     public float spawnInterval = 5f;
 
     private bool isRunning = false;
+    private bool isPooled = false;
+
+    private void Start() {
+        PoolObject poolObject = (PoolObject)spawnType.GetComponent(typeof(PoolObject));
+        if (poolObject != null) {
+            isPooled = true;
+            PoolManager.instance.CreatePool(spawnType, Mathf.Max(spawnInstances, 50));
+        }
+    }
 
     private void Update() {
         if (!isRunning && (runForever || spawnInstances > 0)) {
@@ -27,7 +36,11 @@ public class SpawnPointController : MonoBehaviour {
     }
 
     public void Spawn() {
-        Instantiate(spawnType, transform.position, Quaternion.identity);
+        if (isPooled) {
+            PoolManager.instance.ReuseObject(spawnType, transform.position, Quaternion.identity);
+        } else {
+            Instantiate(spawnType, transform.position, Quaternion.identity);
+        }
         //GameObject obj = Instantiate(spawnType, transform.position, Quaternion.identity);
     }
 
