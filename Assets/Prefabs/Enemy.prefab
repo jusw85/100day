@@ -113,6 +113,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 84c89ff23749b6b409721c4c79551a4f, type: 3}
   - {fileID: 8300000, guid: 11cc181ebb0fef542beb02b41a48766e, type: 3}
   - {fileID: 8300000, guid: de5fa85ad25be034da56d82db3ba7c88, type: 3}
+  bloodSplatter: {fileID: 1843829896786728, guid: ae3707c0446c30a46a6415ebfd193f72,
+    type: 2}
 --- !u!212 &212618019328822794
 SpriteRenderer:
   m_ObjectHideFlags: 1

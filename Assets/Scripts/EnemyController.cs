@@ -18,6 +18,8 @@ public class EnemyController : PoolObject, IDamageable {
     private MoverController moverController;
     private SpriteRenderer spriteRenderer;
 
+    public GameObject bloodSplatter;
+
     private void Awake() {
         moverController = GetComponent<MoverController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -26,6 +28,8 @@ public class EnemyController : PoolObject, IDamageable {
 
     private void Start() {
         followTarget = PlayerController.Instance.gameObject;
+
+        PoolManager.instance.CreatePool(bloodSplatter, 150);
     }
 
     private void Update() {
@@ -46,14 +50,22 @@ public class EnemyController : PoolObject, IDamageable {
             }
             IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
             if (damageable != null) {
-                damageable.Damage();
+                damageable.Damage(gameObject);
             }
         }
     }
 
-    public void Damage() {
+    public void Damage(GameObject damager) {
         currentHp--;
         AudioManager.Instance.PlaySfx(hitSounds[Random.Range(0, hitSounds.Length)]);
+
+        Vector3 inRot = damager.transform.eulerAngles;
+        Vector3 outRot = new Vector3(-inRot.z - 90f, 0f, 0f);
+
+        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, Vector3.right);
+        rot *= Quaternion.Euler(outRot);
+
+        PoolManager.instance.ReuseObject(bloodSplatter, transform.position, rot);
         if (currentHp <= 0) {
             AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
             Destroy();

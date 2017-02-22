@@ -164,7 +164,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         animationController.SetIsFacingRight(lookPosition.x > transform.position.x);
     }
 
-    public void Damage() {
+    public void Damage(GameObject damager) {
         currentHp--;
         tookDamageThisFrame = true;
         if (HpChangedEvent != null) {

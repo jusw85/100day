@@ -15,7 +15,7 @@ public class SwordController : MonoBehaviour {
             }
             IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
             if (damageable != null) {
-                damageable.Damage();
+                damageable.Damage(gameObject);
             }
         }
         //string tag = other.gameObject.tag;
