@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private AnimationController animationController;
     private LineRenderer lineRenderer;
     private GameObject playerFace;
-    private Light gunLight;
+    private Light muzzleFlash;
 
     private Vector2 moveInput;
     private Vector3 lookPosition = Vector3.zero;
@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private bool isAttackCharging = false;
     private float chargeRate = 0.5f;
 
+    private GunBeam gunBeam;
+
     private void Awake() {
         if (instance != null && instance != this) {
             Destroy(gameObject);
@@ -64,8 +66,10 @@ public class PlayerController : MonoBehaviour, IDamageable {
         moverController = GetComponent<MoverController>();
         animationController = GetComponent<AnimationController>();
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.sortingOrder = -2;
         playerFace = transform.Find("PlayerFace").gameObject;
-        gunLight = transform.FindChild("PlayerFace/GunLight").GetComponent<Light>();
+        muzzleFlash = transform.Find("PlayerFace/MuzzleFlash").GetComponent<Light>();
+        gunBeam = transform.Find("GunBeam").GetComponent<GunBeam>();
 
         currentHp = maxHp;
     }
@@ -153,16 +157,17 @@ public class PlayerController : MonoBehaviour, IDamageable {
         //    AudioManager.Instance.PlaySfx(swordSound);
         //}
 
-        bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0.1f);
-        gunLight.enabled = false;
+        bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0);
+        muzzleFlash.enabled = false;
         if (canShoot && isShootAttack) {
             StartCoroutine(Shoot());
         }
+        gunBeam.TurnOn(isShootAttack);
 
-        damageFlash();
+        damageScreenFlash();
     }
 
-    private void damageFlash() {
+    private void damageScreenFlash() {
         if (tookDamageThisFrame) {
             damageFlashImage.color = damageFlashColour;
         } else {
@@ -179,7 +184,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
 
     public IEnumerator Shoot() {
-        gunLight.enabled = true;
+        muzzleFlash.enabled = true;
         Vector3 dir = playerFace.transform.up.normalized;
         Vector3 spawnLoc = transform.position + (dir * 1.5f);
         Quaternion originalRot = playerFace.transform.rotation;
@@ -203,14 +208,20 @@ public class PlayerController : MonoBehaviour, IDamageable {
             UpdateLookPosition();
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, lookVector, 100f);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, lookVector, 100f, Constants.LINECAST_LAYERS);
         float distance = 100f;
         if (hit.collider != null) {
             distance = hit.distance;
         }
 
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, transform.position + (lookVector * distance));
+        Vector3 lineStart = transform.position;
+        Vector3 lineEnd = transform.position + (lookVector * distance);
+        lineRenderer.SetPosition(0, lineStart);
+        lineRenderer.SetPosition(1, lineEnd);
+
+        if (gunBeam != null) {
+            gunBeam.SetPosition(lineStart, lineEnd);
+        }
         //Debug.DrawLine(transform.position, lookPosition, Color.red);
 
         animationController.SetIsFacingRight(lookPosition.x > transform.position.x);

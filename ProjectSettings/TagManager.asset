@@ -15,13 +15,13 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Background
+  - PlayerMovement
+  - EnemyMovement
+  - PlayerHitbox
+  - EnemyHitbox
+  - PlayerBullet
+  - EnemyBullet
   - 
   - 
   - 

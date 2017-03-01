@@ -27,16 +27,13 @@ public class ProjectileController : PoolObject {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        string tag = other.gameObject.tag;
-        if (tag != "Player") {
-            MoverController movable = other.gameObject.GetComponent<MoverController>();
-            if (movable != null) {
-                movable.externalForce = transform.up * projectileForce;
-            }
-            IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
-            if (damageable != null) {
-                damageable.Damage(gameObject);
-            }
+        MoverController movable = other.transform.parent.gameObject.GetComponent<MoverController>();
+        if (movable != null) {
+            movable.externalForce = transform.up * projectileForce;
+        }
+        IDamageable damageable = (IDamageable)other.transform.parent.gameObject.GetComponent(typeof(IDamageable));
+        if (damageable != null) {
+            damageable.Damage(gameObject);
         }
         Destroy();
     }
