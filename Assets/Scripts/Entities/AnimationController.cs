@@ -22,8 +22,11 @@ public class AnimationController : MonoBehaviour {
         animator.SetBool("isAttacking", isAttacking);
     }
 
+    private static int idleState = Animator.StringToHash("Attack.Idle");
+
     public bool isIdle() {
-        return animator.GetCurrentAnimatorStateInfo(1).IsName("Idle");
+        //return animator.GetCurrentAnimatorStateInfo(1).IsName("Idle");
+        return animator.GetCurrentAnimatorStateInfo(1).fullPathHash == idleState;
     }
 
 }

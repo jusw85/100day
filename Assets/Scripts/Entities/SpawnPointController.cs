@@ -5,9 +5,12 @@ using UnityEngine;
 public class SpawnPointController : MonoBehaviour {
 
     public GameObject spawnType;
+    public float initialDelay = 0f;
     public bool runForever = false;
     public int spawnInstances = 1;
     public float spawnInterval = 5f;
+
+    private bool isStarted = false;
 
     private bool isRunning = false;
     private bool isPooled = false;
@@ -21,9 +24,16 @@ public class SpawnPointController : MonoBehaviour {
     }
 
     private void Update() {
+        if (!isStarted) {
+            initialDelay -= Time.deltaTime;
+            if (initialDelay <= 0)
+                isStarted = true;
+            return;
+        }
         if (!isRunning && (runForever || spawnInstances > 0)) {
             StartCoroutine(SpawnCoroutine());
         }
+
     }
 
     private IEnumerator SpawnCoroutine() {

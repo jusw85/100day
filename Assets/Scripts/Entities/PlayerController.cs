@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private AnimationController animationController;
     private LineRenderer lineRenderer;
     private GameObject playerFace;
+    private Light gunLight;
 
     private Vector2 moveInput;
     private Vector3 lookPosition = Vector3.zero;
@@ -47,6 +48,12 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private Image damageFlashImage;
     private Color damageFlashColour = new Color(1f, 1f, 1f, 0.6f);
 
+    private Slider chargeSlider;
+    private bool isLAxisHeld = false;
+    //private bool isRAxisHeld = false;
+    private bool isAttackCharging = false;
+    private float chargeRate = 0.5f;
+
     private void Awake() {
         if (instance != null && instance != this) {
             Destroy(gameObject);
@@ -58,13 +65,17 @@ public class PlayerController : MonoBehaviour, IDamageable {
         animationController = GetComponent<AnimationController>();
         lineRenderer = GetComponent<LineRenderer>();
         playerFace = transform.Find("PlayerFace").gameObject;
+        gunLight = transform.FindChild("PlayerFace/GunLight").GetComponent<Light>();
 
         currentHp = maxHp;
     }
 
     private void Start() {
-        GameObject damageFlash = GameObject.Find("DamageFlash");
-        damageFlashImage = damageFlash.GetComponent<Image>();
+        var obj = GameObject.Find("DamageFlash");
+        damageFlashImage = obj.GetComponent<Image>();
+
+        var obj2 = GameObject.Find("ChargeSlider");
+        chargeSlider = obj2.GetComponent<Slider>();
 
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         cameraFollow.target = gameObject;
@@ -92,16 +103,12 @@ public class PlayerController : MonoBehaviour, IDamageable {
             gamePadMoved = true;
         }
 
-        if (mouseActive) {
-            lookVector = (lookPosition - transform.position).normalized;
-        }
         if (gamepadActive) {
             if (gamePadMoved) {
-                lookVector = gamepadLookInput.normalized * controllerAimLength;
+                lookVector = gamepadLookInput.normalized;
             }
-            lookPosition = transform.position + lookVector;
+            lookPosition = transform.position + (lookVector * controllerAimLength);
         }
-
 
         // update face direction only if not attacking
         if (animationController.isIdle()) {
@@ -109,18 +116,53 @@ public class PlayerController : MonoBehaviour, IDamageable {
             playerFace.transform.rotation = rot;
         }
 
-        bool isSwordAttack = Input.GetButton("Fire1") || (Input.GetAxisRaw("PadLTrigger") > 0.1f);
-        bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0.1f);
-
-        animationController.doAttack(isSwordAttack);
-        if (animationController.isIdle() && isSwordAttack) {
-            AudioManager.Instance.PlaySfx(swordSound);
+        bool isPrimaryDown = Input.GetButtonDown("Fire1");
+        bool isPrimaryHold = Input.GetButton("Fire1");
+        bool isPrimaryUp = Input.GetButtonUp("Fire1");
+        //Debug.Log(isPrimaryDown + " " + isPrimaryHold + " " + isPrimaryUp);
+        if (Input.GetAxisRaw("PadLTrigger") > 0) {
+            if (!isLAxisHeld) {
+                isLAxisHeld = true;
+                isPrimaryDown = true;
+            } else {
+                isPrimaryHold = true;
+            }
+        } else if (isLAxisHeld) {
+            isLAxisHeld = false;
+            isPrimaryUp = true;
         }
 
+        if (!isAttackCharging && animationController.isIdle()) {
+            chargeSlider.value = 0f;
+        }
+
+        animationController.doAttack(false);
+        if (isPrimaryUp) {
+            isAttackCharging = false;
+            animationController.doAttack(true);
+        }
+        if (isAttackCharging && isPrimaryHold) {
+            chargeSlider.value += chargeRate * Time.deltaTime;
+        }
+        if ((isPrimaryHold || isPrimaryDown) && animationController.isIdle()) {
+            isAttackCharging = true;
+        }
+
+        //animationController.doAttack(isPrimaryDown);
+        //if (animationController.isIdle() && isPrimaryDown) {
+        //    AudioManager.Instance.PlaySfx(swordSound);
+        //}
+
+        bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0.1f);
+        gunLight.enabled = false;
         if (canShoot && isShootAttack) {
             StartCoroutine(Shoot());
         }
 
+        damageFlash();
+    }
+
+    private void damageFlash() {
         if (tookDamageThisFrame) {
             damageFlashImage.color = damageFlashColour;
         } else {
@@ -132,10 +174,12 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private void UpdateLookPosition() {
         var rawMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         lookPosition = new Vector3(rawMousePosition.x, rawMousePosition.y, 0);
+        lookVector = (lookPosition - transform.position).normalized;
     }
 
 
     public IEnumerator Shoot() {
+        gunLight.enabled = true;
         Vector3 dir = playerFace.transform.up.normalized;
         Vector3 spawnLoc = transform.position + (dir * 1.5f);
         Quaternion originalRot = playerFace.transform.rotation;
@@ -155,11 +199,19 @@ public class PlayerController : MonoBehaviour, IDamageable {
     }
 
     private void LateUpdate() {
-        UpdateLookPosition();
+        if (mouseActive) {
+            UpdateLookPosition();
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, lookVector, 100f);
+        float distance = 100f;
+        if (hit.collider != null) {
+            distance = hit.distance;
+        }
 
         lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, lookPosition);
-        Debug.DrawLine(transform.position, lookPosition, Color.red);
+        lineRenderer.SetPosition(1, transform.position + (lookVector * distance));
+        //Debug.DrawLine(transform.position, lookPosition, Color.red);
 
         animationController.SetIsFacingRight(lookPosition.x > transform.position.x);
     }
