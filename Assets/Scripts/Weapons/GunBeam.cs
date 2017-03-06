@@ -8,6 +8,8 @@ public class GunBeam : MonoBehaviour {
 
     private LineRenderer lineRenderer;
     private ParticleSystem sparksInstance;
+    private float offset;
+    private float offsetSpeed = 3f;
 
     private void Awake() {
         lineRenderer = GetComponent<LineRenderer>();
@@ -19,7 +21,12 @@ public class GunBeam : MonoBehaviour {
     }
 
     private void LateUpdate() {
-        sparksInstance.transform.position = lineRenderer.GetPosition(1);
+        if (lineRenderer.enabled) {
+            offset -= offsetSpeed * Time.deltaTime;
+            offset = Mathf.Repeat(offset, 1);
+            lineRenderer.material.mainTextureOffset = new Vector2(offset, 0);
+            sparksInstance.transform.position = lineRenderer.GetPosition(1);
+        }
     }
 
     private void OnDestroy() {

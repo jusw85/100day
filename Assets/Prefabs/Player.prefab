@@ -702,7 +702,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
   m_UseWorldSpace: 1
 --- !u!212 &212130864716807832
 SpriteRenderer:
