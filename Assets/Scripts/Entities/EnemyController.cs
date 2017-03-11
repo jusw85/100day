@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(MoverController))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -17,13 +18,28 @@ public class EnemyController : PoolObject, IDamageable {
 
     private MoverController moverController;
     private SpriteRenderer spriteRenderer;
+    private AnimationController animationController;
 
     public GameObject bloodSplatter;
+
+    private Color flashColor = Color.red;
+    public float FlashAmount {
+        get {
+            return spriteRenderer.material.GetFloat(Constants.MATERIAL_FLASHAMOUNT_ID);
+        }
+        set {
+            spriteRenderer.material.SetFloat(Constants.MATERIAL_FLASHAMOUNT_ID, value);
+        }
+    }
+    private Tween flashTween;
 
     private void Awake() {
         moverController = GetComponent<MoverController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animationController = GetComponent<AnimationController>();
         currentHp = maxHp;
+
+        spriteRenderer.material.SetColor(Constants.MATERIAL_FLASHCOLOR_ID, flashColor);
     }
 
     private void Start() {
@@ -32,6 +48,7 @@ public class EnemyController : PoolObject, IDamageable {
         PoolManager.instance.CreatePool(bloodSplatter, 150);
     }
 
+    private Vector2 lastMoveInput;
     private void Update() {
         moverController.MoveDirection = Vector2.zero;
 
@@ -39,6 +56,19 @@ public class EnemyController : PoolObject, IDamageable {
             var followVector = (followTarget.transform.position - transform.position);
             moverController.MoveDirection = followVector;
         }
+
+        Vector2 moveInput = moverController.MoveDirection;
+        animationController.SetIsMoving(moveInput.magnitude > 0);
+        animationController.SetMoveVector(moveInput);
+        animationController.SetLastMoveVector(lastMoveInput);
+
+        animationController.SetIsFacingRight(true);
+        if (moveInput.x < 0 ||
+            (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
+            animationController.SetIsFacingRight(false);
+        }
+        if (moveInput.magnitude > 0)
+            lastMoveInput = moveInput;
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
@@ -69,6 +99,20 @@ public class EnemyController : PoolObject, IDamageable {
         if (currentHp <= 0) {
             AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
             Destroy();
+        }
+        Flash();
+    }
+
+    public void Flash() {
+        if (flashTween != null) {
+            flashTween.Restart();
+        } else {
+            FlashAmount = 0f;
+            flashTween = DOTween
+                .To(() => FlashAmount, x => FlashAmount = x, 1.0f, 0.05f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetAutoKill(false);
+            flashTween.Play();
         }
     }
 

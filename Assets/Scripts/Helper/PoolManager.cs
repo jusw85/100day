@@ -58,9 +58,10 @@ public class PoolManager : MonoBehaviour {
             transform = gameObject.transform;
             gameObject.SetActive(false);
 
-            if (gameObject.GetComponent<PoolObject>()) {
+            var poolObjectScript = gameObject.GetComponent<PoolObject>();
+            if (poolObjectScript != null) {
                 hasPoolObjectComponent = true;
-                poolObjectScript = gameObject.GetComponent<PoolObject>();
+                this.poolObjectScript = poolObjectScript;
             }
         }
 

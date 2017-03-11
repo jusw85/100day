@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private Light muzzleFlash;
 
     private Vector2 moveInput;
+    private Vector2 lastMoveInput;
     private Vector3 lookPosition = Vector3.zero;
     private Vector3 lookVector;
     private bool mouseActive = true;
@@ -53,6 +54,10 @@ public class PlayerController : MonoBehaviour, IDamageable {
     //private bool isRAxisHeld = false;
     private bool isAttackCharging = false;
     private float chargeRate = 0.5f;
+    private float initialChargeValue = -0.5f;
+    private float chargeValue;
+
+    private GameObject dialogCanvas;
 
     private GunBeam gunBeam;
 
@@ -72,14 +77,18 @@ public class PlayerController : MonoBehaviour, IDamageable {
         gunBeam = transform.Find("GunBeam").GetComponent<GunBeam>();
 
         currentHp = maxHp;
+        chargeValue = initialChargeValue;
     }
 
     private void Start() {
-        var obj = GameObject.Find("DamageFlash");
+        var obj = GameObject.Find("ScreenFlash");
         damageFlashImage = obj.GetComponent<Image>();
 
         var obj2 = GameObject.Find("ChargeSlider");
         chargeSlider = obj2.GetComponent<Slider>();
+
+        dialogCanvas = GameObject.Find("DialogCanvas");
+        dialogCanvas.SetActive(false);
 
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         cameraFollow.target = gameObject;
@@ -93,6 +102,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         if (isPaused)
             return;
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        moveInput = moveInput.normalized;
         moverController.MoveDirection = moveInput;
 
         var mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
@@ -115,7 +125,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         }
 
         // update face direction only if not attacking
-        if (animationController.isIdle()) {
+        if (animationController.IsIdle()) {
             Quaternion rot = Quaternion.LookRotation(Vector3.forward, lookPosition - transform.position);
             playerFace.transform.rotation = rot;
         }
@@ -136,26 +146,32 @@ public class PlayerController : MonoBehaviour, IDamageable {
             isPrimaryUp = true;
         }
 
-        if (!isAttackCharging && animationController.isIdle()) {
+        animationController.DoAttack(false);
+        if (!isAttackCharging && animationController.IsIdle()) {
+            chargeValue = initialChargeValue;
             chargeSlider.value = 0f;
         }
-
-        animationController.doAttack(false);
-        if (isPrimaryUp) {
-            isAttackCharging = false;
-            animationController.doAttack(true);
+        if (isPrimaryDown) {
+            animationController.DoAttack(true);
+            AudioManager.Instance.PlaySfx(swordSound);
         }
-        if (isAttackCharging && isPrimaryHold) {
-            chargeSlider.value += chargeRate * Time.deltaTime;
-        }
-        if ((isPrimaryHold || isPrimaryDown) && animationController.isIdle()) {
+        if ((isPrimaryHold || isPrimaryDown) && animationController.IsIdle()) {
             isAttackCharging = true;
         }
-
-        //animationController.doAttack(isPrimaryDown);
-        //if (animationController.isIdle() && isPrimaryDown) {
-        //    AudioManager.Instance.PlaySfx(swordSound);
-        //}
+        if (isAttackCharging && isPrimaryHold) {
+            //chargeSlider.value += chargeRate * Time.deltaTime;
+            chargeValue += chargeRate * Time.deltaTime;
+            if (chargeValue >= 0f) {
+                chargeSlider.value = chargeValue;
+            }
+        }
+        if (isPrimaryUp) {
+            isAttackCharging = false;
+        }
+        if (isPrimaryUp && chargeSlider.value == 1.0f) {
+            animationController.DoAttack(true);
+            AudioManager.Instance.PlaySfx(swordSound);
+        }
 
         bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0);
         muzzleFlash.enabled = false;
@@ -165,6 +181,10 @@ public class PlayerController : MonoBehaviour, IDamageable {
         gunBeam.TurnOn(isShootAttack);
 
         damageScreenFlash();
+
+        if (Input.GetKeyDown(KeyCode.K)) {
+            dialogCanvas.SetActive(!dialogCanvas.activeSelf);
+        }
     }
 
     private void damageScreenFlash() {
@@ -224,7 +244,18 @@ public class PlayerController : MonoBehaviour, IDamageable {
         }
         //Debug.DrawLine(transform.position, lookPosition, Color.red);
 
-        animationController.SetIsFacingRight(lookPosition.x > transform.position.x);
+        animationController.SetIsMoving(moveInput.magnitude > 0);
+        animationController.SetMoveVector(moveInput);
+        animationController.SetLastMoveVector(lastMoveInput);
+
+        animationController.SetIsFacingRight(true);
+        if (moveInput.x < 0 ||
+            (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
+            animationController.SetIsFacingRight(false);
+        }
+
+        if (moveInput.magnitude > 0)
+            lastMoveInput = moveInput;
     }
 
     public void Damage(GameObject damager) {

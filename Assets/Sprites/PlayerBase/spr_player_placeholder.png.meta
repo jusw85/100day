@@ -1,0 +1,714 @@
+fileFormatVersion: 2
+guid: 460c75306a92f634fb0afc08b465eaea
+timeCreated: 1488947271
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: spr_player_placeholder_0
+    21300002: spr_player_placeholder_1
+    21300004: spr_player_placeholder_2
+    21300006: spr_player_placeholder_3
+    21300008: spr_player_placeholder_4
+    21300010: spr_player_placeholder_5
+    21300012: spr_player_placeholder_6
+    21300014: spr_player_placeholder_7
+    21300016: spr_player_placeholder_8
+    21300018: spr_player_placeholder_9
+    21300020: spr_player_placeholder_10
+    21300022: spr_player_placeholder_11
+    21300024: spr_player_placeholder_12
+    21300026: spr_player_placeholder_13
+    21300028: spr_player_placeholder_14
+    21300030: spr_player_placeholder_15
+    21300032: spr_player_placeholder_16
+    21300034: spr_player_placeholder_17
+    21300036: spr_player_placeholder_18
+    21300038: spr_player_placeholder_19
+    21300040: spr_player_placeholder_20
+    21300042: spr_player_placeholder_21
+    21300044: spr_player_placeholder_22
+    21300046: spr_player_placeholder_23
+    21300048: spr_player_placeholder_24
+    21300050: spr_player_placeholder_25
+    21300052: spr_player_placeholder_26
+    21300054: spr_player_placeholder_27
+    21300056: spr_player_placeholder_28
+    21300058: spr_player_placeholder_29
+    21300060: spr_player_placeholder_30
+    21300062: spr_player_placeholder_31
+    21300064: spr_player_placeholder_32
+    21300066: spr_player_placeholder_33
+    21300068: spr_player_placeholder_34
+    21300070: spr_player_placeholder_35
+    21300072: spr_player_placeholder_36
+    21300074: spr_player_placeholder_37
+    21300076: spr_player_placeholder_38
+    21300078: spr_player_placeholder_39
+    21300080: spr_player_placeholder_40
+    21300082: spr_player_placeholder_41
+    21300084: spr_player_placeholder_42
+    21300086: spr_player_placeholder_43
+    21300088: spr_player_placeholder_44
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 32
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: spr_player_placeholder_0
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 1605
+        width: 75
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_1
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 1596
+        width: 76
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_2
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 1585
+        width: 77
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_3
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 1592
+        width: 85
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_4
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 1595
+        width: 84
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_5
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 1584
+        width: 73
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_6
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 1581
+        width: 76
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_7
+      rect:
+        serializedVersion: 2
+        x: 1870
+        y: 1593
+        width: 87
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_8
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 1364
+        width: 75
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_9
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 1364
+        width: 96
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_10
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 1362
+        width: 114
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_11
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 1358
+        width: 87
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_12
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 1356
+        width: 101
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_13
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 1347
+        width: 113
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_14
+      rect:
+        serializedVersion: 2
+        x: 1622
+        y: 1341
+        width: 103
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_15
+      rect:
+        serializedVersion: 2
+        x: 1886
+        y: 1349
+        width: 91
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_16
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 1105
+        width: 90
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_17
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 1100
+        width: 122
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_18
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 1118
+        width: 126
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_19
+      rect:
+        serializedVersion: 2
+        x: 845
+        y: 1107
+        width: 90
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_20
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 1100
+        width: 92
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_21
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 1101
+        width: 125
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_22
+      rect:
+        serializedVersion: 2
+        x: 1598
+        y: 1102
+        width: 130
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_23
+      rect:
+        serializedVersion: 2
+        x: 1854
+        y: 1098
+        width: 109
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_24
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 846
+        width: 101
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_25
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 835
+        width: 111
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_26
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 855
+        width: 98
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_27
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 850
+        width: 97
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_28
+      rect:
+        serializedVersion: 2
+        x: 1130
+        y: 842
+        width: 65
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_29
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 839
+        width: 91
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_30
+      rect:
+        serializedVersion: 2
+        x: 1615
+        y: 864
+        width: 103
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_31
+      rect:
+        serializedVersion: 2
+        x: 1878
+        y: 844
+        width: 80
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_32
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 574
+        width: 89
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_33
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 573
+        width: 78
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_34
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 587
+        width: 67
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_35
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 584
+        width: 80
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_36
+      rect:
+        serializedVersion: 2
+        x: 1113
+        y: 582
+        width: 85
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_37
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 579
+        width: 76
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_38
+      rect:
+        serializedVersion: 2
+        x: 1632
+        y: 592
+        width: 65
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_39
+      rect:
+        serializedVersion: 2
+        x: 1888
+        y: 580
+        width: 79
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_40
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 314
+        width: 77
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_41
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 314
+        width: 63
+        height: 137
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_42
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 313
+        width: 56
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_43
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 315
+        width: 59
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: spr_player_placeholder_44
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 314
+        width: 79
+        height: 137
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: Player
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
