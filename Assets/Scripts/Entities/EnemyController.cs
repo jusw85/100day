@@ -21,6 +21,7 @@ public class EnemyController : PoolObject, IDamageable {
     private AnimationController animationController;
 
     public GameObject bloodSplatter;
+    private PoolManager poolManager;
 
     private Color flashColor = Color.red;
     public float FlashAmount {
@@ -45,7 +46,8 @@ public class EnemyController : PoolObject, IDamageable {
     private void Start() {
         followTarget = PlayerController.Instance.gameObject;
 
-        PoolManager.instance.CreatePool(bloodSplatter, 150);
+        poolManager = Toolbox.RegisterComponent<PoolManager>();
+        poolManager.CreatePool(bloodSplatter, 150);
     }
 
     private Vector2 lastMoveInput;
@@ -95,7 +97,7 @@ public class EnemyController : PoolObject, IDamageable {
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, Vector3.right);
         rot *= Quaternion.Euler(outRot);
 
-        PoolManager.instance.ReuseObject(bloodSplatter, transform.position, rot);
+        poolManager.ReuseObject(bloodSplatter, transform.position, rot);
         if (currentHp <= 0) {
             AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
             Destroy();

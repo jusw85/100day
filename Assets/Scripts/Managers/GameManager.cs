@@ -5,21 +5,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     public bool enableFpsDisplay = true;
-    public GameObject fpsDisplay;
-    public GameObject poolManager;
     public GameObject level1;
 
     private void Start() {
+        Toolbox.RegisterComponent<PoolManager>();
         if (enableFpsDisplay) {
-            Instantiate(fpsDisplay);
+            Toolbox.RegisterComponent<FPSDisplay>();
         }
-        var obj = Instantiate(poolManager);
-        obj.transform.SetParent(transform);
         Instantiate(level1);
-    }
-
-    // Update is called once per frame
-    void Update() {
-
     }
 }

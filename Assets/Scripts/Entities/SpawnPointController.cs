@@ -15,11 +15,15 @@ public class SpawnPointController : MonoBehaviour {
     private bool isRunning = false;
     private bool isPooled = false;
 
+    private PoolManager poolManager;
+
     private void Start() {
         PoolObject poolObject = (PoolObject)spawnType.GetComponent(typeof(PoolObject));
         if (poolObject != null) {
             isPooled = true;
-            PoolManager.instance.CreatePool(spawnType, Mathf.Max(spawnInstances, 50));
+
+            poolManager = Toolbox.RegisterComponent<PoolManager>();
+            poolManager.CreatePool(spawnType, Mathf.Max(spawnInstances, 50));
         }
     }
 
@@ -47,7 +51,7 @@ public class SpawnPointController : MonoBehaviour {
 
     public void Spawn() {
         if (isPooled) {
-            PoolManager.instance.ReuseObject(spawnType, transform.position, Quaternion.identity);
+            poolManager.ReuseObject(spawnType, transform.position, Quaternion.identity);
         } else {
             Instantiate(spawnType, transform.position, Quaternion.identity);
         }

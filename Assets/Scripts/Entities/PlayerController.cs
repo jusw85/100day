@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private GameObject dialogCanvas;
 
     private GunBeam gunBeam;
+    private PoolManager poolManager;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -93,7 +94,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         cameraFollow.target = gameObject;
 
-        PoolManager.instance.CreatePool(projectile, 50);
+        poolManager = Toolbox.RegisterComponent<PoolManager>();
+        poolManager.CreatePool(projectile, 50);
 
         CreateHeartPanel();
     }
@@ -213,7 +215,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         Quaternion newRot = Quaternion.identity;
         newRot.eulerAngles = newAngles;
 
-        GameObject newprojectile = PoolManager.instance.ReuseObject(projectile, spawnLoc, newRot);
+        GameObject newprojectile = poolManager.ReuseObject(projectile, spawnLoc, newRot);
         newprojectile.GetComponent<ProjectileController>().movementSpeed = shotSpeed;
 
         AudioManager.Instance.PlaySfx(shootSound);

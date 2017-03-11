@@ -1,18 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PoolManager : MonoBehaviour {
-
-    private static PoolManager _instance;
-    public static PoolManager instance {
-        get {
-            if (_instance == null) {
-                _instance = FindObjectOfType<PoolManager>();
-            }
-            return _instance;
-        }
-    }
 
     private Dictionary<int, Queue<ObjectInstance>> poolDictionary = new Dictionary<int, Queue<ObjectInstance>>();
 
@@ -49,20 +38,14 @@ public class PoolManager : MonoBehaviour {
 
         public GameObject gameObject;
         public Transform transform;
-
-        private bool hasPoolObjectComponent;
         private PoolObject poolObjectScript;
 
-        public ObjectInstance(GameObject objectInstance) {
-            gameObject = objectInstance;
+        public ObjectInstance(GameObject gameObject) {
+            this.gameObject = gameObject;
             transform = gameObject.transform;
-            gameObject.SetActive(false);
+            poolObjectScript = gameObject.GetComponent<PoolObject>();
 
-            var poolObjectScript = gameObject.GetComponent<PoolObject>();
-            if (poolObjectScript != null) {
-                hasPoolObjectComponent = true;
-                this.poolObjectScript = poolObjectScript;
-            }
+            gameObject.SetActive(false);
         }
 
         public void Reuse(Vector3 position, Quaternion rotation) {
@@ -70,7 +53,7 @@ public class PoolManager : MonoBehaviour {
             transform.position = position;
             transform.rotation = rotation;
 
-            if (hasPoolObjectComponent) {
+            if (poolObjectScript != null) {
                 poolObjectScript.OnObjectReuse();
             }
         }
