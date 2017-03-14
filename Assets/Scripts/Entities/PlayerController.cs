@@ -41,8 +41,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private bool canShoot = true;
 
     public GameObject heartsPanel;
-    public delegate void HpChangeEvent(int hp);
-    public static event HpChangeEvent HpChangedEvent;
+    //public delegate void HpChangeEvent(int hp);
+    //public static event HpChangeEvent HpChangedEvent;
 
     private bool tookDamageThisFrame = false;
     private float flashSpeed = 1.5f;
@@ -60,7 +60,9 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private GameObject dialogCanvas;
 
     private GunBeam gunBeam;
+
     private PoolManager poolManager;
+    private EventManager eventManager;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -96,6 +98,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
         poolManager = Toolbox.RegisterComponent<PoolManager>();
         poolManager.CreatePool(projectile, 50);
+
+        eventManager = Toolbox.RegisterComponent<EventManager>();
 
         CreateHeartPanel();
     }
@@ -187,6 +191,12 @@ public class PlayerController : MonoBehaviour, IDamageable {
         if (Input.GetKeyDown(KeyCode.K)) {
             dialogCanvas.SetActive(!dialogCanvas.activeSelf);
         }
+
+        Animator a = GetComponent<Animator>();
+        //a.SetBool("isAttacking2", false);
+        if (Input.GetKeyDown(KeyCode.J)) {
+            a.SetBool("isAttacking2", true);
+        }
     }
 
     private void damageScreenFlash() {
@@ -261,11 +271,14 @@ public class PlayerController : MonoBehaviour, IDamageable {
     }
 
     public void Damage(GameObject damager) {
-        currentHp--;
+        int prevHp = currentHp--;
         tookDamageThisFrame = true;
-        if (HpChangedEvent != null) {
-            HpChangedEvent(currentHp);
-        }
+
+        HpChangeEvent ev = new HpChangeEvent(prevHp, currentHp);
+        eventManager.Publish(Events.HPCHANGE_ID, ev);
+        //if (HpChangedEvent != null) {
+        //    HpChangedEvent(currentHp);
+        //}
 
         CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
         cameraShake.shakeIntensity = 0.1f;

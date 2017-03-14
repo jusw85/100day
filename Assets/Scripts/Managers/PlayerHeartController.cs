@@ -13,9 +13,13 @@ public class PlayerHeartController : MonoBehaviour {
     private GameObject heartPanel;
     private List<Image> heartsList = new List<Image>();
 
-    private void Start() {
-        PlayerController.HpChangedEvent += HpChanged;
+    private EventManager eventManager;
 
+    private void Awake() {
+        eventManager = Toolbox.RegisterComponent<EventManager>();
+    }
+
+    private void Start() {
         var hp = PlayerController.Instance.maxHp;
         var maxHearts = (hp + 1) / 2;
         for (int i = 0, offset = 10; i < maxHearts; i++, offset += 60) {
@@ -28,7 +32,18 @@ public class PlayerHeartController : MonoBehaviour {
         }
     }
 
-    public void HpChanged(int hp) {
+    private void OnEnable() {
+        eventManager.AddSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
+    }
+
+    private void OnDisable() {
+        eventManager.RemoveSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
+    }
+
+    public void HpChangeHandler(IGameEvent e) {
+        HpChangeEvent ev = (HpChangeEvent)e;
+        int hp = ev.currentHp;
+
         foreach (Image heart in heartsList) {
             if (hp <= 0) {
                 heart.sprite = emptyHeart;
@@ -39,6 +54,9 @@ public class PlayerHeartController : MonoBehaviour {
             }
             hp -= 2;
         }
+    }
+
+    public void HpChanged(int hp) {
     }
 
     //public void MaxHpChanged(int maxhp) {

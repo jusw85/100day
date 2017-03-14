@@ -51,6 +51,7 @@ public class EnemyController : PoolObject, IDamageable {
     }
 
     private Vector2 lastMoveInput;
+
     private void Update() {
         moverController.MoveDirection = Vector2.zero;
 

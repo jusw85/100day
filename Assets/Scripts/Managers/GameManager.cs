@@ -9,8 +9,9 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         Toolbox.RegisterComponent<PoolManager>();
+        Toolbox.RegisterComponent<EventManager>();
         if (enableFpsDisplay) {
-            Toolbox.RegisterComponent<FPSDisplay>();
+            gameObject.AddChildComponent<FPSDisplay>();
         }
         Instantiate(level1);
     }

@@ -62,5 +62,4 @@ public class PoolManager : MonoBehaviour {
             transform.parent = parent;
         }
     }
-
 }

@@ -713,7 +713,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 340112318}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.946268, y: 33.5653, z: -18.523438}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -928,9 +928,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableFpsDisplay: 1
-  fpsDisplay: {fileID: 1669990267370452, guid: 5d45418263ea5024391dab747157d247, type: 2}
-  poolManager: {fileID: 1672738746229110, guid: ce2809b267502ec47a59ab7b3fa698c3,
-    type: 2}
   level1: {fileID: 1816328293156630, guid: 18b17ee5f26abec41bee79b38b3a95b0, type: 2}
 --- !u!1 &350357348
 GameObject:
@@ -2023,7 +2020,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1063345978255250, guid: 75e981157cfec654a85161d26d5230f6, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 75e981157cfec654a85161d26d5230f6, type: 2}
