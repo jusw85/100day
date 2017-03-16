@@ -1,5 +1,5 @@
 public class Events {
-    public static readonly int HPCHANGE_ID = EventManager.ChannelToId("hpchange");
+    public static readonly int HPCHANGE_ID = EventManager.StringToHash("hpchange");
 }
 
 public class HpChangeEvent : IGameEvent {

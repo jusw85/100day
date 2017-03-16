@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,13 +42,11 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private bool canShoot = true;
 
     public GameObject heartsPanel;
-    //public delegate void HpChangeEvent(int hp);
-    //public static event HpChangeEvent HpChangedEvent;
 
-    private bool tookDamageThisFrame = false;
     private float flashSpeed = 1.5f;
     private Image damageFlashImage;
     private Color damageFlashColour = new Color(1f, 1f, 1f, 0.6f);
+    private Tween screenFlashTween;
 
     private Slider chargeSlider;
     private bool isLAxisHeld = false;
@@ -108,6 +107,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         if (isPaused)
             return;
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
         moveInput = moveInput.normalized;
         moverController.MoveDirection = moveInput;
 
@@ -186,8 +186,6 @@ public class PlayerController : MonoBehaviour, IDamageable {
         }
         gunBeam.TurnOn(isShootAttack);
 
-        damageScreenFlash();
-
         if (Input.GetKeyDown(KeyCode.K)) {
             dialogCanvas.SetActive(!dialogCanvas.activeSelf);
         }
@@ -197,15 +195,6 @@ public class PlayerController : MonoBehaviour, IDamageable {
         if (Input.GetKeyDown(KeyCode.J)) {
             a.SetBool("isAttacking2", true);
         }
-    }
-
-    private void damageScreenFlash() {
-        if (tookDamageThisFrame) {
-            damageFlashImage.color = damageFlashColour;
-        } else {
-            damageFlashImage.color = Color.Lerp(damageFlashImage.color, Color.clear, flashSpeed * Time.deltaTime);
-        }
-        tookDamageThisFrame = false;
     }
 
     private void UpdateLookPosition() {
@@ -272,13 +261,10 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public void Damage(GameObject damager) {
         int prevHp = currentHp--;
-        tookDamageThisFrame = true;
+        DamageScreenFlash();
 
         HpChangeEvent ev = new HpChangeEvent(prevHp, currentHp);
         eventManager.Publish(Events.HPCHANGE_ID, ev);
-        //if (HpChangedEvent != null) {
-        //    HpChangedEvent(currentHp);
-        //}
 
         CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
         cameraShake.shakeIntensity = 0.1f;
@@ -291,6 +277,18 @@ public class PlayerController : MonoBehaviour, IDamageable {
         }
     }
 
+    public void DamageScreenFlash() {
+        damageFlashImage.color = damageFlashColour;
+        if (screenFlashTween != null) {
+            screenFlashTween.Restart();
+        } else {
+            screenFlashTween = DOTween
+                .To(() => damageFlashImage.color, x => damageFlashImage.color = x, Color.clear, flashSpeed)
+                .SetAutoKill(false);
+            screenFlashTween.Play();
+        }
+    }
+    
     private void CreateHeartPanel() {
         GameObject hud = GameObject.Find("HUDCanvas");
         GameObject heartPanel = Instantiate(heartsPanel);

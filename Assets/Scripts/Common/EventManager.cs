@@ -10,12 +10,12 @@ public class EventManager : MonoBehaviour {
         delegateMap = new Dictionary<int, EventDelegate>();
     }
 
-    public static int ChannelToId(string channel) {
+    public static int StringToHash(string channel) {
         return channel.GetHashCode();
     }
 
     public void AddSubscriber(string channel, EventDelegate del) {
-        AddSubscriber(ChannelToId(channel), del);
+        AddSubscriber(StringToHash(channel), del);
     }
 
     public void AddSubscriber(int channelId, EventDelegate del) {
@@ -29,7 +29,7 @@ public class EventManager : MonoBehaviour {
     }
 
     public void RemoveSubscriber(string channel, EventDelegate del) {
-        RemoveSubscriber(ChannelToId(channel), del);
+        RemoveSubscriber(StringToHash(channel), del);
     }
 
     public void RemoveSubscriber(int channelId, EventDelegate del) {
@@ -45,7 +45,7 @@ public class EventManager : MonoBehaviour {
     }
 
     public void Publish(string channel, IGameEvent gameEvent) {
-        Publish(ChannelToId(channel), gameEvent);
+        Publish(StringToHash(channel), gameEvent);
     }
 
     public void Publish(int channelId, IGameEvent gameEvent) {
