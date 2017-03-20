@@ -12,14 +12,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public int maxHp = 6;
     private int currentHp;
-
-    public GameObject projectile;
-    public float shotDelay = 0.05f;
-    public float shotSpeed = 20f;
-    public float shotSpread = 7.5f;
-    public float controllerAimLength = 5f;
-
-    public AudioClip shootSound;
+    
     public AudioClip swordSound;
     public AudioClip[] owSounds;
     public AudioClip[] deathSounds;
@@ -29,17 +22,9 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     private MoverController moverController;
     private AnimationController animationController;
-    private LineRenderer lineRenderer;
-    private GameObject playerFace;
-    private Light muzzleFlash;
 
     private Vector2 moveInput;
     private Vector2 lastMoveInput;
-    private Vector3 lookPosition = Vector3.zero;
-    private Vector3 lookVector;
-    private bool mouseActive = true;
-    private bool gamepadActive = false;
-    private bool canShoot = true;
 
     public GameObject heartsPanel;
 
@@ -56,10 +41,6 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private float initialChargeValue = -0.5f;
     private float chargeValue;
 
-    private GameObject dialogCanvas;
-
-    private GunBeam gunBeam;
-
     private PoolManager poolManager;
     private EventManager eventManager;
 
@@ -72,11 +53,6 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
         moverController = GetComponent<MoverController>();
         animationController = GetComponent<AnimationController>();
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.sortingOrder = -2;
-        playerFace = transform.Find("PlayerFace").gameObject;
-        muzzleFlash = transform.Find("PlayerFace/MuzzleFlash").GetComponent<Light>();
-        gunBeam = transform.Find("GunBeam").GetComponent<GunBeam>();
 
         currentHp = maxHp;
         chargeValue = initialChargeValue;
@@ -89,14 +65,10 @@ public class PlayerController : MonoBehaviour, IDamageable {
         var obj2 = GameObject.Find("ChargeSlider");
         chargeSlider = obj2.GetComponent<Slider>();
 
-        dialogCanvas = GameObject.Find("DialogCanvas");
-        dialogCanvas.SetActive(false);
-
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         cameraFollow.target = gameObject;
 
         poolManager = Toolbox.RegisterComponent<PoolManager>();
-        poolManager.CreatePool(projectile, 50);
 
         eventManager = Toolbox.RegisterComponent<EventManager>();
         CreateHeartPanel();
@@ -105,7 +77,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     public void Move(Vector2 moveInput) {
         this.moveInput = moveInput;
         moverController.MoveDirection = moveInput;
-        
+
         // set player state i.e. walking
         // fsm e.g. idle -> walking?
 
@@ -130,32 +102,6 @@ public class PlayerController : MonoBehaviour, IDamageable {
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
         //moveInput = moveInput.normalized;
-        
-
-        var mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        var gamepadLookInput = new Vector2(Input.GetAxisRaw("PadRHorizontal"), Input.GetAxisRaw("PadRVertical"));
-        var gamePadMoved = false;
-        if (mouseInput.magnitude > 0.01f) {
-            mouseActive = true;
-            gamepadActive = false;
-        } else if (gamepadLookInput.magnitude > 0.01f) {
-            mouseActive = false;
-            gamepadActive = true;
-            gamePadMoved = true;
-        }
-
-        if (gamepadActive) {
-            if (gamePadMoved) {
-                lookVector = gamepadLookInput.normalized;
-            }
-            lookPosition = transform.position + (lookVector * controllerAimLength);
-        }
-
-        // update face direction only if not attacking
-        if (animationController.IsIdle()) {
-            Quaternion rot = Quaternion.LookRotation(Vector3.forward, lookPosition - transform.position);
-            playerFace.transform.rotation = rot;
-        }
 
         bool isPrimaryDown = Input.GetButtonDown("Fire1");
         bool isPrimaryHold = Input.GetButton("Fire1");
@@ -200,91 +146,11 @@ public class PlayerController : MonoBehaviour, IDamageable {
             AudioManager.Instance.PlaySfx(swordSound);
         }
 
-        if (Input.GetKeyDown(KeyCode.N)) {
-            dialogCanvas.SetActive(!dialogCanvas.activeSelf);
-        }
-
-
         Animator a = GetComponent<Animator>();
         //a.SetBool("isAttacking2", false);
         if (Input.GetKeyDown(KeyCode.M)) {
             a.SetBool("isAttacking2", true);
         }
-    }
-
-    private void UpdateLookPosition() {
-        var rawMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        lookPosition = new Vector3(rawMousePosition.x, rawMousePosition.y, 0);
-        lookVector = (lookPosition - transform.position).normalized;
-    }
-
-    public void Reset() {
-        muzzleFlash.enabled = false;
-        gunBeam.TurnOn(false);
-    }
-
-    public void ShootFn() {
-        //bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0);
-        if (canShoot) {
-            StartCoroutine(Shoot());
-        }
-        gunBeam.TurnOn(true);
-        //gunBeam.TurnOn(isShootAttack);
-    }
-
-    public IEnumerator Shoot() {
-        muzzleFlash.enabled = true;
-        Vector3 dir = playerFace.transform.up.normalized;
-        Vector3 spawnLoc = transform.position + (dir * 1.5f);
-        Quaternion originalRot = playerFace.transform.rotation;
-        Vector3 originalAngles = originalRot.eulerAngles;
-        Vector3 newAngles = new Vector3(originalAngles.x, originalAngles.y, originalAngles.z + Random.Range(-shotSpread, shotSpread));
-        Quaternion newRot = Quaternion.identity;
-        newRot.eulerAngles = newAngles;
-
-        GameObject newprojectile = poolManager.ReuseObject(projectile, spawnLoc, newRot);
-        newprojectile.GetComponent<ProjectileController>().movementSpeed = shotSpeed;
-
-        AudioManager.Instance.PlaySfx(shootSound);
-
-        canShoot = false;
-        yield return new WaitForSeconds(shotDelay);
-        canShoot = true;
-    }
-
-    private void LateUpdate() {
-        if (mouseActive) {
-            UpdateLookPosition();
-        }
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, lookVector, 100f, Constants.LINECAST_LAYERS);
-        float distance = 100f;
-        if (hit.collider != null) {
-            distance = hit.distance;
-        }
-
-        Vector3 lineStart = transform.position;
-        Vector3 lineEnd = transform.position + (lookVector * distance);
-        lineRenderer.SetPosition(0, lineStart);
-        lineRenderer.SetPosition(1, lineEnd);
-
-        if (gunBeam != null) {
-            gunBeam.SetPosition(lineStart, lineEnd);
-        }
-        //Debug.DrawLine(transform.position, lookPosition, Color.red);
-
-        //animationController.SetIsMoving(moveInput.magnitude > 0);
-        //animationController.SetMoveVector(moveInput);
-        //animationController.SetLastMoveVector(lastMoveInput);
-
-        //animationController.SetIsFacingRight(true);
-        //if (moveInput.x < 0 ||
-        //    (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
-        //    animationController.SetIsFacingRight(false);
-        //}
-
-        //if (moveInput.magnitude > 0)
-        //    lastMoveInput = moveInput;
     }
 
     public void Damage(GameObject damager) {
@@ -316,7 +182,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
             screenFlashTween.Play();
         }
     }
-    
+
     private void CreateHeartPanel() {
         GameObject hud = GameObject.Find("HUDCanvas");
         GameObject heartPanel = Instantiate(heartsPanel);

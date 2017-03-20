@@ -16,14 +16,7 @@ public class PlayerInput : MonoBehaviour {
     }
 
     private void Update() {
-        player.Reset();
-
         Vector2 moveInput = controls.actions.Move;
         player.Move(moveInput);
-
-        if (controls.actions.Attack2.IsPressed) {
-            Debug.Log("!");
-            player.ShootFn();
-        }
     }
 }

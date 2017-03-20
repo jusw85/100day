@@ -2,7 +2,7 @@ using InControl;
 
 public class PlayerActions : PlayerActionSet {
     public PlayerAction Attack;
-    public PlayerAction Attack2;
+    public PlayerAction Special;
     public PlayerAction MoveLeft;
     public PlayerAction MoveRight;
     public PlayerAction MoveUp;
@@ -11,7 +11,7 @@ public class PlayerActions : PlayerActionSet {
 
     public PlayerActions() {
         Attack = CreatePlayerAction("Attack");
-        Attack2 = CreatePlayerAction("Attack 2");
+        Special = CreatePlayerAction("Special");
         MoveLeft = CreatePlayerAction("Move Left");
         MoveRight = CreatePlayerAction("Move Right");
         MoveUp = CreatePlayerAction("Move Up");
@@ -27,10 +27,10 @@ public class PlayerActions : PlayerActionSet {
         playerActions.Attack.AddDefaultBinding(Mouse.LeftButton);
         playerActions.Attack.AddDefaultBinding(InputControlType.LeftTrigger);
 
-        playerActions.Attack2.AddDefaultBinding(Key.K);
-        playerActions.Attack2.AddDefaultBinding(InputControlType.Action2);
-        playerActions.Attack2.AddDefaultBinding(Mouse.RightButton);
-        playerActions.Attack2.AddDefaultBinding(InputControlType.RightTrigger);
+        playerActions.Special.AddDefaultBinding(Key.K);
+        playerActions.Special.AddDefaultBinding(InputControlType.Action2);
+        playerActions.Special.AddDefaultBinding(Mouse.RightButton);
+        playerActions.Special.AddDefaultBinding(InputControlType.RightTrigger);
 
         playerActions.MoveUp.AddDefaultBinding(Key.UpArrow);
         playerActions.MoveDown.AddDefaultBinding(Key.DownArrow);
