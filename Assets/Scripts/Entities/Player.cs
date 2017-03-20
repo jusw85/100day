@@ -76,27 +76,28 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void Update() {
-        if (isPaused)
-            return;
+        //if (isPaused)
+        //    return;
+
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
         //moveInput = moveInput.normalized;
 
-        bool isPrimaryDown = Input.GetButtonDown("Fire1");
-        bool isPrimaryHold = Input.GetButton("Fire1");
-        bool isPrimaryUp = Input.GetButtonUp("Fire1");
-        //Debug.Log(isPrimaryDown + " " + isPrimaryHold + " " + isPrimaryUp);
-        if (Input.GetAxisRaw("PadLTrigger") > 0) {
-            if (!isLAxisHeld) {
-                isLAxisHeld = true;
-                isPrimaryDown = true;
-            } else {
-                isPrimaryHold = true;
-            }
-        } else if (isLAxisHeld) {
-            isLAxisHeld = false;
-            isPrimaryUp = true;
-        }
+        //bool isPrimaryDown = Input.GetButtonDown("Fire1");
+        //bool isPrimaryHold = Input.GetButton("Fire1");
+        //bool isPrimaryUp = Input.GetButtonUp("Fire1");
+        ////Debug.Log(isPrimaryDown + " " + isPrimaryHold + " " + isPrimaryUp);
+        //if (Input.GetAxisRaw("PadLTrigger") > 0) {
+        //    if (!isLAxisHeld) {
+        //        isLAxisHeld = true;
+        //        isPrimaryDown = true;
+        //    } else {
+        //        isPrimaryHold = true;
+        //    }
+        //} else if (isLAxisHeld) {
+        //    isLAxisHeld = false;
+        //    isPrimaryUp = true;
+        //}
 
         //animationController.DoAttack(false);
         //if (!isAttackCharging && animationController.IsIdle()) {
@@ -125,11 +126,11 @@ public class Player : MonoBehaviour, IDamageable {
         //    AudioManager.Instance.PlaySfx(swordSound);
         //}
 
-        Animator a = GetComponent<Animator>();
+        //Animator a = GetComponent<Animator>();
         //a.SetBool("isAttacking2", false);
-        if (Input.GetKeyDown(KeyCode.M)) {
-            a.SetBool("isAttacking2", true);
-        }
+        //if (Input.GetKeyDown(KeyCode.M)) {
+        //    a.SetBool("isAttacking2", true);
+        //}
     }
 
     public void Damage(GameObject damager) {
