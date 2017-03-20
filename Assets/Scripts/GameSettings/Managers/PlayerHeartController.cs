@@ -20,7 +20,7 @@ public class PlayerHeartController : MonoBehaviour {
     }
 
     private void Start() {
-        var hp = PlayerController.Instance.maxHp;
+        var hp = Player.Instance.maxHp;
         var maxHearts = (hp + 1) / 2;
         for (int i = 0, offset = 10; i < maxHearts; i++, offset += 60) {
             Image heart = Instantiate(heartImage);

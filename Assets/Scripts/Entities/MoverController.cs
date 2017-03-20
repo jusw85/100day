@@ -7,6 +7,8 @@ public class MoverController : MonoBehaviour {
     public float moveSpeed = 0f;
     [NonSerialized]
     public Vector2 externalForce = Vector2.zero;
+    [NonSerialized]
+    public bool resetVelocity = true;
 
     private Vector2 moveDirection;
     public Vector2 MoveDirection {
@@ -29,6 +31,8 @@ public class MoverController : MonoBehaviour {
     private void FixedUpdate() {
         velocity += externalForce;
         rigidBody.velocity = velocity;
+
+        if (resetVelocity) velocity = Vector2.zero;
         externalForce = Vector2.zero;
     }
 

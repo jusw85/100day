@@ -44,7 +44,7 @@ public class EnemyController : PoolObject, IDamageable {
     }
 
     private void Start() {
-        followTarget = PlayerController.Instance.gameObject;
+        followTarget = Player.Instance.gameObject;
 
         poolManager = Toolbox.RegisterComponent<PoolManager>();
         poolManager.CreatePool(bloodSplatter, 150);
@@ -125,7 +125,7 @@ public class EnemyController : PoolObject, IDamageable {
 
     public override void OnObjectReuse() {
         currentHp = maxHp;
-        followTarget = PlayerController.Instance.gameObject;
+        followTarget = Player.Instance.gameObject;
     }
 
 }

@@ -1,193 +1,55 @@
-using DG.Tweening;
-using System.Collections;
+using MonsterLove.StateMachine;
 using UnityEngine;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(MoverController))]
-[RequireComponent(typeof(AnimationController))]
-public class PlayerController : MonoBehaviour, IDamageable {
+[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(PlayerAnimator))]
+public class PlayerController : MonoBehaviour {
 
-    private static PlayerController instance;
-    public static PlayerController Instance { get { return instance; } }
-
-    public int maxHp = 6;
-    private int currentHp;
-    
-    public AudioClip swordSound;
-    public AudioClip[] owSounds;
-    public AudioClip[] deathSounds;
-
-    [System.NonSerialized]
-    public bool isPaused = false;
-
-    private MoverController moverController;
-    private AnimationController animationController;
-
-    private Vector2 moveInput;
-    private Vector2 lastMoveInput;
-
-    public GameObject heartsPanel;
-
-    private float flashSpeed = 1.5f;
-    private Image damageFlashImage;
-    private Color damageFlashColour = new Color(1f, 1f, 1f, 0.6f);
-    private Tween screenFlashTween;
-
-    private Slider chargeSlider;
-    private bool isLAxisHeld = false;
-    //private bool isRAxisHeld = false;
-    private bool isAttackCharging = false;
-    private float chargeRate = 0.5f;
-    private float initialChargeValue = -0.5f;
-    private float chargeValue;
-
-    private PoolManager poolManager;
-    private EventManager eventManager;
+    private ControlManager controls;
+    private Player player;
+    private PlayerAnimator playerAnimator;
+    private StateMachine<PlayerState> fsm;
 
     private void Awake() {
-        if (instance != null && instance != this) {
-            Destroy(gameObject);
-        } else {
-            instance = this;
-        }
-
-        moverController = GetComponent<MoverController>();
-        animationController = GetComponent<AnimationController>();
-
-        currentHp = maxHp;
-        chargeValue = initialChargeValue;
+        player = GetComponent<Player>();
+        playerAnimator = GetComponent<PlayerAnimator>();
+        fsm = StateMachine<PlayerState>.Initialize(player, PlayerState.Idle);
     }
 
     private void Start() {
-        var obj = GameObject.Find("ScreenFlash");
-        damageFlashImage = obj.GetComponent<Image>();
-
-        var obj2 = GameObject.Find("ChargeSlider");
-        chargeSlider = obj2.GetComponent<Slider>();
+        controls = Toolbox.RegisterComponent<ControlManager>();
 
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
-        cameraFollow.target = gameObject;
-
-        poolManager = Toolbox.RegisterComponent<PoolManager>();
-
-        eventManager = Toolbox.RegisterComponent<EventManager>();
-        CreateHeartPanel();
-    }
-
-    public void Move(Vector2 moveInput) {
-        this.moveInput = moveInput;
-        moverController.MoveDirection = moveInput;
-
-        // set player state i.e. walking
-        // fsm e.g. idle -> walking?
-
-        // anim update based on fsm in one class
-        animationController.SetIsMoving(moveInput.magnitude > 0);
-        animationController.SetMoveVector(moveInput);
-        animationController.SetLastMoveVector(lastMoveInput);
-
-        animationController.SetIsFacingRight(true);
-        if (moveInput.x < 0 ||
-            (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
-            animationController.SetIsFacingRight(false);
-        }
-
-        if (moveInput.magnitude > 0)
-            lastMoveInput = moveInput;
+        if (cameraFollow != null) cameraFollow.target = gameObject;
     }
 
     private void Update() {
-        if (isPaused)
-            return;
-        //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
-        //moveInput = moveInput.normalized;
+        Vector2 moveInput = controls.actions.Move;
 
-        bool isPrimaryDown = Input.GetButtonDown("Fire1");
-        bool isPrimaryHold = Input.GetButton("Fire1");
-        bool isPrimaryUp = Input.GetButtonUp("Fire1");
-        //Debug.Log(isPrimaryDown + " " + isPrimaryHold + " " + isPrimaryUp);
-        if (Input.GetAxisRaw("PadLTrigger") > 0) {
-            if (!isLAxisHeld) {
-                isLAxisHeld = true;
-                isPrimaryDown = true;
-            } else {
-                isPrimaryHold = true;
-            }
-        } else if (isLAxisHeld) {
-            isLAxisHeld = false;
-            isPrimaryUp = true;
-        }
+        var sqrMagnitude = moveInput.sqrMagnitude;
+        var state = fsm.State;
 
-        animationController.DoAttack(false);
-        if (!isAttackCharging && animationController.IsIdle()) {
-            chargeValue = initialChargeValue;
-            chargeSlider.value = 0f;
-        }
-        if (isPrimaryDown) {
-            animationController.DoAttack(true);
-            AudioManager.Instance.PlaySfx(swordSound);
-        }
-        if ((isPrimaryHold || isPrimaryDown) && animationController.IsIdle()) {
-            isAttackCharging = true;
-        }
-        if (isAttackCharging && isPrimaryHold) {
-            //chargeSlider.value += chargeRate * Time.deltaTime;
-            chargeValue += chargeRate * Time.deltaTime;
-            if (chargeValue >= 0f) {
-                chargeSlider.value = chargeValue;
-            }
-        }
-        if (isPrimaryUp) {
-            isAttackCharging = false;
-        }
-        if (isPrimaryUp && chargeSlider.value == 1.0f) {
-            animationController.DoAttack(true);
-            AudioManager.Instance.PlaySfx(swordSound);
+        switch (state) {
+            case PlayerState.Idle:
+                if (sqrMagnitude > 0) {
+                    fsm.ChangeState(PlayerState.Walk);
+                    player.Move(moveInput);
+                }
+                break;
+            case PlayerState.Walk:
+                if (sqrMagnitude > 0) {
+                    player.Move(moveInput);
+                } else {
+                    fsm.ChangeState(PlayerState.Idle);
+                }
+                break;
         }
 
-        Animator a = GetComponent<Animator>();
-        //a.SetBool("isAttacking2", false);
-        if (Input.GetKeyDown(KeyCode.M)) {
-            a.SetBool("isAttacking2", true);
-        }
+        playerAnimator.Animate(state, player);
     }
+}
 
-    public void Damage(GameObject damager) {
-        int prevHp = currentHp--;
-        DamageScreenFlash();
-
-        HpChangeEvent ev = new HpChangeEvent(prevHp, currentHp);
-        eventManager.Publish(Events.HPCHANGE_ID, ev);
-
-        CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
-        cameraShake.shakeIntensity = 0.1f;
-        cameraShake.duration = 0.25f;
-
-        AudioManager.Instance.PlaySfx(owSounds[Random.Range(0, owSounds.Length)]);
-        if (currentHp <= 0) {
-            MenuManager.Instance.GameOver();
-            AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
-        }
-    }
-
-    public void DamageScreenFlash() {
-        damageFlashImage.color = damageFlashColour;
-        if (screenFlashTween != null) {
-            screenFlashTween.Restart();
-        } else {
-            screenFlashTween = DOTween
-                .To(() => damageFlashImage.color, x => damageFlashImage.color = x, Color.clear, flashSpeed)
-                .SetAutoKill(false);
-            screenFlashTween.Play();
-        }
-    }
-
-    private void CreateHeartPanel() {
-        GameObject hud = GameObject.Find("HUDCanvas");
-        GameObject heartPanel = Instantiate(heartsPanel);
-        heartPanel.transform.SetParent(hud.transform);
-        heartPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-    }
-
+public enum PlayerState {
+    Idle,
+    Walk,
 }
