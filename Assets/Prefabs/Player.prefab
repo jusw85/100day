@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 114463622701243276}
   - component: {fileID: 114072539984702268}
   - component: {fileID: 114022043741599870}
+  - component: {fileID: 114267928434180792}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -320,7 +321,7 @@ Animator:
   m_GameObject: {fileID: 1063345978255250}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0ea78d2a72d3cc64c9fc07f64c56b541, type: 2}
+  m_Controller: {fileID: 9100000, guid: 225d243b3198abd47b4f0d0353fa7b41, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -397,6 +398,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sparks: {fileID: 19800000, guid: 51f86eac077549d4aa4627aa42653fb9, type: 2}
+--- !u!114 &114267928434180792
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1063345978255250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff018146f8433a4498163f31b8767a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114402538217921976
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -99,17 +99,38 @@ public class PlayerController : MonoBehaviour, IDamageable {
         poolManager.CreatePool(projectile, 50);
 
         eventManager = Toolbox.RegisterComponent<EventManager>();
-
         CreateHeartPanel();
+    }
+
+    public void Move(Vector2 moveInput) {
+        this.moveInput = moveInput;
+        moverController.MoveDirection = moveInput;
+        
+        // set player state i.e. walking
+        // fsm e.g. idle -> walking?
+
+        // anim update based on fsm in one class
+        animationController.SetIsMoving(moveInput.magnitude > 0);
+        animationController.SetMoveVector(moveInput);
+        animationController.SetLastMoveVector(lastMoveInput);
+
+        animationController.SetIsFacingRight(true);
+        if (moveInput.x < 0 ||
+            (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
+            animationController.SetIsFacingRight(false);
+        }
+
+        if (moveInput.magnitude > 0)
+            lastMoveInput = moveInput;
     }
 
     private void Update() {
         if (isPaused)
             return;
-        moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
-        moveInput = moveInput.normalized;
-        moverController.MoveDirection = moveInput;
+        //moveInput = moveInput.normalized;
+        
 
         var mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         var gamepadLookInput = new Vector2(Input.GetAxisRaw("PadRHorizontal"), Input.GetAxisRaw("PadRVertical"));
@@ -179,20 +200,14 @@ public class PlayerController : MonoBehaviour, IDamageable {
             AudioManager.Instance.PlaySfx(swordSound);
         }
 
-        bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0);
-        muzzleFlash.enabled = false;
-        if (canShoot && isShootAttack) {
-            StartCoroutine(Shoot());
-        }
-        gunBeam.TurnOn(isShootAttack);
-
-        if (Input.GetKeyDown(KeyCode.K)) {
+        if (Input.GetKeyDown(KeyCode.N)) {
             dialogCanvas.SetActive(!dialogCanvas.activeSelf);
         }
 
+
         Animator a = GetComponent<Animator>();
         //a.SetBool("isAttacking2", false);
-        if (Input.GetKeyDown(KeyCode.J)) {
+        if (Input.GetKeyDown(KeyCode.M)) {
             a.SetBool("isAttacking2", true);
         }
     }
@@ -203,6 +218,19 @@ public class PlayerController : MonoBehaviour, IDamageable {
         lookVector = (lookPosition - transform.position).normalized;
     }
 
+    public void Reset() {
+        muzzleFlash.enabled = false;
+        gunBeam.TurnOn(false);
+    }
+
+    public void ShootFn() {
+        //bool isShootAttack = Input.GetButton("Fire2") || (Input.GetAxisRaw("PadRTrigger") > 0);
+        if (canShoot) {
+            StartCoroutine(Shoot());
+        }
+        gunBeam.TurnOn(true);
+        //gunBeam.TurnOn(isShootAttack);
+    }
 
     public IEnumerator Shoot() {
         muzzleFlash.enabled = true;
@@ -245,18 +273,18 @@ public class PlayerController : MonoBehaviour, IDamageable {
         }
         //Debug.DrawLine(transform.position, lookPosition, Color.red);
 
-        animationController.SetIsMoving(moveInput.magnitude > 0);
-        animationController.SetMoveVector(moveInput);
-        animationController.SetLastMoveVector(lastMoveInput);
+        //animationController.SetIsMoving(moveInput.magnitude > 0);
+        //animationController.SetMoveVector(moveInput);
+        //animationController.SetLastMoveVector(lastMoveInput);
 
-        animationController.SetIsFacingRight(true);
-        if (moveInput.x < 0 ||
-            (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
-            animationController.SetIsFacingRight(false);
-        }
+        //animationController.SetIsFacingRight(true);
+        //if (moveInput.x < 0 ||
+        //    (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
+        //    animationController.SetIsFacingRight(false);
+        //}
 
-        if (moveInput.magnitude > 0)
-            lastMoveInput = moveInput;
+        //if (moveInput.magnitude > 0)
+        //    lastMoveInput = moveInput;
     }
 
     public void Damage(GameObject damager) {

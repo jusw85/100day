@@ -8,8 +8,8 @@ public class Scratch : MonoBehaviour {
     //private int idx = 0;
 
     void Awake() {
-        string[] x = Input.GetJoystickNames();
-        Debug.Log("");
+        //string[] x = Input.GetJoystickNames();
+        //Debug.Log("");
     }
     // Update is called once per frame
     void Update() {
