@@ -1,4 +1,3 @@
-using MonsterLove.StateMachine;
 using UnityEngine;
 
 [RequireComponent(typeof(Player))]
@@ -11,8 +10,6 @@ public class PlayerController : MonoBehaviour {
     private PlayerAnimator playerAnimator;
     private Animator fsm;
 
-    //private StateMachine<PlayerState> fsm;
-
     private Vector2 moveInput;
     private bool isAttackQueued;
 
@@ -20,7 +17,6 @@ public class PlayerController : MonoBehaviour {
         player = GetComponent<Player>();
         playerAnimator = GetComponent<PlayerAnimator>();
         fsm = GetComponent<Animator>();
-        //fsm = StateMachine<PlayerState>.Initialize(this, PlayerState.Idle);
     }
 
     private void Start() {
@@ -33,6 +29,7 @@ public class PlayerController : MonoBehaviour {
     private static int idleId = Animator.StringToHash("Base.Idle");
     private static int movementId = Animator.StringToHash("Base.Movement");
     private static int attack1Id = Animator.StringToHash("Base.Attack1");
+    private static int attack2Id = Animator.StringToHash("Base.Attack2");
     private static int isMovingId = Animator.StringToHash("isMoving");
     private static int triggerAttackId = Animator.StringToHash("triggerAttack");
 
@@ -42,7 +39,6 @@ public class PlayerController : MonoBehaviour {
         bool isAttackHeld = controls.actions.Attack.IsPressed;
 
         var sqrMagnitude = moveInput.sqrMagnitude;
-        //var state = fsm.State;
 
         if (isAttackPressed) {
             isAttackQueued = true;
@@ -51,7 +47,7 @@ public class PlayerController : MonoBehaviour {
         int currentState = fsm.GetCurrentAnimatorStateInfo(0).fullPathHash;
         if (currentState == idleId) {
             if (isAttackQueued) {
-                player.Move(moveInput);
+                if (sqrMagnitude > 0) player.Move(moveInput);
                 isAttackQueued = false;
                 fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude > 0) {
@@ -60,7 +56,7 @@ public class PlayerController : MonoBehaviour {
             }
         } else if (currentState == movementId) {
             if (isAttackQueued) {
-                player.Move(moveInput);
+                if (sqrMagnitude > 0) player.Move(moveInput);
                 isAttackQueued = false;
                 fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude > 0) {
@@ -69,47 +65,18 @@ public class PlayerController : MonoBehaviour {
                 fsm.SetBool(isMovingId, false);
             }
         } else if (currentState == attack1Id) {
+            if (isAttackQueued) {
+                isAttackQueued = false;
+                fsm.SetTrigger(triggerAttackId);
+            }
+        } else if (currentState == attack2Id) {
+            if (isAttackQueued) {
+                isAttackQueued = false;
+                fsm.SetTrigger(triggerAttackId);
+            }
         }
 
-        //switch (state) {
-        //    case PlayerState.Idle:
-        //        if (isAttackQueued) {
-        //            fsm.ChangeState(PlayerState.Attack1);
-        //        } else if (sqrMagnitude > 0) {
-        //            player.Move(moveInput);
-        //            fsm.ChangeState(PlayerState.Walk);
-        //        }
-        //        break;
-        //    case PlayerState.Walk:
-        //        if (isAttackQueued) {
-        //            fsm.ChangeState(PlayerState.Attack1);
-        //        } else if (sqrMagnitude > 0) {
-        //            player.Move(moveInput);
-        //        } else if (sqrMagnitude <= 0) {
-        //            fsm.ChangeState(PlayerState.Idle);
-        //        }
-        //        break;
-        //    case PlayerState.Attack1:
-        //        if (playerAnimator.isIdle) {
-        //            fsm.ChangeState(PlayerState.Idle);
-        //        }
-        //        break;
-        //}
-
-        //playerAnimator.Animate(state, player);
-        playerAnimator.Animate(player);
+        playerAnimator.Animate(fsm, player);
     }
 
-    //private void Attack1_Enter() {
-    //    player.Move(moveInput);
-    //    isAttackQueued = false;
-    //    playerAnimator.TriggerAttack();
-    //}
-
 }
-
-//public enum PlayerState {
-//    Idle,
-//    Walk,
-//    Attack1,
-//}
