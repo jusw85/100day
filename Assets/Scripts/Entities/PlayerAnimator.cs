@@ -25,20 +25,26 @@ public class PlayerAnimator : MonoBehaviour {
         playerIdleStateMachineBehaviour.playerAnimator = this;
     }
 
-    public void Animate(PlayerState state, Player player) {
+    //public void Animate(PlayerState state, Player player) {
+    //    animator.SetFloat(faceDirXId, player.faceDir.x);
+    //    animator.SetFloat(faceDirYId, player.faceDir.y);
+    //    spriteRenderer.flipX = (player.faceDir.x <= 0);
+    //    //animator.SetBool(isMovingId, false);
+    //    //switch (state) {
+    //    //    case PlayerState.Idle:
+    //    //        break;
+    //    //    case PlayerState.Walk:
+    //    //        animator.SetBool(isMovingId, true);
+    //    //        break;
+    //    //    case PlayerState.Attack1:
+    //    //        break;
+    //    //}
+    //}
+
+    public void Animate(Player player) {
         animator.SetFloat(faceDirXId, player.faceDir.x);
         animator.SetFloat(faceDirYId, player.faceDir.y);
         spriteRenderer.flipX = (player.faceDir.x <= 0);
-        animator.SetBool(isMovingId, false);
-        switch (state) {
-            case PlayerState.Idle:
-                break;
-            case PlayerState.Walk:
-                animator.SetBool(isMovingId, true);
-                break;
-            case PlayerState.Attack:
-                break;
-        }
     }
 
     public void TriggerAttack() {
