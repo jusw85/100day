@@ -10,10 +10,13 @@ public class PlayerController : MonoBehaviour {
     private PlayerAnimator playerAnimator;
     private StateMachine<PlayerState> fsm;
 
+    private Vector2 moveInput;
+    private bool isAttackQueued;
+
     private void Awake() {
         player = GetComponent<Player>();
         playerAnimator = GetComponent<PlayerAnimator>();
-        fsm = StateMachine<PlayerState>.Initialize(player, PlayerState.Idle);
+        fsm = StateMachine<PlayerState>.Initialize(this, PlayerState.Idle);
     }
 
     private void Start() {
@@ -24,22 +27,39 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Update() {
-        Vector2 moveInput = controls.actions.Move;
+        moveInput = controls.actions.Move;
+        bool isAttackPressed = controls.actions.Attack.WasPressed;
+        bool isAttackHeld = controls.actions.Attack.IsPressed;
 
         var sqrMagnitude = moveInput.sqrMagnitude;
         var state = fsm.State;
 
+        if (isAttackPressed) {
+            isAttackQueued = true;
+        }
+
+        //Debug.Log(state + " " + isAttackQueued);
+
         switch (state) {
             case PlayerState.Idle:
-                if (sqrMagnitude > 0) {
-                    fsm.ChangeState(PlayerState.Walk);
+                if (isAttackQueued) {
+                    fsm.ChangeState(PlayerState.Attack);
+                } else if (sqrMagnitude > 0) {
                     player.Move(moveInput);
+                    fsm.ChangeState(PlayerState.Walk);
                 }
                 break;
             case PlayerState.Walk:
-                if (sqrMagnitude > 0) {
+                if (isAttackQueued) {
+                    fsm.ChangeState(PlayerState.Attack);
+                } else if (sqrMagnitude > 0) {
                     player.Move(moveInput);
-                } else {
+                } else if (sqrMagnitude <= 0) {
+                    fsm.ChangeState(PlayerState.Idle);
+                }
+                break;
+            case PlayerState.Attack:
+                if (playerAnimator.isIdle) {
                     fsm.ChangeState(PlayerState.Idle);
                 }
                 break;
@@ -47,9 +67,17 @@ public class PlayerController : MonoBehaviour {
 
         playerAnimator.Animate(state, player);
     }
+
+    private void Attack_Enter() {
+        player.Move(moveInput);
+        isAttackQueued = false;
+        playerAnimator.TriggerAttack();
+    }
+
 }
 
 public enum PlayerState {
     Idle,
     Walk,
+    Attack,
 }
