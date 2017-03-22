@@ -72,7 +72,11 @@ public class Player : MonoBehaviour, IDamageable {
 
     public void Move(Vector2 moveInput) {
         moverController.MoveDirection = moveInput;
-        faceDir = moveInput.normalized;
+        Face(moveInput);
+    }
+
+    public void Face(Vector2 faceDir) {
+        this.faceDir = faceDir.normalized;
     }
 
     private void Update() {

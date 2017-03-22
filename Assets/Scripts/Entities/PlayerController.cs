@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private static int idleId = Animator.StringToHash("Base.Idle");
-    private static int movementId = Animator.StringToHash("Base.Movement");
+    private static int walkId = Animator.StringToHash("Base.Walk");
     private static int attack1Id = Animator.StringToHash("Base.Attack1");
     private static int attack2Id = Animator.StringToHash("Base.Attack2");
     private static int isMovingId = Animator.StringToHash("isMoving");
@@ -47,14 +47,14 @@ public class PlayerController : MonoBehaviour {
         int currentState = fsm.GetCurrentAnimatorStateInfo(0).fullPathHash;
         if (currentState == idleId) {
             if (isAttackQueued) {
-                if (sqrMagnitude > 0) player.Move(moveInput);
+                if (sqrMagnitude > 0) player.Face(moveInput);
                 isAttackQueued = false;
                 fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude > 0) {
                 player.Move(moveInput);
                 fsm.SetBool(isMovingId, true);
             }
-        } else if (currentState == movementId) {
+        } else if (currentState == walkId) {
             if (isAttackQueued) {
                 if (sqrMagnitude > 0) player.Move(moveInput);
                 isAttackQueued = false;

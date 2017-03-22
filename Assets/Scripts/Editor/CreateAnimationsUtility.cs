@@ -4,6 +4,14 @@ using UnityEditor.Animations;
 
 public class CreateAnimationsUtility {
 
+    public static void FlipSprite(AnimationClip clip, int lastFrame) {
+        EditorCurveBinding binding = CreateEditorCurveBinding(typeof(SpriteRenderer), "", "m_FlipX");
+        AnimationCurve curve = new AnimationCurve();
+        AddAnimationKey(clip.frameRate, curve, 0, 1f, AnimationUtility.TangentMode.Constant, AnimationUtility.TangentMode.Constant);
+        AddAnimationKey(clip.frameRate, curve, lastFrame, 1f, AnimationUtility.TangentMode.Constant, AnimationUtility.TangentMode.Constant);
+        AnimationUtility.SetEditorCurve(clip, binding, curve);
+    }
+
     public static EditorCurveBinding CreateEditorCurveBinding(System.Type type, string path, string propertyName) {
         EditorCurveBinding binding = new EditorCurveBinding();
         binding.type = type;
@@ -39,8 +47,9 @@ public class CreateAnimationsUtility {
         spriteBinding.path = "";
         spriteBinding.propertyName = "m_Sprite";
 
-        ObjectReferenceKeyframe[] spriteKeyFrames = new ObjectReferenceKeyframe[8];
-        for (int i = 0, idx = startIdx; idx < endIdx; i++, idx++) {
+        int numFrames = (endIdx - startIdx) + 1;
+        ObjectReferenceKeyframe[] spriteKeyFrames = new ObjectReferenceKeyframe[numFrames];
+        for (int i = 0, idx = startIdx; idx <= endIdx; i++, idx++) {
             AnimationKeyTime akt = FrameToAnimationKey(i, frameRate);
             spriteKeyFrames[i] = new ObjectReferenceKeyframe();
             spriteKeyFrames[i].time = akt.Time;
