@@ -17,7 +17,7 @@ public class PlayerAnimator : MonoBehaviour {
     public void Animate(Animator animator, Player player) {
         animator.SetFloat(faceDirXId, player.faceDir.x);
         animator.SetFloat(faceDirYId, player.faceDir.y);
-        spriteRenderer.flipX = (player.faceDir.x <= 0);
+        spriteRenderer.flipX = (player.faceDir.x < 0);
     }
 
 }
