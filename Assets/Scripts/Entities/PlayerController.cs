@@ -30,9 +30,17 @@ public class PlayerController : MonoBehaviour {
     private static int walkId = Animator.StringToHash("Base.Walk");
     private static int attack1Id = Animator.StringToHash("Base.Attack1");
     private static int attack2Id = Animator.StringToHash("Base.Attack2");
+    private static int attack3Id = Animator.StringToHash("Base.Attack3");
     private static int isMovingId = Animator.StringToHash("isMoving");
     private static int triggerAttackId = Animator.StringToHash("triggerAttack");
 
+    // 1. migrate to state machine behaviour?
+    // 2. responsive controls i.e. direction change in middle of string, moving away in middle of string
+
+    // mirror easy creation of animation
+    // collider inconsistent
+    // (only) queue attack at end of transition
+    // sortorder based on y
     private void Update() {
         moveInput = controls.actions.Move;
         bool isAttackPressed = controls.actions.Attack.WasPressed;
@@ -73,6 +81,10 @@ public class PlayerController : MonoBehaviour {
             if (isAttackQueued) {
                 isAttackQueued = false;
                 fsm.SetTrigger(triggerAttackId);
+            }
+        } else if (currentState == attack3Id) {
+            if (isAttackQueued) {
+                isAttackQueued = false;
             }
         }
 

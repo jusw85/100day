@@ -67,16 +67,35 @@ public class Player : MonoBehaviour, IDamageable {
         //CreateHeartPanel();
     }
 
+    private static readonly Vector2 FACE_DOWN = new Vector2(0f, -1f);
+    private static readonly Vector2 FACE_RIGHT = new Vector2(1f, 0f);
+    private static readonly Vector2 FACE_UP = new Vector2(0f, 1f);
+    private static readonly Vector2 FACE_LEFT = new Vector2(-1f, 0f);
+
     [System.NonSerialized]
-    public Vector2 faceDir;
+    public Vector2 faceDir = FACE_DOWN;
 
     public void Move(Vector2 moveInput) {
         moverController.MoveDirection = moveInput;
         Face(moveInput);
     }
 
-    public void Face(Vector2 faceDir) {
-        this.faceDir = faceDir.normalized;
+    public void Face(Vector2 moveDir) {
+        Vector2 v = moveDir.normalized;
+
+        if (Mathf.Abs(v.x) >= Mathf.Abs(v.y)) {
+            if (v.x < 0) {
+                faceDir = FACE_LEFT;
+            } else {
+                faceDir = FACE_RIGHT;
+            }
+        } else {
+            if (v.y < 0) {
+                faceDir = FACE_DOWN;
+            } else {
+                faceDir = FACE_UP;
+            }
+        }
     }
 
     private void Update() {

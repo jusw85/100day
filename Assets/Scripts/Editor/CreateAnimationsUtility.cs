@@ -8,7 +8,7 @@ public class CreateAnimationsUtility {
         EditorCurveBinding binding = CreateEditorCurveBinding(typeof(SpriteRenderer), "", "m_FlipX");
         AnimationCurve curve = new AnimationCurve();
         AddAnimationKey(clip.frameRate, curve, 0, 1f, AnimationUtility.TangentMode.Constant, AnimationUtility.TangentMode.Constant);
-        AddAnimationKey(clip.frameRate, curve, lastFrame, 1f, AnimationUtility.TangentMode.Constant, AnimationUtility.TangentMode.Constant);
+        AddAnimationKey(clip.frameRate, curve, lastFrame, 0f, AnimationUtility.TangentMode.Constant, AnimationUtility.TangentMode.Constant);
         AnimationUtility.SetEditorCurve(clip, binding, curve);
     }
 

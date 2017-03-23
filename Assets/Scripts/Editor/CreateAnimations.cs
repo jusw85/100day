@@ -9,11 +9,45 @@ public class CreateAnimations : EditorWindow {
 
     [MenuItem("Window/Create Animations/CreateAll")]
     public static void CreateAll() {
-        CreateIdle();
-        CreateWalk();
-        CreateSwordAttack1();
-        CreateSwordAttack2();
-        CreateSwordAttack3();
+        //CreateIdle();
+        CreateWalk2();
+        //CreateSwordAttack1();
+        //CreateSwordAttack2();
+        //CreateSwordAttack3();
+    }
+
+    public static void CreateWalk2() {
+        string baseClipPath = "Assets/Animations/Player/PlayerWalk";
+        int frameRate = 12;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Walk";
+        int[] idx = { 0, 7, 16, 23, 32, 39, 16, 23 };
+        Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+    }
+
+    public static void Create4Dir(string baseClipPath, int frameRate, string spritePath, int[] idx, string controllerPath, string stateName) {
+        string[] dirs = { "Down", "Right", "Up", "Left" };
+        int[] flipdirs = { 3 };
+
+        int numdirs = dirs.Length;
+        if (idx.Length != (numdirs * 2)) {
+            Debug.LogError("Incorrect number of indices");
+            return;
+        }
+
+        for (int i = 0; i < numdirs; i++) {
+            string clipPath = baseClipPath + dirs[i] + ".anim";
+            AnimationClip clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
+            int startIdx = idx[i * 2];
+            int endIdx = idx[(i * 2) + 1];
+            CreateAnimationsUtility.AddSprites(clip, spritePath, startIdx, endIdx, frameRate);
+            if (System.Array.IndexOf(flipdirs, i) >= 0) {
+                CreateAnimationsUtility.FlipSprite(clip, (endIdx - startIdx) + 1);
+            }
+            CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, i);
+        }
     }
 
     public static void CreateWalk() {
@@ -101,24 +135,28 @@ public class CreateAnimations : EditorWindow {
         clipPath = "Assets/Animations/Player/PlayerSwordAttackDown1.anim";
         clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
         CreateAnimationsUtility.AddSprites(clip, spritePath, 0, 7, frameRate);
+        CreateAttackCurves(clip);
         CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
         CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 0);
 
         clipPath = "Assets/Animations/Player/PlayerSwordAttackRight1.anim";
         clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
         CreateAnimationsUtility.AddSprites(clip, spritePath, 48, 55, frameRate);
+        CreateAttackCurves(clip);
         CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
         CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 1);
 
         clipPath = "Assets/Animations/Player/PlayerSwordAttackUp1.anim";
         clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
         CreateAnimationsUtility.AddSprites(clip, spritePath, 96, 103, frameRate);
+        CreateAttackCurves(clip);
         CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
         CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 2);
 
         clipPath = "Assets/Animations/Player/PlayerSwordAttackLeft1.anim";
         clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
         CreateAnimationsUtility.AddSprites(clip, spritePath, 48, 55, frameRate);
+        CreateAttackCurves(clip);
         CreateAnimationsUtility.FlipSprite(clip, lastFrame);
         CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
         CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 3);
@@ -210,21 +248,21 @@ public class CreateAnimations : EditorWindow {
         binding = CreateAnimationsUtility.CreateEditorCurveBinding(typeof(Transform), "PlayerBullet", "m_LocalPosition.y");
         curve = new AnimationCurve();
         CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 0, 0f, CONSTANT, CONSTANT);
-        CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 3, -1f, CONSTANT, CONSTANT);
+        CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 3, -1.5f, CONSTANT, CONSTANT);
         CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 6, 0f, CONSTANT, CONSTANT);
         AnimationUtility.SetEditorCurve(clip, binding, curve);
 
         binding = CreateAnimationsUtility.CreateEditorCurveBinding(typeof(Transform), "PlayerBullet", "m_LocalScale.x");
         curve = new AnimationCurve();
         CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 0, 1f, CONSTANT, CONSTANT);
-        CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 3, 3f, CONSTANT, CONSTANT);
+        CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 3, 2.5f, CONSTANT, CONSTANT);
         CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 6, 1f, CONSTANT, CONSTANT);
         AnimationUtility.SetEditorCurve(clip, binding, curve);
 
         binding = CreateAnimationsUtility.CreateEditorCurveBinding(typeof(Transform), "PlayerBullet", "m_LocalScale.y");
         curve = new AnimationCurve();
         CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 0, 1f, CONSTANT, CONSTANT);
-        CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 3, 4f, CONSTANT, CONSTANT);
+        CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 3, 3f, CONSTANT, CONSTANT);
         CreateAnimationsUtility.AddAnimationKey(clip.frameRate, curve, 6, 1f, CONSTANT, CONSTANT);
         AnimationUtility.SetEditorCurve(clip, binding, curve);
     }
