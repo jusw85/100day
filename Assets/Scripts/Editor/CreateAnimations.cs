@@ -52,7 +52,7 @@ public class CreateAnimations : EditorWindow {
 
     public static void CreateSwordAttack1() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack1";
-        int frameRate = 16;
+        int frameRate = 20;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Attack1";

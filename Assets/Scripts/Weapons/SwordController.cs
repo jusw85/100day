@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class SwordController : MonoBehaviour {
 
-    public float projectileForce = 10f;
+    public float projectileForce = 50f;
 
     private void OnTriggerEnter2D(Collider2D other) {
         //string tag = other.gameObject.tag;
         //if (tag != "Player") {
         MoverController movable = other.transform.parent.gameObject.GetComponent<MoverController>();
         if (movable != null) {
-            movable.externalForce = transform.up * projectileForce;
+            Transform otherTransform = other.transform.parent.transform;
+            //Vector2 dir = transform.up.normalized;
+            Vector3 dir = (otherTransform.position - transform.parent.position).normalized;
+            movable.externalForce = dir * projectileForce;
         }
         IDamageable damageable = (IDamageable)other.transform.parent.gameObject.GetComponent(typeof(IDamageable));
         if (damageable != null) {

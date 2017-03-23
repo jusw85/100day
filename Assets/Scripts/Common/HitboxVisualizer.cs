@@ -15,8 +15,10 @@ public class HitboxVisualizer : MonoBehaviour {
         boxCollider2D = transform.parent.GetComponent<BoxCollider2D>();
     }
 
+#if UNITY_EDITOR
     private void LateUpdate() {
         spriteRenderer.enabled = boxCollider2D.enabled;
     }
-    
+#endif
+
 }
