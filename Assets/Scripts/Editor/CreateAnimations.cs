@@ -9,14 +9,24 @@ public class CreateAnimations : EditorWindow {
 
     [MenuItem("Window/Create Animations/CreateAll")]
     public static void CreateAll() {
-        //CreateIdle();
-        CreateWalk2();
-        //CreateSwordAttack1();
-        //CreateSwordAttack2();
-        //CreateSwordAttack3();
+        CreateIdle();
+        CreateWalk();
+        CreateSwordAttack1();
+        CreateSwordAttack2();
+        CreateSwordAttack3();
     }
 
-    public static void CreateWalk2() {
+    public static void CreateIdle() {
+        string baseClipPath = "Assets/Animations/Player/PlayerIdle";
+        int frameRate = 1;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Idle";
+        int[] idx = { 40, 40, 42, 42, 44, 44, 42, 42 };
+        Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+    }
+
+    public static void CreateWalk() {
         string baseClipPath = "Assets/Animations/Player/PlayerWalk";
         int frameRate = 12;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
@@ -26,7 +36,40 @@ public class CreateAnimations : EditorWindow {
         Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
     }
 
-    public static void Create4Dir(string baseClipPath, int frameRate, string spritePath, int[] idx, string controllerPath, string stateName) {
+    public static void CreateSwordAttack1() {
+        string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack1";
+        int frameRate = 16;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Attack1";
+        int[] idx = { 0, 7, 48, 55, 96, 103, 48, 55 };
+        int[] subBlendTreeIdx = { 0 };
+        Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName, subBlendTreeIdx);
+    }
+
+    public static void CreateSwordAttack2() {
+        string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack2";
+        int frameRate = 16;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Attack2";
+        int[] idx = { 16, 23, 64, 71, 112, 119, 64, 71 };
+        int[] subBlendTreeIdx = { 0 };
+        Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName, subBlendTreeIdx);
+    }
+
+    public static void CreateSwordAttack3() {
+        string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack3";
+        int frameRate = 12;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Attack3";
+        int[] idx = { 8, 15, 56, 63, 104, 111, 56, 63 };
+        int[] subBlendTreeIdx = { 0 };
+        Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName, subBlendTreeIdx);
+    }
+
+    public static void Create4Dir(string baseClipPath, int frameRate, string spritePath, int[] idx, string controllerPath, string stateName, int[] subBlendTreeIdx = null) {
         string[] dirs = { "Down", "Right", "Up", "Left" };
         int[] flipdirs = { 3 };
 
@@ -34,6 +77,12 @@ public class CreateAnimations : EditorWindow {
         if (idx.Length != (numdirs * 2)) {
             Debug.LogError("Incorrect number of indices");
             return;
+        }
+
+        if (subBlendTreeIdx == null) {
+            subBlendTreeIdx = new int[1];
+        } else {
+            System.Array.Resize(ref subBlendTreeIdx, subBlendTreeIdx.Length + 1);
         }
 
         for (int i = 0; i < numdirs; i++) {
@@ -46,47 +95,12 @@ public class CreateAnimations : EditorWindow {
                 CreateAnimationsUtility.FlipSprite(clip, (endIdx - startIdx) + 1);
             }
             CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, i);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
         }
     }
 
-    public static void CreateWalk() {
-        int frameRate = 12;
-        int numFrames = 8;
-        int lastFrame = numFrames;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
-        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
-        string stateName = "Walk";
-        string clipPath;
-        AnimationClip clip;
-
-        clipPath = "Assets/Animations/Player/PlayerWalkDown.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 0, 7, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0);
-
-        clipPath = "Assets/Animations/Player/PlayerWalkRight.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 16, 23, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 1);
-
-        clipPath = "Assets/Animations/Player/PlayerWalkUp.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 32, 39, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 2);
-
-        clipPath = "Assets/Animations/Player/PlayerWalkLeft.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 16, 23, frameRate);
-        CreateAnimationsUtility.FlipSprite(clip, lastFrame);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 3);
-    }
-
-    public static void CreateIdle() {
+    public static void CreateIdleReference() {
         int frameRate = 1;
         int numFrames = 1;
         int lastFrame = numFrames;
@@ -122,118 +136,7 @@ public class CreateAnimations : EditorWindow {
         CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 3);
     }
 
-    public static void CreateSwordAttack1() {
-        int frameRate = 16;
-        int numFrames = 8;
-        int lastFrame = numFrames;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
-        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
-        string stateName = "Attack1";
-        string clipPath;
-        AnimationClip clip;
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackDown1.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 0, 7, frameRate);
-        CreateAttackCurves(clip);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 0);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackRight1.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 48, 55, frameRate);
-        CreateAttackCurves(clip);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 1);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackUp1.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 96, 103, frameRate);
-        CreateAttackCurves(clip);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 2);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackLeft1.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 48, 55, frameRate);
-        CreateAttackCurves(clip);
-        CreateAnimationsUtility.FlipSprite(clip, lastFrame);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 3);
-    }
-
-    public static void CreateSwordAttack2() {
-        int frameRate = 16;
-        int numFrames = 8;
-        int lastFrame = numFrames;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
-        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
-        string stateName = "Attack2";
-        string clipPath;
-        AnimationClip clip;
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackDown2.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 16, 23, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 0);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackRight2.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 64, 71, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 1);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackUp2.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 112, 119, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 2);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackLeft2.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 64, 71, frameRate);
-        CreateAnimationsUtility.FlipSprite(clip, lastFrame);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 3);
-    }
-
-    public static void CreateSwordAttack3() {
-        int frameRate = 16;
-        int numFrames = 8;
-        int lastFrame = numFrames;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
-        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
-        string stateName = "Attack3";
-        string clipPath;
-        AnimationClip clip;
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackDown3.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 8, 15, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 0);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackRight3.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 56, 63, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 1);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackUp3.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 104, 111, frameRate);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 2);
-
-        clipPath = "Assets/Animations/Player/PlayerSwordAttackLeft3.anim";
-        clip = CreateAnimationsUtility.CreateAnimationClip(frameRate);
-        CreateAnimationsUtility.AddSprites(clip, spritePath, 56, 63, frameRate);
-        CreateAnimationsUtility.FlipSprite(clip, lastFrame);
-        CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
-        CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, 0, 3);
-    }
-
+    // mirror about axis (non zero)
     public static void CreateAttackCurves(AnimationClip clip) {
         EditorCurveBinding binding;
         AnimationCurve curve;

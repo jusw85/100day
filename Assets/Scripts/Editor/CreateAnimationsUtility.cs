@@ -71,18 +71,18 @@ public class CreateAnimationsUtility {
         animatorState.motion = clip;
     }
 
-    public static void SetClipToAnimatorControllerBlendTree(AnimationClip clip, string controllerPath, int layerIdx, string stateName, params int[] blendTreeIdx) {
+    public static void SetClipToAnimatorControllerBlendTree(AnimationClip clip, string controllerPath, int layerIdx, string stateName, params int[] subBlendTreeIdx) {
         var animatorState = GetAnimatorState(controllerPath, stateName, layerIdx);
         BlendTree bt = (BlendTree)animatorState.motion;
         ChildMotion[] cm = bt.children;
         int idx;
 
-        for (int i = 0; i < blendTreeIdx.Length - 1; i++) {
-            idx = blendTreeIdx[i];
+        for (int i = 0; i < subBlendTreeIdx.Length - 1; i++) {
+            idx = subBlendTreeIdx[i];
             bt = (BlendTree)cm[idx].motion;
             cm = bt.children;
         }
-        idx = blendTreeIdx[blendTreeIdx.Length - 1];
+        idx = subBlendTreeIdx[subBlendTreeIdx.Length - 1];
         cm[idx].motion = clip;
         bt.children = cm;
     }
