@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class Player : MonoBehaviour, IDamageable {
 
     private static Player instance;
     public static Player Instance { get { return instance; } }
+
+    public NamedHpChangeEvent x;
 
     public int maxHp = 6;
     private int currentHp;
@@ -33,10 +36,11 @@ public class Player : MonoBehaviour, IDamageable {
     //private Slider chargeSlider;
     private bool isLAxisHeld = false;
     //private bool isRAxisHeld = false;
-    private bool isAttackCharging = false;
-    private float chargeRate = 0.5f;
-    private float initialChargeValue = -0.5f;
-    private float chargeValue;
+
+    //private bool isAttackCharging = false;
+    //private float chargeRate = 0.5f;
+    //private float initialChargeValue = -0.5f;
+    //private float chargeValue;
 
     private PoolManager poolManager;
     private EventManager eventManager;
@@ -52,7 +56,7 @@ public class Player : MonoBehaviour, IDamageable {
         animationController = GetComponent<AnimationController>();
 
         currentHp = maxHp;
-        chargeValue = initialChargeValue;
+        //chargeValue = initialChargeValue;
     }
 
     private void Start() {
@@ -96,6 +100,30 @@ public class Player : MonoBehaviour, IDamageable {
                 faceDir = FACE_UP;
             }
         }
+    }
+
+    // TODO: possibly store prev frame data as struct and reset every update e.g. isChargingThisFrame
+    private float chargeCurrentTime = 0;
+    private float chargeThresholdTime = 1.0f; // threshold before considered 'charging'
+    private float chargeFullTime = 2.0f; // time to fully charge
+    public void AddCharge(float time) {
+        chargeCurrentTime = Mathf.Clamp(chargeCurrentTime + time, 0, chargeFullTime);
+    }
+
+    public void ResetCharge() {
+        chargeCurrentTime = 0;
+    }
+
+    public float ChargeNormalizedValue {
+        get { return Mathf.Clamp((chargeCurrentTime - chargeThresholdTime) / chargeFullTime, 0, 1); }
+    }
+
+    public bool IsCharging {
+        get { return chargeCurrentTime > chargeThresholdTime; }
+    }
+
+    public bool IsFullyCharged {
+        get { return chargeCurrentTime >= chargeFullTime; }
     }
 
     private void Update() {
@@ -163,15 +191,15 @@ public class Player : MonoBehaviour, IDamageable {
         HpChangeEvent ev = new HpChangeEvent(prevHp, currentHp);
         eventManager.Publish(Events.HPCHANGE_ID, ev);
 
-        CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
-        cameraShake.shakeIntensity = 0.1f;
-        cameraShake.duration = 0.25f;
+        //CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
+        //cameraShake.shakeIntensity = 0.1f;
+        //cameraShake.duration = 0.25f;
 
-        AudioManager.Instance.PlaySfx(owSounds[Random.Range(0, owSounds.Length)]);
-        if (currentHp <= 0) {
-            MenuManager.Instance.GameOver();
-            AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
-        }
+        //AudioManager.Instance.PlaySfx(owSounds[Random.Range(0, owSounds.Length)]);
+        //if (currentHp <= 0) {
+        //    MenuManager.Instance.GameOver();
+        //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
+        //}
     }
 
     public void DamageScreenFlash() {

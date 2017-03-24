@@ -19,6 +19,14 @@ public class PlayerHeartController : MonoBehaviour {
         eventManager = Toolbox.RegisterComponent<EventManager>();
     }
 
+    private void OnEnable() {
+        eventManager.AddSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
+    }
+
+    private void OnDisable() {
+        eventManager.RemoveSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
+    }
+
     private void Start() {
         var hp = Player.Instance.maxHp;
         var maxHearts = (hp + 1) / 2;
@@ -30,14 +38,6 @@ public class PlayerHeartController : MonoBehaviour {
 
             heartsList.Add(heart);
         }
-    }
-
-    private void OnEnable() {
-        eventManager.AddSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
-    }
-
-    private void OnDisable() {
-        eventManager.RemoveSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
     }
 
     public void HpChangeHandler(IGameEvent e) {

@@ -3,6 +3,8 @@ using InControl;
 public class PlayerActions : PlayerActionSet {
     public PlayerAction Attack;
     public PlayerAction Special;
+    public PlayerAction Roll;
+    public PlayerAction Action;
     public PlayerAction MoveLeft;
     public PlayerAction MoveRight;
     public PlayerAction MoveUp;
@@ -12,6 +14,8 @@ public class PlayerActions : PlayerActionSet {
     public PlayerActions() {
         Attack = CreatePlayerAction("Attack");
         Special = CreatePlayerAction("Special");
+        Roll = CreatePlayerAction("Roll");
+        Action = CreatePlayerAction("Action");
         MoveLeft = CreatePlayerAction("Move Left");
         MoveRight = CreatePlayerAction("Move Right");
         MoveUp = CreatePlayerAction("Move Up");
@@ -19,18 +23,30 @@ public class PlayerActions : PlayerActionSet {
         Move = CreateTwoAxisPlayerAction(MoveLeft, MoveRight, MoveDown, MoveUp);
     }
 
+    //http://www.gallantgames.com/pages/incontrol-standardized-controls
+    // Action1 = A, X
+    // Action2 = B, Circle
+    // Action3 = X, Square
+    // Action4 = Y, Triangle
     public static PlayerActions CreateWithDefaultBindings() {
         var playerActions = new PlayerActions();
 
         playerActions.Attack.AddDefaultBinding(Key.J);
-        playerActions.Attack.AddDefaultBinding(InputControlType.Action1);
+        playerActions.Attack.AddDefaultBinding(InputControlType.Action3);
         playerActions.Attack.AddDefaultBinding(Mouse.LeftButton);
         playerActions.Attack.AddDefaultBinding(InputControlType.LeftTrigger);
 
         playerActions.Special.AddDefaultBinding(Key.K);
         playerActions.Special.AddDefaultBinding(InputControlType.Action2);
-        playerActions.Special.AddDefaultBinding(Mouse.RightButton);
+        playerActions.Special.AddDefaultBinding(Mouse.MiddleButton);
         playerActions.Special.AddDefaultBinding(InputControlType.RightTrigger);
+
+        playerActions.Roll.AddDefaultBinding(Key.U);
+        playerActions.Roll.AddDefaultBinding(InputControlType.Action1);
+        playerActions.Roll.AddDefaultBinding(Mouse.RightButton);
+
+        playerActions.Action.AddDefaultBinding(Key.E);
+        playerActions.Action.AddDefaultBinding(InputControlType.Action4);
 
         playerActions.MoveUp.AddDefaultBinding(Key.UpArrow);
         playerActions.MoveDown.AddDefaultBinding(Key.DownArrow);

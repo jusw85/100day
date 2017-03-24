@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour {
     private Animator fsm;
 
     private Vector2 moveInput;
-    private bool isAttackQueued;
 
     private int prevStateHash;
     private int prevFrameStateHash;
@@ -39,24 +38,30 @@ public class PlayerController : MonoBehaviour {
     private static int attack1Id = Animator.StringToHash("Base.Attack1");
     private static int attack2Id = Animator.StringToHash("Base.Attack2");
     private static int attack3Id = Animator.StringToHash("Base.Attack3");
+    private static int chargeAttackId = Animator.StringToHash("Base.ChargeAttack");
+    private static int rollId = Animator.StringToHash("Base.Roll");
+
     private static int isMovingId = Animator.StringToHash("isMoving");
     private static int triggerAttackId = Animator.StringToHash("triggerAttack");
+    private static int triggerChargeAttackId = Animator.StringToHash("triggerChargeAttack");
+    private static int triggerRollId = Animator.StringToHash("triggerRoll");
 
-    // 1. migrate to state machine behaviour?
-    // 2. responsive controls i.e. direction change in middle of string, moving away in middle of string
-    // (only) queue attack at end of animation
-
-    // sortorder based on y
+    // roll
+    // get hit
+    // player-audio interface to catch events
+    // decouple Player.cs
+    // overall game controller (single update)
     private void Update() {
         moveInput = controls.actions.Move;
         bool isAttackPressed = controls.actions.Attack.WasPressed;
+        bool isAttackReleased = controls.actions.Attack.WasReleased;
         bool isAttackHeld = controls.actions.Attack.IsPressed;
 
-        var sqrMagnitude = moveInput.sqrMagnitude;
+        bool isRollPressed = controls.actions.Roll.WasPressed;
 
-        if (isAttackPressed) {
-            isAttackQueued = true;
-        }
+        bool isSpecialPressed = controls.actions.Special.WasPressed;
+
+        var sqrMagnitude = moveInput.sqrMagnitude;
 
         AnimatorStateInfo animInfo = fsm.GetCurrentAnimatorStateInfo(0);
         int currentStateHash = animInfo.fullPathHash;
@@ -69,49 +74,83 @@ public class PlayerController : MonoBehaviour {
         //Debug.Log(hasStateChanged + " " + DebugAnimationStates.Get(prevFrameStateHash) + " " + DebugAnimationStates.Get(prevStateHash) + " " + DebugAnimationStates.Get(currentStateHash));
 
         if (currentStateHash == idleId) {
-            if (isAttackQueued) {
-                isAttackQueued = false;
-                fsm.SetTrigger(triggerAttackId);
-            } else if (sqrMagnitude > 0) {
+            if (isAttackHeld) {
+                player.AddCharge(Time.deltaTime);
+            }
+            if (sqrMagnitude > 0) {
                 player.Move(moveInput);
+            }
+            bool wasPlayerFullyCharged = false;
+            if (isAttackReleased) {
+                wasPlayerFullyCharged = player.IsFullyCharged;
+                player.ResetCharge();
+            }
+
+            if (isAttackPressed) {
+                fsm.SetTrigger(triggerAttackId);
+            } else if (isAttackReleased && wasPlayerFullyCharged) {
+                fsm.SetTrigger(triggerChargeAttackId);
+            } else if (sqrMagnitude > 0) {
                 fsm.SetBool(isMovingId, true);
             }
+
         } else if (currentStateHash == walkId) {
-            if (isAttackQueued) {
-                isAttackQueued = false;
-                fsm.SetTrigger(triggerAttackId);
-            } else if (sqrMagnitude > 0) {
+            if (isAttackHeld) {
+                player.AddCharge(Time.deltaTime);
+            }
+            if (sqrMagnitude > 0) {
                 player.Move(moveInput);
+            }
+            bool wasPlayerFullyCharged = false;
+            if (isAttackReleased) {
+                wasPlayerFullyCharged = player.IsFullyCharged;
+                player.ResetCharge();
+            }
+
+            if (isRollPressed) {
+                fsm.SetTrigger(triggerRollId);
+            } else if (isAttackPressed) {
+                fsm.SetTrigger(triggerAttackId);
+            } else if (isAttackReleased && wasPlayerFullyCharged) {
+                fsm.SetTrigger(triggerChargeAttackId);
             } else if (sqrMagnitude <= 0) {
                 fsm.SetBool(isMovingId, false);
             }
+
         } else if (currentStateHash == attack1Id) { // 0.5f, 3-6th frame, 8 frames
+            player.ResetCharge();
             if (hasStateChanged && sqrMagnitude > 0) {
                 player.Face(moveInput);
             }
-            if (isAttackQueued) {
-                isAttackQueued = false;
-                if (animInfo.normalizedTime >= (3f/8)) {
-                    fsm.SetTrigger(triggerAttackId);
-                }
+
+            if (isAttackPressed && animInfo.normalizedTime >= (3f / 8)) {
+                fsm.SetTrigger(triggerAttackId);
             }
+
         } else if (currentStateHash == attack2Id) { // 0.5f, 2-4th frame, 8 frames
-            if (isAttackQueued) {
-                isAttackQueued = false;
-                if (animInfo.normalizedTime >= (2f/8)) {
-                    fsm.SetTrigger(triggerAttackId);
-                }
+            player.ResetCharge();
+
+            if (isAttackPressed && (animInfo.normalizedTime >= (2f / 8))) {
+                fsm.SetTrigger(triggerAttackId);
             }
+
         } else if (currentStateHash == attack3Id) { // 0.666f, 3-6th frame, 8 frames
-            if (isAttackQueued) {
-                isAttackQueued = false;
-                if (animInfo.normalizedTime >= (6f/8)) {
-                    fsm.SetTrigger(triggerAttackId);
-                }
+            player.ResetCharge();
+
+            if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+                fsm.SetTrigger(triggerAttackId);
             }
+
+        } else if (currentStateHash == chargeAttackId) { // 0.666f, 3-6th frame, 8 frames
+            player.ResetCharge();
+
+            if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+                fsm.SetTrigger(triggerAttackId);
+            }
+        } else if (currentStateHash == rollId) {
         }
 
-        playerAnimator.Animate(fsm, player);
+        playerAnimator.Animate(player);
 
         prevFrameStateHash = currentStateHash;
     }

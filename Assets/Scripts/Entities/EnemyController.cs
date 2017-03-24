@@ -53,25 +53,26 @@ public class EnemyController : PoolObject, IDamageable {
     private Vector2 lastMoveInput;
 
     private void Update() {
-        moverController.MoveDirection = Vector2.zero;
+        //moverController.MoveDirection = Vector2.zero;
 
-        if (followTarget != null) {
-            var followVector = (followTarget.transform.position - transform.position);
-            moverController.MoveDirection = followVector;
-        }
+        //if (followTarget != null) {
+        //    var followVector = (followTarget.transform.position - transform.position);
+        //    moverController.MoveDirection = followVector;
+        //}
 
-        Vector2 moveInput = moverController.MoveDirection;
-        animationController.SetIsMoving(moveInput.magnitude > 0);
-        animationController.SetMoveVector(moveInput);
-        animationController.SetLastMoveVector(lastMoveInput);
+        //Vector2 moveInput = moverController.MoveDirection;
+        //animationController.SetIsMoving(moveInput.magnitude > 0);
+        //animationController.SetMoveVector(moveInput);
+        //animationController.SetLastMoveVector(lastMoveInput);
 
-        animationController.SetIsFacingRight(true);
-        if (moveInput.x < 0 ||
-            (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
-            animationController.SetIsFacingRight(false);
-        }
-        if (moveInput.magnitude > 0)
-            lastMoveInput = moveInput;
+        //animationController.SetIsFacingRight(true);
+        //if (moveInput.x < 0 ||
+        //    (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
+        //    animationController.SetIsFacingRight(false);
+        //}
+        //if (moveInput.magnitude > 0)
+        //    lastMoveInput = moveInput;
+        spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y * 100f) * -1;
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
@@ -89,20 +90,20 @@ public class EnemyController : PoolObject, IDamageable {
     }
 
     public void Damage(GameObject damager) {
-        currentHp--;
-        AudioManager.Instance.PlaySfx(hitSounds[Random.Range(0, hitSounds.Length)]);
+        //currentHp--;
+        //AudioManager.Instance.PlaySfx(hitSounds[Random.Range(0, hitSounds.Length)]);
 
-        Vector3 inRot = damager.transform.eulerAngles;
-        Vector3 outRot = new Vector3(-inRot.z - 90f, 0f, 0f);
+        //Vector3 inRot = damager.transform.eulerAngles;
+        //Vector3 outRot = new Vector3(-inRot.z - 90f, 0f, 0f);
 
-        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, Vector3.right);
-        rot *= Quaternion.Euler(outRot);
+        //Quaternion rot = Quaternion.FromToRotation(Vector3.forward, Vector3.right);
+        //rot *= Quaternion.Euler(outRot);
 
-        poolManager.ReuseObject(bloodSplatter, transform.position, rot);
-        if (currentHp <= 0) {
-            AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
-            Destroy();
-        }
+        //poolManager.ReuseObject(bloodSplatter, transform.position, rot);
+        //if (currentHp <= 0) {
+        //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
+        //    Destroy();
+        //}
         Flash();
     }
 
@@ -120,7 +121,7 @@ public class EnemyController : PoolObject, IDamageable {
     }
 
     private void LateUpdate() {
-        spriteRenderer.flipX = moverController.MoveDirection.x <= 0;
+        //spriteRenderer.flipX = moverController.MoveDirection.x <= 0;
     }
 
     public override void OnObjectReuse() {
