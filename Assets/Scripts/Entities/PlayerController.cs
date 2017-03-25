@@ -46,11 +46,6 @@ public class PlayerController : MonoBehaviour {
     private static int triggerChargeAttackId = Animator.StringToHash("triggerChargeAttack");
     private static int triggerRollId = Animator.StringToHash("triggerRoll");
 
-    // roll
-    // get hit
-    // player-audio interface to catch events
-    // decouple Player.cs
-    // overall game controller (single update)
     private void Update() {
         moveInput = controls.actions.Move;
         bool isAttackPressed = controls.actions.Attack.WasPressed;
@@ -73,6 +68,12 @@ public class PlayerController : MonoBehaviour {
         }
         //Debug.Log(hasStateChanged + " " + DebugAnimationStates.Get(prevFrameStateHash) + " " + DebugAnimationStates.Get(prevStateHash) + " " + DebugAnimationStates.Get(currentStateHash));
 
+        if (hasStateChanged) {
+            if (prevStateHash == rollId) {
+                player.StopRoll();
+            }
+        }
+
         if (currentStateHash == idleId) {
             if (isAttackHeld) {
                 player.AddCharge(Time.deltaTime);
@@ -86,10 +87,10 @@ public class PlayerController : MonoBehaviour {
                 player.ResetCharge();
             }
 
-            if (isAttackPressed) {
-                fsm.SetTrigger(triggerAttackId);
-            } else if (isAttackReleased && wasPlayerFullyCharged) {
+            if (isAttackReleased && wasPlayerFullyCharged) {
                 fsm.SetTrigger(triggerChargeAttackId);
+            } else if (isAttackPressed) {
+                fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude > 0) {
                 fsm.SetBool(isMovingId, true);
             }
@@ -107,12 +108,12 @@ public class PlayerController : MonoBehaviour {
                 player.ResetCharge();
             }
 
-            if (isRollPressed) {
+            if (isRollPressed && sqrMagnitude > 0) {
                 fsm.SetTrigger(triggerRollId);
-            } else if (isAttackPressed) {
-                fsm.SetTrigger(triggerAttackId);
             } else if (isAttackReleased && wasPlayerFullyCharged) {
                 fsm.SetTrigger(triggerChargeAttackId);
+            } else if (isAttackPressed) {
+                fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude <= 0) {
                 fsm.SetBool(isMovingId, false);
             }
@@ -123,31 +124,60 @@ public class PlayerController : MonoBehaviour {
                 player.Face(moveInput);
             }
 
-            if (isAttackPressed && animInfo.normalizedTime >= (3f / 8)) {
+            if (isRollPressed && sqrMagnitude > 0) {
+                fsm.SetTrigger(triggerRollId);
+            } else if (isAttackPressed && animInfo.normalizedTime >= (3f / 8)) {
                 fsm.SetTrigger(triggerAttackId);
             }
 
         } else if (currentStateHash == attack2Id) { // 0.5f, 2-4th frame, 8 frames
             player.ResetCharge();
 
-            if (isAttackPressed && (animInfo.normalizedTime >= (2f / 8))) {
+            if (isRollPressed && sqrMagnitude > 0) {
+                fsm.SetTrigger(triggerRollId);
+            } else if (isAttackPressed && (animInfo.normalizedTime >= (2f / 8))) {
                 fsm.SetTrigger(triggerAttackId);
             }
 
         } else if (currentStateHash == attack3Id) { // 0.666f, 3-6th frame, 8 frames
             player.ResetCharge();
 
-            if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+            if (isRollPressed && sqrMagnitude > 0) {
+                fsm.ResetTrigger(triggerAttackId);
+                fsm.SetTrigger(triggerRollId);
+            } else if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+                fsm.ResetTrigger(triggerRollId);
                 fsm.SetTrigger(triggerAttackId);
             }
 
         } else if (currentStateHash == chargeAttackId) { // 0.666f, 3-6th frame, 8 frames
             player.ResetCharge();
 
-            if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+            if (isRollPressed && sqrMagnitude > 0) {
+                fsm.ResetTrigger(triggerAttackId);
+                fsm.SetTrigger(triggerRollId);
+            } else if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+                fsm.ResetTrigger(triggerRollId);
                 fsm.SetTrigger(triggerAttackId);
             }
+
         } else if (currentStateHash == rollId) {
+            if (hasStateChanged) {
+                fsm.SetBool(isMovingId, false);
+                if (sqrMagnitude > 0) {
+                    player.StartRoll(moveInput);
+                } else {
+                    player.StartRoll(player.faceDir);
+                }
+            }
+
+            if (isAttackReleased && player.IsFullyCharged) {
+                fsm.ResetTrigger(triggerAttackId);
+                fsm.SetTrigger(triggerChargeAttackId);
+            } else if (isAttackPressed && !fsm.GetBool(triggerChargeAttackId)) {
+                fsm.SetTrigger(triggerAttackId);
+            }
+
         }
 
         playerAnimator.Animate(player);
@@ -173,6 +203,8 @@ public class DebugAnimationStates {
         Add("Base.Attack1");
         Add("Base.Attack2");
         Add("Base.Attack3");
+        Add("Base.ChargeAttack");
+        Add("Base.Roll");
     }
 
     public static string Get(int fullPathHash) {

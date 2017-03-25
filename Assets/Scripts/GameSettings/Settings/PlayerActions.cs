@@ -34,16 +34,16 @@ public class PlayerActions : PlayerActionSet {
         playerActions.Attack.AddDefaultBinding(Key.J);
         playerActions.Attack.AddDefaultBinding(InputControlType.Action3);
         playerActions.Attack.AddDefaultBinding(Mouse.LeftButton);
-        playerActions.Attack.AddDefaultBinding(InputControlType.LeftTrigger);
+        playerActions.Attack.AddDefaultBinding(InputControlType.RightTrigger);
 
         playerActions.Special.AddDefaultBinding(Key.K);
         playerActions.Special.AddDefaultBinding(InputControlType.Action2);
         playerActions.Special.AddDefaultBinding(Mouse.MiddleButton);
-        playerActions.Special.AddDefaultBinding(InputControlType.RightTrigger);
 
         playerActions.Roll.AddDefaultBinding(Key.U);
         playerActions.Roll.AddDefaultBinding(InputControlType.Action1);
         playerActions.Roll.AddDefaultBinding(Mouse.RightButton);
+        playerActions.Roll.AddDefaultBinding(InputControlType.LeftTrigger);
 
         playerActions.Action.AddDefaultBinding(Key.E);
         playerActions.Action.AddDefaultBinding(InputControlType.Action4);

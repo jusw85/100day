@@ -9,16 +9,53 @@ public class CreateAnimations : EditorWindow {
 
     [MenuItem("Window/Create Animations/CreateAll")]
     public static void CreateAll() {
-        //CreateIdle();
-        //CreateWalk();
-        //CreateSwordAttack1();
-        //CreateSwordAttack2();
-        //CreateSwordAttack3();
-        //CreateChargeAttack();
-        CreateRoll();
+        CreatePlayerIdle();
+        CreatePlayerWalk();
+        CreatePlayerSwordAttack1();
+        CreatePlayerSwordAttack2();
+        CreatePlayerSwordAttack3();
+        CreatePlayerChargeAttack();
+        CreatePlayerRoll();
+
+        CreateEnemyIdle();
+        CreateEnemyWalk();
     }
 
-    public static void CreateIdle() {
+    public static void CreateEnemyIdle() {
+        string baseClipPath = "Assets/Animations/Enemy/EnemyIdle";
+        int frameRate = 1;
+        string spritePath = "Assets/Sprites/EnemyBase/spr_enemy_move.png";
+        string controllerPath = "Assets/Animations/Enemy/EnemyBase.controller";
+        string stateName = "Idle";
+        int[] idx = { 40, 40, 42, 42, 44, 44, 42, 42 };
+        int[] subBlendTreeIdx = { 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            CreateAnimationsUtility.SaveAnimationClip(clips[i].clip, clips[i].clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clips[i].clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreateEnemyWalk() {
+        string baseClipPath = "Assets/Animations/Enemy/EnemyWalk";
+        int frameRate = 12;
+        string spritePath = "Assets/Sprites/EnemyBase/spr_enemy_move.png";
+        string controllerPath = "Assets/Animations/Enemy/EnemyBase.controller";
+        string stateName = "Walk";
+        int[] idx = { 0, 7, 16, 23, 32, 39, 16, 23 };
+        int[] subBlendTreeIdx = { 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            CreateAnimationsUtility.SaveAnimationClip(clips[i].clip, clips[i].clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clips[i].clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreatePlayerIdle() {
         string baseClipPath = "Assets/Animations/Player/PlayerIdle";
         int frameRate = 1;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
@@ -35,9 +72,9 @@ public class CreateAnimations : EditorWindow {
         }
     }
 
-    public static void CreateRoll() {
+    public static void CreatePlayerRoll() {
         string baseClipPath = "Assets/Animations/Player/PlayerRoll";
-        int frameRate = 1;
+        int frameRate = 4;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Roll";
@@ -46,13 +83,17 @@ public class CreateAnimations : EditorWindow {
 
         NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
         for (int i = 0; i < clips.Length; i++) {
-            CreateAnimationsUtility.SaveAnimationClip(clips[i].clip, clips[i].clipPath);
+            AnimationClip clip = clips[i].clip;
+            string clipPath = clips[i].clipPath;
+            int[] keyFrames = { 0, 1 };
+            AddCurve(clip, typeof(BoxCollider2D), "Hitbox", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f));
+            CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
             subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
-            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clips[i].clip, controllerPath, 0, stateName, subBlendTreeIdx);
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
         }
     }
 
-    public static void CreateWalk() {
+    public static void CreatePlayerWalk() {
         string baseClipPath = "Assets/Animations/Player/PlayerWalk";
         int frameRate = 12;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
@@ -69,7 +110,7 @@ public class CreateAnimations : EditorWindow {
         }
     }
 
-    public static void CreateSwordAttack1() {
+    public static void CreatePlayerSwordAttack1() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack1";
         int frameRate = 20;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
@@ -83,29 +124,29 @@ public class CreateAnimations : EditorWindow {
             AnimationClip clip = clips[i].clip;
             string clipPath = clips[i].clipPath;
             int[] keyFrames = { 0, 3, 6 };
-            AddCurve(clip, typeof(BoxCollider2D), "PlayerBullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
             switch (i) {
                 case 0:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -1.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
                     break;
                 case 1:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
                 case 2:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", MirrorKeyFrames(-0.25f, ParamsToKeyFrames(keyFrames, 0f, -1.5f, 0f)));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", MirrorKeyFrames(-0.25f, ParamsToKeyFrames(keyFrames, 0f, -1.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
                     break;
                 case 3:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
             }
             CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
@@ -114,7 +155,7 @@ public class CreateAnimations : EditorWindow {
         }
     }
 
-    public static void CreateSwordAttack2() {
+    public static void CreatePlayerSwordAttack2() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack2";
         int frameRate = 16;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
@@ -128,29 +169,29 @@ public class CreateAnimations : EditorWindow {
             AnimationClip clip = clips[i].clip;
             string clipPath = clips[i].clipPath;
             int[] keyFrames = { 0, 2, 4 };
-            AddCurve(clip, typeof(BoxCollider2D), "PlayerBullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
             switch (i) {
                 case 0:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
                     break;
                 case 1:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
                 case 2:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
                     break;
                 case 3:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
             }
             CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
@@ -159,7 +200,7 @@ public class CreateAnimations : EditorWindow {
         }
     }
 
-    public static void CreateSwordAttack3() {
+    public static void CreatePlayerSwordAttack3() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack3";
         int frameRate = 12;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
@@ -173,29 +214,29 @@ public class CreateAnimations : EditorWindow {
             AnimationClip clip = clips[i].clip;
             string clipPath = clips[i].clipPath;
             int[] keyFrames = { 0, 3, 6 };
-            AddCurve(clip, typeof(BoxCollider2D), "PlayerBullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
             switch (i) {
                 case 0:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
                     break;
                 case 1:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
                 case 2:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
                     break;
                 case 3:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
             }
             CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
@@ -204,7 +245,7 @@ public class CreateAnimations : EditorWindow {
         }
     }
 
-    public static void CreateChargeAttack() {
+    public static void CreatePlayerChargeAttack() {
         string baseClipPath = "Assets/Animations/Player/PlayerChargeAttack";
         int frameRate = 12;
         string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
@@ -218,29 +259,29 @@ public class CreateAnimations : EditorWindow {
             AnimationClip clip = clips[i].clip;
             string clipPath = clips[i].clipPath;
             int[] keyFrames = { 0, 3, 6 };
-            AddCurve(clip, typeof(BoxCollider2D), "PlayerBullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
             switch (i) {
                 case 0:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
                     break;
                 case 1:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
                 case 2:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
                     break;
                 case 3:
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
-                    AddCurve(clip, typeof(Transform), "PlayerBullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
                     break;
             }
             CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
@@ -375,5 +416,4 @@ public class CreateAnimations : EditorWindow {
         }
         AnimationUtility.SetEditorCurve(clip, binding, curve);
     }
-
 }

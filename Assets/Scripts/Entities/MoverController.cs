@@ -4,11 +4,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MoverController : MonoBehaviour {
 
-    public float moveSpeed = 0f;
     [NonSerialized]
     public Vector2 externalForce = Vector2.zero;
     [NonSerialized]
     public bool resetVelocity = true;
+
+
+    public float MoveSpeed { get; set; }
 
     private Vector2 moveDirection;
     public Vector2 MoveDirection {
@@ -17,7 +19,7 @@ public class MoverController : MonoBehaviour {
         }
         set {
             moveDirection = value;
-            velocity = moveDirection.normalized * moveSpeed;
+            velocity = moveDirection.normalized * MoveSpeed;
         }
     }
 

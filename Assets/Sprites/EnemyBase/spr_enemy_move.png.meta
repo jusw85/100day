@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 0c5c324e4c0c32046a9f9a208f6c1d0e
-timeCreated: 1489132782
+guid: 775723cf5fec0ba48b0ec8dc115d3698
+timeCreated: 1490176202
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -49,51 +49,51 @@ TextureImporter:
     21300084: spr_player_placeholder_42
     21300086: spr_player_placeholder_43
     21300088: spr_player_placeholder_44
-    21300090: spr_enemy_placeholder_0
-    21300092: spr_enemy_placeholder_1
-    21300094: spr_enemy_placeholder_2
-    21300096: spr_enemy_placeholder_3
-    21300098: spr_enemy_placeholder_4
-    21300100: spr_enemy_placeholder_5
-    21300102: spr_enemy_placeholder_6
-    21300104: spr_enemy_placeholder_7
-    21300106: spr_enemy_placeholder_8
-    21300108: spr_enemy_placeholder_9
-    21300110: spr_enemy_placeholder_10
-    21300112: spr_enemy_placeholder_11
-    21300114: spr_enemy_placeholder_12
-    21300116: spr_enemy_placeholder_13
-    21300118: spr_enemy_placeholder_14
-    21300120: spr_enemy_placeholder_15
-    21300122: spr_enemy_placeholder_16
-    21300124: spr_enemy_placeholder_17
-    21300126: spr_enemy_placeholder_18
-    21300128: spr_enemy_placeholder_19
-    21300130: spr_enemy_placeholder_20
-    21300132: spr_enemy_placeholder_21
-    21300134: spr_enemy_placeholder_22
-    21300136: spr_enemy_placeholder_23
-    21300138: spr_enemy_placeholder_24
-    21300140: spr_enemy_placeholder_25
-    21300142: spr_enemy_placeholder_26
-    21300144: spr_enemy_placeholder_27
-    21300146: spr_enemy_placeholder_28
-    21300148: spr_enemy_placeholder_29
-    21300150: spr_enemy_placeholder_30
-    21300152: spr_enemy_placeholder_31
-    21300154: spr_enemy_placeholder_32
-    21300156: spr_enemy_placeholder_33
-    21300158: spr_enemy_placeholder_34
-    21300160: spr_enemy_placeholder_35
-    21300162: spr_enemy_placeholder_36
-    21300164: spr_enemy_placeholder_37
-    21300166: spr_enemy_placeholder_38
-    21300168: spr_enemy_placeholder_39
-    21300170: spr_enemy_placeholder_40
-    21300172: spr_enemy_placeholder_41
-    21300174: spr_enemy_placeholder_42
-    21300176: spr_enemy_placeholder_43
-    21300178: spr_enemy_placeholder_44
+    21300090: spr_player_move_0
+    21300092: spr_player_move_1
+    21300094: spr_player_move_2
+    21300096: spr_player_move_3
+    21300098: spr_player_move_4
+    21300100: spr_player_move_5
+    21300102: spr_player_move_6
+    21300104: spr_player_move_7
+    21300106: spr_player_move_8
+    21300108: spr_player_move_9
+    21300110: spr_player_move_10
+    21300112: spr_player_move_11
+    21300114: spr_player_move_12
+    21300116: spr_player_move_13
+    21300118: spr_player_move_14
+    21300120: spr_player_move_15
+    21300122: spr_player_move_16
+    21300124: spr_player_move_17
+    21300126: spr_player_move_18
+    21300128: spr_player_move_19
+    21300130: spr_player_move_20
+    21300132: spr_player_move_21
+    21300134: spr_player_move_22
+    21300136: spr_player_move_23
+    21300138: spr_player_move_24
+    21300140: spr_player_move_25
+    21300142: spr_player_move_26
+    21300144: spr_player_move_27
+    21300146: spr_player_move_28
+    21300148: spr_player_move_29
+    21300150: spr_player_move_30
+    21300152: spr_player_move_31
+    21300154: spr_player_move_32
+    21300156: spr_player_move_33
+    21300158: spr_player_move_34
+    21300160: spr_player_move_35
+    21300162: spr_player_move_36
+    21300164: spr_player_move_37
+    21300166: spr_player_move_38
+    21300168: spr_player_move_39
+    21300170: spr_player_move_40
+    21300172: spr_player_move_41
+    21300174: spr_player_move_42
+    21300176: spr_player_move_43
+    21300178: spr_player_move_44
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -143,23 +143,23 @@ TextureImporter:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
     maxTextureSize: 2048
-    textureFormat: 4
-    textureCompression: 1
+    textureFormat: -1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
-    overridden: 1
+    overridden: 0
   - buildTarget: WebGL
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -168,585 +168,585 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spr_enemy_placeholder_0
+      name: spr_player_move_0
       rect:
         serializedVersion: 2
-        x: 96
-        y: 1605
-        width: 75
-        height: 94
+        x: 0
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_1
+      name: spr_player_move_1
       rect:
         serializedVersion: 2
-        x: 349
-        y: 1596
-        width: 76
-        height: 115
+        x: 256
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_2
+      name: spr_player_move_2
       rect:
         serializedVersion: 2
-        x: 604
-        y: 1585
-        width: 77
-        height: 126
+        x: 512
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_3
+      name: spr_player_move_3
       rect:
         serializedVersion: 2
-        x: 860
-        y: 1592
-        width: 85
-        height: 114
+        x: 768
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_4
+      name: spr_player_move_4
       rect:
         serializedVersion: 2
-        x: 1100
-        y: 1595
-        width: 84
-        height: 94
+        x: 1024
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_5
+      name: spr_player_move_5
       rect:
         serializedVersion: 2
-        x: 1363
-        y: 1584
-        width: 73
-        height: 115
+        x: 1280
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_6
+      name: spr_player_move_6
       rect:
         serializedVersion: 2
-        x: 1620
-        y: 1581
-        width: 76
-        height: 127
+        x: 1536
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_7
+      name: spr_player_move_7
       rect:
         serializedVersion: 2
-        x: 1870
-        y: 1593
-        width: 87
-        height: 113
+        x: 1792
+        y: 1536
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_8
+      name: spr_player_move_8
       rect:
         serializedVersion: 2
-        x: 101
-        y: 1364
-        width: 75
-        height: 108
+        x: 0
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_9
+      name: spr_player_move_9
       rect:
         serializedVersion: 2
-        x: 348
-        y: 1364
-        width: 96
-        height: 117
+        x: 256
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_10
+      name: spr_player_move_10
       rect:
         serializedVersion: 2
-        x: 593
-        y: 1362
-        width: 114
-        height: 123
+        x: 512
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_11
+      name: spr_player_move_11
       rect:
         serializedVersion: 2
-        x: 855
-        y: 1358
-        width: 87
-        height: 108
+        x: 768
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_12
+      name: spr_player_move_12
       rect:
         serializedVersion: 2
-        x: 1111
-        y: 1356
-        width: 101
-        height: 98
+        x: 1024
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_13
+      name: spr_player_move_13
       rect:
         serializedVersion: 2
-        x: 1363
-        y: 1347
-        width: 113
-        height: 103
+        x: 1280
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_14
+      name: spr_player_move_14
       rect:
         serializedVersion: 2
-        x: 1622
-        y: 1341
-        width: 103
-        height: 121
+        x: 1536
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_15
+      name: spr_player_move_15
       rect:
         serializedVersion: 2
-        x: 1886
-        y: 1349
-        width: 91
-        height: 113
+        x: 1792
+        y: 1280
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_16
+      name: spr_player_move_16
       rect:
         serializedVersion: 2
-        x: 90
-        y: 1105
-        width: 90
-        height: 113
+        x: 0
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_17
+      name: spr_player_move_17
       rect:
         serializedVersion: 2
-        x: 331
-        y: 1100
-        width: 122
-        height: 120
+        x: 256
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_18
+      name: spr_player_move_18
       rect:
         serializedVersion: 2
-        x: 569
-        y: 1118
-        width: 126
-        height: 101
+        x: 512
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_19
+      name: spr_player_move_19
       rect:
         serializedVersion: 2
-        x: 845
-        y: 1107
-        width: 90
-        height: 109
+        x: 768
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_20
+      name: spr_player_move_20
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 1100
-        width: 92
-        height: 111
+        x: 1024
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_21
+      name: spr_player_move_21
       rect:
         serializedVersion: 2
-        x: 1357
-        y: 1101
-        width: 125
-        height: 110
+        x: 1280
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_22
+      name: spr_player_move_22
       rect:
         serializedVersion: 2
-        x: 1598
-        y: 1102
-        width: 130
-        height: 114
+        x: 1536
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_23
+      name: spr_player_move_23
       rect:
         serializedVersion: 2
-        x: 1854
-        y: 1098
-        width: 109
-        height: 115
+        x: 1792
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_24
+      name: spr_player_move_24
       rect:
         serializedVersion: 2
-        x: 87
-        y: 846
-        width: 101
-        height: 127
+        x: 0
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_25
+      name: spr_player_move_25
       rect:
         serializedVersion: 2
-        x: 341
-        y: 835
-        width: 111
-        height: 133
+        x: 256
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_26
+      name: spr_player_move_26
       rect:
         serializedVersion: 2
-        x: 595
-        y: 855
-        width: 98
-        height: 111
+        x: 512
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_27
+      name: spr_player_move_27
       rect:
         serializedVersion: 2
-        x: 856
-        y: 850
-        width: 97
-        height: 113
+        x: 768
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_28
+      name: spr_player_move_28
       rect:
         serializedVersion: 2
-        x: 1130
-        y: 842
-        width: 65
-        height: 123
+        x: 1024
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_29
+      name: spr_player_move_29
       rect:
         serializedVersion: 2
-        x: 1376
-        y: 839
-        width: 91
-        height: 123
+        x: 1280
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_30
+      name: spr_player_move_30
       rect:
         serializedVersion: 2
-        x: 1615
-        y: 864
-        width: 103
-        height: 102
+        x: 1536
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_31
+      name: spr_player_move_31
       rect:
         serializedVersion: 2
-        x: 1878
-        y: 844
-        width: 80
-        height: 121
+        x: 1792
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_32
+      name: spr_player_move_32
       rect:
         serializedVersion: 2
-        x: 78
-        y: 574
-        width: 89
-        height: 139
+        x: 0
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_33
+      name: spr_player_move_33
       rect:
         serializedVersion: 2
-        x: 339
-        y: 573
-        width: 78
-        height: 141
+        x: 256
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_34
+      name: spr_player_move_34
       rect:
         serializedVersion: 2
-        x: 603
-        y: 587
-        width: 67
-        height: 124
+        x: 512
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_35
+      name: spr_player_move_35
       rect:
         serializedVersion: 2
-        x: 848
-        y: 584
-        width: 80
-        height: 128
+        x: 768
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_36
+      name: spr_player_move_36
       rect:
         serializedVersion: 2
-        x: 1113
-        y: 582
-        width: 85
-        height: 138
+        x: 1024
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_37
+      name: spr_player_move_37
       rect:
         serializedVersion: 2
-        x: 1376
-        y: 579
-        width: 76
-        height: 142
+        x: 1280
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_38
+      name: spr_player_move_38
       rect:
         serializedVersion: 2
-        x: 1632
-        y: 592
-        width: 65
-        height: 123
+        x: 1536
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_39
+      name: spr_player_move_39
       rect:
         serializedVersion: 2
-        x: 1888
-        y: 580
-        width: 79
-        height: 127
+        x: 1792
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_40
+      name: spr_player_move_40
       rect:
         serializedVersion: 2
-        x: 90
-        y: 314
-        width: 77
-        height: 138
+        x: 0
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_41
+      name: spr_player_move_41
       rect:
         serializedVersion: 2
-        x: 353
-        y: 314
-        width: 63
-        height: 137
+        x: 256
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_42
+      name: spr_player_move_42
       rect:
         serializedVersion: 2
-        x: 619
-        y: 313
-        width: 56
-        height: 138
+        x: 512
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_43
+      name: spr_player_move_43
       rect:
         serializedVersion: 2
-        x: 866
-        y: 315
-        width: 59
-        height: 136
+        x: 768
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spr_enemy_placeholder_44
+      name: spr_player_move_44
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 314
-        width: 79
-        height: 137
+        x: 1024
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -36,8 +36,8 @@ public class CreateAnimationsWindow : EditorWindow {
                 frameRate = 1;
             }
             // Undo.RegisterCompleteObjectUndo(c, "Create Animations");
-            CreateAnimations.CreateIdle();
-            CreateAnimations.CreateSwordAttack1();
+            CreateAnimations.CreatePlayerIdle();
+            CreateAnimations.CreatePlayerSwordAttack1();
         }
     }
 

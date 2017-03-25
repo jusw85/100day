@@ -19,6 +19,7 @@ public class EnemyController : PoolObject, IDamageable {
     private MoverController moverController;
     private SpriteRenderer spriteRenderer;
     private AnimationController animationController;
+    private Animator fsm;
 
     public GameObject bloodSplatter;
     private PoolManager poolManager;
@@ -33,12 +34,16 @@ public class EnemyController : PoolObject, IDamageable {
         }
     }
     private Tween flashTween;
+    private BoxCollider2D hitbox;
 
     private void Awake() {
         moverController = GetComponent<MoverController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animationController = GetComponent<AnimationController>();
+        fsm = GetComponent<Animator>();
         currentHp = maxHp;
+
+        hitbox = transform.Find("Hitbox").GetComponent<BoxCollider2D>();
 
         spriteRenderer.material.SetColor(Constants.MATERIAL_FLASHCOLOR_ID, flashColor);
     }
@@ -52,26 +57,83 @@ public class EnemyController : PoolObject, IDamageable {
 
     private Vector2 lastMoveInput;
 
+    public bool trackTarget = false;
+
+    private static readonly Vector2 FACE_DOWN = new Vector2(0f, -1f);
+    private static readonly Vector2 FACE_RIGHT = new Vector2(1f, 0f);
+    private static readonly Vector2 FACE_UP = new Vector2(0f, 1f);
+    private static readonly Vector2 FACE_LEFT = new Vector2(-1f, 0f);
+
+    [System.NonSerialized]
+    public Vector2 faceDir = FACE_DOWN;
+    public float moveSpeed = 12f;
+
+    public void Move(Vector2 moveInput) {
+        moverController.MoveSpeed = moveSpeed;
+        moverController.MoveDirection = moveInput;
+        Face(moveInput);
+    }
+
+    public void Face(Vector2 moveDir) {
+        Vector2 v = moveDir.normalized;
+
+        if (Mathf.Abs(v.x) >= Mathf.Abs(v.y)) {
+            if (v.x < 0) {
+                faceDir = FACE_LEFT;
+            } else {
+                faceDir = FACE_RIGHT;
+            }
+        } else {
+            if (v.y < 0) {
+                faceDir = FACE_DOWN;
+            } else {
+                faceDir = FACE_UP;
+            }
+        }
+    }
+
+    private static int isMovingId = Animator.StringToHash("isMoving");
+    private static int faceDirXId = Animator.StringToHash("faceDirX");
+    private static int faceDirYId = Animator.StringToHash("faceDirY");
+
     private void Update() {
-        //moverController.MoveDirection = Vector2.zero;
-
-        //if (followTarget != null) {
-        //    var followVector = (followTarget.transform.position - transform.position);
-        //    moverController.MoveDirection = followVector;
+        //if (stopFrames-- > 0) {
+        //    moverController.MoveSpeed = 0;
         //}
 
-        //Vector2 moveInput = moverController.MoveDirection;
-        //animationController.SetIsMoving(moveInput.magnitude > 0);
-        //animationController.SetMoveVector(moveInput);
-        //animationController.SetLastMoveVector(lastMoveInput);
+        if (moverController.MoveSpeed > 0) {
+            fsm.SetBool(isMovingId, true);
+        } else {
+            fsm.SetBool(isMovingId, false);
+        }
+        if (trackTarget && stopFrames-- <= 0) {
+            moverController.MoveSpeed = moveSpeed;
+            moverController.MoveDirection = Vector2.zero;
 
-        //animationController.SetIsFacingRight(true);
-        //if (moveInput.x < 0 ||
-        //    (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
-        //    animationController.SetIsFacingRight(false);
-        //}
-        //if (moveInput.magnitude > 0)
-        //    lastMoveInput = moveInput;
+            if (followTarget != null) {
+                var followVector = (followTarget.transform.position - transform.position);
+                moverController.MoveDirection = followVector;
+            }
+            Face(moverController.MoveDirection);
+
+            //Vector2 moveInput = moverController.MoveDirection;
+            //animationController.SetIsMoving(moveInput.magnitude > 0);
+            //animationController.SetMoveVector(moveInput);
+            //animationController.SetLastMoveVector(lastMoveInput);
+
+            //animationController.SetIsFacingRight(true);
+            //if (moveInput.x < 0 ||
+            //    (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
+            //    animationController.SetIsFacingRight(false);
+            //}
+            //if (moveInput.magnitude > 0)
+            //    lastMoveInput = moveInput;
+        } else {
+            moverController.MoveSpeed = 0;
+            moverController.MoveDirection = Vector2.zero;
+        }
+        fsm.SetFloat(faceDirXId, faceDir.x);
+        fsm.SetFloat(faceDirYId, faceDir.y);
         spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y * 100f) * -1;
     }
 
@@ -104,7 +166,18 @@ public class EnemyController : PoolObject, IDamageable {
         //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
         //    Destroy();
         //}
+        stopFrames = 16; // should use time-based instead
         Flash();
+    }
+
+    private int stopFrames = 0;
+
+    public IEnumerator Invuln(int numFrames) {
+        hitbox.enabled = false;
+        for (int i = 0; i < numFrames; i++) {
+            yield return null;
+        }
+        hitbox.enabled = true;
     }
 
     public void Flash() {

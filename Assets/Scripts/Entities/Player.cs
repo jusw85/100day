@@ -11,7 +11,7 @@ public class Player : MonoBehaviour, IDamageable {
     private static Player instance;
     public static Player Instance { get { return instance; } }
 
-    public NamedHpChangeEvent x;
+    public NamedHpChangeEvent hpChangeEvent;
 
     public int maxHp = 6;
     private int currentHp;
@@ -78,10 +78,25 @@ public class Player : MonoBehaviour, IDamageable {
 
     [System.NonSerialized]
     public Vector2 faceDir = FACE_DOWN;
+    public float moveSpeed = 12f;
+    public float rollSpeed = 36f;
 
     public void Move(Vector2 moveInput) {
+        moverController.MoveSpeed = moveSpeed;
         moverController.MoveDirection = moveInput;
         Face(moveInput);
+    }
+
+    public void StartRoll(Vector2 moveInput) {
+        moverController.MoveSpeed = rollSpeed;
+        moverController.MoveDirection = moveInput;
+        moverController.resetVelocity = false;
+        Face(moveInput);
+    }
+
+    public void StopRoll() {
+        moverController.MoveDirection = Vector2.zero;
+        moverController.resetVelocity = true;
     }
 
     public void Face(Vector2 moveDir) {
