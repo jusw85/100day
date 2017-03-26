@@ -9,16 +9,18 @@ public class CreateAnimations : EditorWindow {
 
     [MenuItem("Window/Create Animations/CreateAll")]
     public static void CreateAll() {
-        CreatePlayerIdle();
-        CreatePlayerWalk();
-        CreatePlayerSwordAttack1();
-        CreatePlayerSwordAttack2();
-        CreatePlayerSwordAttack3();
-        CreatePlayerChargeAttack();
-        CreatePlayerRoll();
+        //CreatePlayerIdle();
+        //CreatePlayerWalk();
+        CreateMaeriIdle();
+        CreateMaeriWalk();
+        //CreatePlayerSwordAttack1();
+        //CreatePlayerSwordAttack2();
+        //CreatePlayerSwordAttack3();
+        //CreatePlayerChargeAttack();
+        //CreatePlayerRoll();
 
-        CreateEnemyIdle();
-        CreateEnemyWalk();
+        //CreateEnemyIdle();
+        //CreateEnemyWalk();
     }
 
     public static void CreateEnemyIdle() {
@@ -90,6 +92,40 @@ public class CreateAnimations : EditorWindow {
             CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
             subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
             CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreateMaeriIdle() {
+        string baseClipPath = "Assets/Animations/Player/PlayerIdle";
+        int frameRate = 1;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_maeri_move.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Idle";
+        int[] idx = { 18, 18, 19, 19, 20, 20, 21, 21 };
+        int[] subBlendTreeIdx = { 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName, false);
+        for (int i = 0; i < clips.Length; i++) {
+            CreateAnimationsUtility.SaveAnimationClip(clips[i].clip, clips[i].clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clips[i].clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreateMaeriWalk() {
+        string baseClipPath = "Assets/Animations/Player/PlayerWalk";
+        int frameRate = 12;
+        string spritePath = "Assets/Sprites/PlayerBase/spr_maeri_move.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Walk";
+        int[] idx = { 0, 5, 6, 11, 12, 17, 6, 11 };
+        int[] subBlendTreeIdx = { 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            CreateAnimationsUtility.SaveAnimationClip(clips[i].clip, clips[i].clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clips[i].clip, controllerPath, 0, stateName, subBlendTreeIdx);
         }
     }
 
@@ -295,7 +331,7 @@ public class CreateAnimations : EditorWindow {
         public string clipPath;
     }
 
-    public static NamedAnimationClip[] Create4Dir(string baseClipPath, int frameRate, string spritePath, int[] idx, string controllerPath, string stateName) {
+    public static NamedAnimationClip[] Create4Dir(string baseClipPath, int frameRate, string spritePath, int[] idx, string controllerPath, string stateName, bool doFlip = true) {
         string[] dirs = { "Down", "Right", "Up", "Left" };
         int[] flipdirs = { 3 };
 
@@ -313,7 +349,7 @@ public class CreateAnimations : EditorWindow {
             int startIdx = idx[i * 2];
             int endIdx = idx[(i * 2) + 1];
             CreateAnimationsUtility.AddSprites(clip, spritePath, startIdx, endIdx, frameRate);
-            if (System.Array.IndexOf(flipdirs, i) >= 0) {
+            if (doFlip && System.Array.IndexOf(flipdirs, i) >= 0) {
                 CreateAnimationsUtility.FlipSprite(clip, (endIdx - startIdx) + 1);
             }
             NamedAnimationClip n = new NamedAnimationClip {

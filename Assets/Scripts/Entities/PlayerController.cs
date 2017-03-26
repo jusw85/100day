@@ -86,9 +86,14 @@ public class PlayerController : MonoBehaviour {
                 wasPlayerFullyCharged = player.IsFullyCharged;
                 player.ResetCharge();
             }
-
-            if (isAttackReleased && wasPlayerFullyCharged) {
-                fsm.SetTrigger(triggerChargeAttackId);
+            if (isRollPressed && player.canDodge) {
+                fsm.SetTrigger(triggerRollId);
+            } else if (isAttackReleased) {
+                if (wasPlayerFullyCharged) {
+                    fsm.SetTrigger(triggerChargeAttackId);
+                } else {
+                    fsm.SetTrigger(triggerAttackId);
+                }
             } else if (isAttackPressed) {
                 fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude > 0) {
@@ -108,10 +113,14 @@ public class PlayerController : MonoBehaviour {
                 player.ResetCharge();
             }
 
-            if (isRollPressed && sqrMagnitude > 0) {
+            if (isRollPressed && player.canDodge) {
                 fsm.SetTrigger(triggerRollId);
-            } else if (isAttackReleased && wasPlayerFullyCharged) {
-                fsm.SetTrigger(triggerChargeAttackId);
+            } else if (isAttackReleased) {
+                if (wasPlayerFullyCharged) {
+                    fsm.SetTrigger(triggerChargeAttackId);
+                } else {
+                    fsm.SetTrigger(triggerAttackId);
+                }
             } else if (isAttackPressed) {
                 fsm.SetTrigger(triggerAttackId);
             } else if (sqrMagnitude <= 0) {
@@ -124,7 +133,7 @@ public class PlayerController : MonoBehaviour {
                 player.Face(moveInput);
             }
 
-            if (isRollPressed && sqrMagnitude > 0) {
+            if (isRollPressed && player.canDodge) {
                 fsm.SetTrigger(triggerRollId);
             } else if (isAttackPressed && animInfo.normalizedTime >= (3f / 8)) {
                 fsm.SetTrigger(triggerAttackId);
@@ -132,8 +141,11 @@ public class PlayerController : MonoBehaviour {
 
         } else if (currentStateHash == attack2Id) { // 0.5f, 2-4th frame, 8 frames
             player.ResetCharge();
+            if (hasStateChanged && sqrMagnitude > 0) {
+                player.Face(moveInput);
+            }
 
-            if (isRollPressed && sqrMagnitude > 0) {
+            if (isRollPressed && player.canDodge) {
                 fsm.SetTrigger(triggerRollId);
             } else if (isAttackPressed && (animInfo.normalizedTime >= (2f / 8))) {
                 fsm.SetTrigger(triggerAttackId);
@@ -141,8 +153,11 @@ public class PlayerController : MonoBehaviour {
 
         } else if (currentStateHash == attack3Id) { // 0.666f, 3-6th frame, 8 frames
             player.ResetCharge();
+            if (hasStateChanged && sqrMagnitude > 0) {
+                player.Face(moveInput);
+            }
 
-            if (isRollPressed && sqrMagnitude > 0) {
+            if (isRollPressed && player.canDodge) {
                 fsm.ResetTrigger(triggerAttackId);
                 fsm.SetTrigger(triggerRollId);
             } else if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
@@ -152,8 +167,11 @@ public class PlayerController : MonoBehaviour {
 
         } else if (currentStateHash == chargeAttackId) { // 0.666f, 3-6th frame, 8 frames
             player.ResetCharge();
+            if (hasStateChanged && sqrMagnitude > 0) {
+                player.Face(moveInput);
+            }
 
-            if (isRollPressed && sqrMagnitude > 0) {
+            if (isRollPressed && player.canDodge) {
                 fsm.ResetTrigger(triggerAttackId);
                 fsm.SetTrigger(triggerRollId);
             } else if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
@@ -183,10 +201,6 @@ public class PlayerController : MonoBehaviour {
         playerAnimator.Animate(player);
 
         prevFrameStateHash = currentStateHash;
-    }
-
-    public float CalcButtonBuffer(AnimatorStateInfo animInfo, float reactionTime) {
-        return 1 - (reactionTime / animInfo.length);
     }
 
 }

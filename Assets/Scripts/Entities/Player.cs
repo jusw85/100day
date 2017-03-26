@@ -57,6 +57,7 @@ public class Player : MonoBehaviour, IDamageable {
 
         currentHp = maxHp;
         //chargeValue = initialChargeValue;
+        canDodge = true;
     }
 
     private void Start() {
@@ -87,6 +88,9 @@ public class Player : MonoBehaviour, IDamageable {
         Face(moveInput);
     }
 
+    public bool canDodge { get; set; }
+    public float dodgeCooldown = 0.5f;
+
     public void StartRoll(Vector2 moveInput) {
         moverController.MoveSpeed = rollSpeed;
         moverController.MoveDirection = moveInput;
@@ -97,6 +101,13 @@ public class Player : MonoBehaviour, IDamageable {
     public void StopRoll() {
         moverController.MoveDirection = Vector2.zero;
         moverController.resetVelocity = true;
+        StartCoroutine(DodgeCooldown());
+    }
+
+    private IEnumerator DodgeCooldown() {
+        canDodge = false;
+        yield return new WaitForSeconds(dodgeCooldown);
+        canDodge = true;
     }
 
     public void Face(Vector2 moveDir) {

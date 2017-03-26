@@ -96,6 +96,7 @@ public class EnemyController : PoolObject, IDamageable {
     private static int faceDirXId = Animator.StringToHash("faceDirX");
     private static int faceDirYId = Animator.StringToHash("faceDirY");
 
+    public float proximityStop = 30f;
     private void Update() {
         //if (stopFrames-- > 0) {
         //    moverController.MoveSpeed = 0;
@@ -112,7 +113,15 @@ public class EnemyController : PoolObject, IDamageable {
 
             if (followTarget != null) {
                 var followVector = (followTarget.transform.position - transform.position);
-                moverController.MoveDirection = followVector;
+                if (followVector.magnitude <= proximityStop) {
+                    moverController.MoveSpeed = 0f;
+                    //Face(moverController.MoveDirection);
+                    //moverController.MoveDirection = Vector2.zero;
+                    moverController.MoveDirection = followVector;
+                } else {
+                    moverController.MoveDirection = followVector;
+                }
+
             }
             Face(moverController.MoveDirection);
 
