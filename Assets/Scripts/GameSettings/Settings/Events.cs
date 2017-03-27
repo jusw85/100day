@@ -1,12 +1,22 @@
+using UnityEngine;
+
 public class Events {
-    public static readonly int HPCHANGE_ID = EventManager.StringToHash("hpchange");
+    public static readonly int PLAYER_HPCHANGE = EventManager.StringToHash("player_hpchange");
+    public static readonly int PLAYER_ATTACK = EventManager.StringToHash("player_attack");
+}
+
+public class PlayerAttackEvent : IGameEvent {
+    public int attackNumber;
+    public PlayerAttackEvent(int attackNumber) {
+        this.attackNumber = attackNumber;
+    }
 }
 
 [System.Serializable]
-public class HpChangeEvent : IGameEvent {
+public class PlayerHpChangeEvent : IGameEvent {
     public int prevHp;
     public int currentHp;
-    public HpChangeEvent(int prevHp, int currentHp) {
+    public PlayerHpChangeEvent(int prevHp, int currentHp) {
         this.prevHp = prevHp;
         this.currentHp = currentHp;
     }
@@ -15,5 +25,5 @@ public class HpChangeEvent : IGameEvent {
 [System.Serializable]
 public struct NamedHpChangeEvent {
     public string name;
-    public HpChangeEvent ev;
+    public PlayerHpChangeEvent ev;
 }

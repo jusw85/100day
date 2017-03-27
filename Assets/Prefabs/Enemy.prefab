@@ -21,13 +21,13 @@ GameObject:
   - component: {fileID: 4981214624675280}
   - component: {fileID: 212801154008597800}
   - component: {fileID: 114100346501125228}
-  m_Layer: 13
-  m_Name: HitboxVisualizer
+  m_Layer: 0
+  m_Name: BoxCollider2DVisualizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1185820704372190
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,8 +91,8 @@ GameObject:
   - component: {fileID: 4700808630579626}
   - component: {fileID: 212968193399636300}
   - component: {fileID: 114889960841034666}
-  m_Layer: 10
-  m_Name: HitboxVisualizer
+  m_Layer: 0
+  m_Name: BoxCollider2DVisualizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,7 +105,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1732059149630150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4981214624675280}
@@ -134,7 +134,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1185820704372190}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4700808630579626}
@@ -301,8 +301,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: de5fa85ad25be034da56d82db3ba7c88, type: 3}
   bloodSplatter: {fileID: 1843829896786728, guid: ae3707c0446c30a46a6415ebfd193f72,
     type: 2}
-  trackTarget: 1
+  trackTarget: 0
   moveSpeed: 2
+  proximityStop: 3
 --- !u!212 &212618019328822794
 SpriteRenderer:
   m_ObjectHideFlags: 1

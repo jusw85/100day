@@ -34,15 +34,8 @@ public class Player : MonoBehaviour, IDamageable {
     //private Tween screenFlashTween;
 
     //private Slider chargeSlider;
-    private bool isLAxisHeld = false;
-    //private bool isRAxisHeld = false;
 
-    //private bool isAttackCharging = false;
-    //private float chargeRate = 0.5f;
-    //private float initialChargeValue = -0.5f;
-    //private float chargeValue;
-
-    private PoolManager poolManager;
+    //private PoolManager poolManager;
     private EventManager eventManager;
 
     private void Awake() {
@@ -56,7 +49,6 @@ public class Player : MonoBehaviour, IDamageable {
         animationController = GetComponent<AnimationController>();
 
         currentHp = maxHp;
-        //chargeValue = initialChargeValue;
         canDodge = true;
     }
 
@@ -67,7 +59,7 @@ public class Player : MonoBehaviour, IDamageable {
         //var obj2 = GameObject.Find("ChargeSlider");
         //chargeSlider = obj2.GetComponent<Slider>();
 
-        poolManager = Toolbox.RegisterComponent<PoolManager>();
+        //poolManager = Toolbox.RegisterComponent<PoolManager>();
         eventManager = Toolbox.RegisterComponent<EventManager>();
         //CreateHeartPanel();
     }
@@ -152,6 +144,11 @@ public class Player : MonoBehaviour, IDamageable {
         get { return chargeCurrentTime >= chargeFullTime; }
     }
 
+    public void Attack(int attackNumber) {
+        PlayerAttackEvent ev = new PlayerAttackEvent(attackNumber);
+        eventManager.Publish(Events.PLAYER_ATTACK, ev);
+    }
+
     private void Update() {
         //if (isPaused)
         //    return;
@@ -159,22 +156,6 @@ public class Player : MonoBehaviour, IDamageable {
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
         //moveInput = moveInput.normalized;
-
-        //bool isPrimaryDown = Input.GetButtonDown("Fire1");
-        //bool isPrimaryHold = Input.GetButton("Fire1");
-        //bool isPrimaryUp = Input.GetButtonUp("Fire1");
-        ////Debug.Log(isPrimaryDown + " " + isPrimaryHold + " " + isPrimaryUp);
-        //if (Input.GetAxisRaw("PadLTrigger") > 0) {
-        //    if (!isLAxisHeld) {
-        //        isLAxisHeld = true;
-        //        isPrimaryDown = true;
-        //    } else {
-        //        isPrimaryHold = true;
-        //    }
-        //} else if (isLAxisHeld) {
-        //    isLAxisHeld = false;
-        //    isPrimaryUp = true;
-        //}
 
         //animationController.DoAttack(false);
         //if (!isAttackCharging && animationController.IsIdle()) {
@@ -214,8 +195,8 @@ public class Player : MonoBehaviour, IDamageable {
         int prevHp = currentHp--;
         DamageScreenFlash();
 
-        HpChangeEvent ev = new HpChangeEvent(prevHp, currentHp);
-        eventManager.Publish(Events.HPCHANGE_ID, ev);
+        PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp);
+        eventManager.Publish(Events.PLAYER_HPCHANGE, ev);
 
         //CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
         //cameraShake.shakeIntensity = 0.1f;

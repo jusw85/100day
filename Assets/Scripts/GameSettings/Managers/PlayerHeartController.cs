@@ -20,11 +20,11 @@ public class PlayerHeartController : MonoBehaviour {
     }
 
     private void OnEnable() {
-        eventManager.AddSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
+        eventManager.AddSubscriber(Events.PLAYER_HPCHANGE, HpChangeHandler);
     }
 
     private void OnDisable() {
-        eventManager.RemoveSubscriber(Events.HPCHANGE_ID, HpChangeHandler);
+        eventManager.RemoveSubscriber(Events.PLAYER_HPCHANGE, HpChangeHandler);
     }
 
     private void Start() {
@@ -41,7 +41,7 @@ public class PlayerHeartController : MonoBehaviour {
     }
 
     public void HpChangeHandler(IGameEvent e) {
-        HpChangeEvent ev = (HpChangeEvent)e;
+        PlayerHpChangeEvent ev = (PlayerHpChangeEvent)e;
         int hp = ev.currentHp;
 
         foreach (Image heart in heartsList) {

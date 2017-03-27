@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Debugger : MonoBehaviour {
 
-    private HitboxVisualizer[] hitboxVisualizers;
+    private BoxCollider2DVisualizer[] boxCollider2DVisualizers;
     private bool toggleHitBoxVisualizers = true;
 
     public void Start() {
-        hitboxVisualizers = FindObjectsOfType<HitboxVisualizer>();
+        boxCollider2DVisualizers = FindObjectsOfType<BoxCollider2DVisualizer>();
         EnableHitboxes();
     }
 
@@ -26,13 +26,13 @@ public class Debugger : MonoBehaviour {
     }
 
     public void ToggleHitboxes() {
-        foreach (HitboxVisualizer hitboxVisualizer in hitboxVisualizers) {
-            hitboxVisualizer.gameObject.SetActive(!hitboxVisualizer.gameObject.activeSelf);
+        foreach (BoxCollider2DVisualizer boxCollider2DVisualizer in boxCollider2DVisualizers) {
+            boxCollider2DVisualizer.gameObject.SetActive(!boxCollider2DVisualizer.gameObject.activeSelf);
         }
     }
 
     public void EnableHitboxes() {
-        foreach (HitboxVisualizer hitboxVisualizer in hitboxVisualizers) {
+        foreach (BoxCollider2DVisualizer hitboxVisualizer in boxCollider2DVisualizers) {
             hitboxVisualizer.gameObject.SetActive(true);
         }
     }

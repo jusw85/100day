@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class HitboxVisualizer : MonoBehaviour {
+public class BoxCollider2DVisualizer : MonoBehaviour {
 
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider2D;
