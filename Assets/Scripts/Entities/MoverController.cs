@@ -4,11 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MoverController : MonoBehaviour {
 
-    [NonSerialized]
-    public Vector2 externalForce = Vector2.zero;
-    [NonSerialized]
-    public bool resetVelocity = true;
-
+    public Vector2 ExternalForce { get; set; }
+    public bool ResetVelocity { get; set; }
 
     public float MoveSpeed { get; set; }
 
@@ -28,14 +25,16 @@ public class MoverController : MonoBehaviour {
 
     private void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
+        ExternalForce = Vector2.zero;
+        ResetVelocity = true;
     }
 
     private void FixedUpdate() {
-        velocity += externalForce;
+        velocity += ExternalForce;
         rigidBody.velocity = velocity;
 
-        if (resetVelocity) velocity = Vector2.zero;
-        externalForce = Vector2.zero;
+        if (ResetVelocity) velocity = Vector2.zero;
+        ExternalForce = Vector2.zero;
     }
 
 }

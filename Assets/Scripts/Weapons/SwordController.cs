@@ -14,7 +14,7 @@ public class SwordController : MonoBehaviour {
             Transform otherTransform = other.transform.parent.transform;
             //Vector2 dir = transform.up.normalized;
             Vector3 dir = (otherTransform.position - transform.parent.position).normalized;
-            movable.externalForce = dir * projectileForce;
+            movable.ExternalForce = dir * projectileForce;
         }
         IDamageable damageable = (IDamageable)other.transform.parent.gameObject.GetComponent(typeof(IDamageable));
         if (damageable != null) {

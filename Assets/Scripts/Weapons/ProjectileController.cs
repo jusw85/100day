@@ -29,7 +29,7 @@ public class ProjectileController : PoolObject {
     private void OnTriggerEnter2D(Collider2D other) {
         MoverController movable = other.transform.parent.gameObject.GetComponent<MoverController>();
         if (movable != null) {
-            movable.externalForce = transform.up * projectileForce;
+            movable.ExternalForce = transform.up * projectileForce;
         }
         IDamageable damageable = (IDamageable)other.transform.parent.gameObject.GetComponent(typeof(IDamageable));
         if (damageable != null) {

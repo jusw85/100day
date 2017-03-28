@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(MoverController))]
-[RequireComponent(typeof(AnimationController))]
 public class Player : MonoBehaviour, IDamageable {
 
     private static Player instance;
@@ -23,7 +22,7 @@ public class Player : MonoBehaviour, IDamageable {
     [System.NonSerialized]
     public bool isPaused = false;
 
-    private MoverController moverController;
+    private MoverController mover;
     private AnimationController animationController;
 
     public GameObject heartsPanel;
@@ -45,11 +44,11 @@ public class Player : MonoBehaviour, IDamageable {
             instance = this;
         }
 
-        moverController = GetComponent<MoverController>();
-        animationController = GetComponent<AnimationController>();
+        mover = GetComponent<MoverController>();
 
         currentHp = maxHp;
         CanRoll = true;
+        FaceDir = FACE_DOWN;
     }
 
     private void Start() {
@@ -69,30 +68,31 @@ public class Player : MonoBehaviour, IDamageable {
     private static readonly Vector2 FACE_UP = new Vector2(0f, 1f);
     private static readonly Vector2 FACE_LEFT = new Vector2(-1f, 0f);
 
-    [System.NonSerialized]
-    public Vector2 faceDir = FACE_DOWN;
+    public Vector2 FaceDir { get; set; }
     public float moveSpeed = 12f;
 
     public void Move(Vector2 moveInput) {
-        moverController.MoveSpeed = moveSpeed;
-        moverController.MoveDirection = moveInput;
+        mover.MoveSpeed = moveSpeed;
+        mover.MoveDirection = moveInput;
         Face(moveInput);
     }
 
     public float rollSpeed = 36f;
     public float rollCooldown = 0.0f;
     public bool CanRoll { get; set; }
+    private Vector2 rollDirection = Vector2.zero;
 
     public void StartRoll(Vector2 moveInput) {
-        moverController.MoveSpeed = rollSpeed;
-        moverController.MoveDirection = moveInput;
-        moverController.resetVelocity = false;
+        mover.MoveSpeed = rollSpeed;
+        rollDirection = moveInput;
         Face(moveInput);
     }
 
+    public void Roll() {
+        mover.MoveDirection = rollDirection;
+    }
+
     public void StopRoll() {
-        moverController.MoveDirection = Vector2.zero;
-        moverController.resetVelocity = true;
         StartCoroutine(RollCooldown());
     }
 
@@ -107,15 +107,15 @@ public class Player : MonoBehaviour, IDamageable {
 
         if (Mathf.Abs(v.x) >= Mathf.Abs(v.y)) {
             if (v.x < 0) {
-                faceDir = FACE_LEFT;
+                FaceDir = FACE_LEFT;
             } else {
-                faceDir = FACE_RIGHT;
+                FaceDir = FACE_RIGHT;
             }
         } else {
             if (v.y < 0) {
-                faceDir = FACE_DOWN;
+                FaceDir = FACE_DOWN;
             } else {
-                faceDir = FACE_UP;
+                FaceDir = FACE_UP;
             }
         }
     }
@@ -180,7 +180,7 @@ public class Player : MonoBehaviour, IDamageable {
                 if (c.isMoved) {
                     StartRoll(c.move);
                 } else {
-                    StartRoll(faceDir);
+                    StartRoll(FaceDir);
                 }
             }
         }
@@ -217,8 +217,10 @@ public class Player : MonoBehaviour, IDamageable {
                 ResetCharge();
             }
 
-        }
+        } else if (state.curr == AnimStates.ROLL) {
+            Roll();
 
+        }
     }
 
     public void Damage(GameObject damager) {

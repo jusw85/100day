@@ -22,8 +22,8 @@ public class PlayerAnimator : MonoBehaviour {
     }
 
     public void DoUpdate(Player player, ref PlayerFrameInfo frameInfo) {
-        animator.SetFloat(AnimParams.FACEDIRX, player.faceDir.x);
-        animator.SetFloat(AnimParams.FACEDIRY, player.faceDir.y);
+        animator.SetFloat(AnimParams.FACEDIRX, player.FaceDir.x);
+        animator.SetFloat(AnimParams.FACEDIRY, player.FaceDir.y);
         spriteRenderer.sortingOrder = Mathf.RoundToInt(player.transform.position.y * 100f) * -1;
         
         if (frameInfo.isFullyCharged) {

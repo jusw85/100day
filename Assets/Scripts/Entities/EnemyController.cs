@@ -151,7 +151,7 @@ public class EnemyController : PoolObject, IDamageable {
         if (tag == "Player") {
             MoverController movable = other.gameObject.GetComponent<MoverController>();
             if (movable != null) {
-                movable.externalForce = moverController.MoveDirection * pushbackForce;
+                movable.ExternalForce = moverController.MoveDirection * pushbackForce;
             }
             IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
             if (damageable != null) {

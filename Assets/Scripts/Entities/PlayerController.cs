@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour {
         if (cameraFollow != null) cameraFollow.target = gameObject;
     }
 
-    // fix roll on enter
     private void Update() {
         AnimatorStateInfo animInfo = fsm.GetCurrentAnimatorStateInfo(0);
         state.DoUpdate(animInfo.fullPathHash);
