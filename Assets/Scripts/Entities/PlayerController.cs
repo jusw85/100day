@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Player))]
@@ -6,241 +5,164 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour {
 
-    private ControlManager controls;
+    private ControlManager c;
     private Player player;
     private PlayerAnimator playerAnimator;
     private Animator fsm;
 
-    private Vector2 moveInput;
-
-    private int prevStateHash;
-    private int prevFrameStateHash;
+    private FsmFrameInfo state;
+    private PlayerFrameInfo frameInfo;
 
     private void Awake() {
+        fsm = GetComponent<Animator>();
         player = GetComponent<Player>();
         playerAnimator = GetComponent<PlayerAnimator>();
-        fsm = GetComponent<Animator>();
 
-        prevStateHash = entryId;
-        prevFrameStateHash = entryId;
+        state = new FsmFrameInfo(AnimStates.ENTRY);
+        frameInfo = new PlayerFrameInfo();
+
+#if UNITY_EDITOR
+        state.DebugInit(fsm);
+#endif
     }
 
     private void Start() {
-        controls = Toolbox.RegisterComponent<ControlManager>();
+        c = Toolbox.RegisterComponent<ControlManager>();
 
+        // refactor this camera follow, e.g. in case camera doesnt follow player during cutscenes
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         if (cameraFollow != null) cameraFollow.target = gameObject;
     }
 
-    private static int entryId = Animator.StringToHash("Base.Entry");
-    private static int idleId = Animator.StringToHash("Base.Idle");
-    private static int walkId = Animator.StringToHash("Base.Walk");
-    private static int attack1Id = Animator.StringToHash("Base.Attack1");
-    private static int attack2Id = Animator.StringToHash("Base.Attack2");
-    private static int attack3Id = Animator.StringToHash("Base.Attack3");
-    private static int chargeAttackId = Animator.StringToHash("Base.ChargeAttack");
-    private static int rollId = Animator.StringToHash("Base.Roll");
-
-    private static int isMovingId = Animator.StringToHash("isMoving");
-    private static int triggerAttackId = Animator.StringToHash("triggerAttack");
-    private static int triggerChargeAttackId = Animator.StringToHash("triggerChargeAttack");
-    private static int triggerRollId = Animator.StringToHash("triggerRoll");
-
+    // fix roll on enter
     private void Update() {
-        moveInput = controls.actions.Move;
-        var sqrMagnitude = moveInput.sqrMagnitude;
-
-        bool isAttackPressed = controls.actions.Attack.WasPressed;
-        bool isAttackReleased = controls.actions.Attack.WasReleased;
-        bool isAttackHeld = controls.actions.Attack.IsPressed;
-        bool isRollPressed = controls.actions.Roll.WasPressed;
-        bool isSpecialPressed = controls.actions.Special.WasPressed;
-
         AnimatorStateInfo animInfo = fsm.GetCurrentAnimatorStateInfo(0);
-        int currentStateHash = animInfo.fullPathHash;
-        bool hasStateChanged = false;
+        state.DoUpdate(animInfo.fullPathHash);
 
-        if (prevFrameStateHash != currentStateHash) {
-            hasStateChanged = true;
-            prevStateHash = prevFrameStateHash;
-        }
-        //Debug.Log(hasStateChanged + " " + DebugAnimationStates.Get(prevFrameStateHash) + " " + DebugAnimationStates.Get(prevStateHash) + " " + DebugAnimationStates.Get(currentStateHash));
+        player.DoUpdate(state, c, ref frameInfo);
+        playerAnimator.DoUpdate(player, ref frameInfo);
 
-        if (hasStateChanged) {
-            if (prevStateHash == rollId) {
-                player.StopRoll();
-            }
-        }
-
-        if (currentStateHash == idleId) {
-            if (isAttackHeld) {
-                player.AddCharge(Time.deltaTime);
-            }
-            if (sqrMagnitude > 0) {
-                player.Move(moveInput);
-            }
-            bool wasPlayerFullyCharged = false;
-            bool wasPlayerCharging = false;
-            if (isAttackReleased) {
-                wasPlayerFullyCharged = player.IsFullyCharged;
-                wasPlayerCharging = player.IsCharging;
-                player.ResetCharge();
-            }
-
-            if (isRollPressed && player.canDodge) {
-                fsm.SetTrigger(triggerRollId);
-            } else if (isAttackReleased) {
-                if (wasPlayerFullyCharged) {
-                    fsm.SetTrigger(triggerChargeAttackId);
-                } else if (wasPlayerCharging) {
-                    fsm.SetTrigger(triggerAttackId);
+        if (state.curr == AnimStates.IDLE) {
+            if (c.isRollPressed && player.CanRoll) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
+            } else if (c.isAttackReleased) {
+                if (frameInfo.isChargeAttacking) {
+                    fsm.SetTrigger(AnimParams.TRIGGER_CHARGEATTACK);
+                } else if (frameInfo.isAttacking) {
+                    fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
                 }
-            } else if (isAttackPressed) {
-                fsm.SetTrigger(triggerAttackId);
-            } else if (sqrMagnitude > 0) {
-                fsm.SetBool(isMovingId, true);
+            } else if (c.isAttackPressed) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
+            } else if (c.isMoved) {
+                fsm.SetBool(AnimParams.ISMOVING, true);
             }
 
-        } else if (currentStateHash == walkId) {
-            if (isAttackHeld) {
-                player.AddCharge(Time.deltaTime);
-            }
-            if (sqrMagnitude > 0) {
-                player.Move(moveInput);
-            }
-            bool wasPlayerFullyCharged = false;
-            bool wasPlayerCharging = false;
-            if (isAttackReleased) {
-                wasPlayerFullyCharged = player.IsFullyCharged;
-                wasPlayerCharging = player.IsCharging;
-                player.ResetCharge();
-            }
-
-            if (isRollPressed && player.canDodge) {
-                fsm.SetTrigger(triggerRollId);
-            } else if (isAttackReleased) {
-                if (wasPlayerFullyCharged) {
-                    fsm.SetTrigger(triggerChargeAttackId);
-                } else if (wasPlayerCharging) {
-                    fsm.SetTrigger(triggerAttackId);
+        } else if (state.curr == AnimStates.WALK) {
+            if (c.isRollPressed && player.CanRoll) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
+            } else if (c.isAttackReleased) {
+                if (frameInfo.isChargeAttacking) {
+                    fsm.SetTrigger(AnimParams.TRIGGER_CHARGEATTACK);
+                } else if (frameInfo.isAttacking) {
+                    fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
                 }
-            } else if (isAttackPressed) {
-                fsm.SetTrigger(triggerAttackId);
-            } else if (sqrMagnitude <= 0) {
-                fsm.SetBool(isMovingId, false);
+            } else if (c.isAttackPressed) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
+            } else if (!c.isMoved) {
+                fsm.SetBool(AnimParams.ISMOVING, false);
             }
 
-        } else if (currentStateHash == attack1Id) { // 0.5f, 3-6th frame, 8 frames
-            player.ResetCharge();
-            if (hasStateChanged) {
-                player.Attack(1);
-                if (sqrMagnitude > 0) {
-                    player.Face(moveInput);
-                }
+        } else if (state.curr == AnimStates.ATTACK1) {
+            if (c.isRollPressed && player.CanRoll) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
+            } else if (c.isAttackPressed && animInfo.normalizedTime >= (3f / 8)) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
             }
 
-            if (isRollPressed && player.canDodge) {
-                fsm.SetTrigger(triggerRollId);
-            } else if (isAttackPressed && animInfo.normalizedTime >= (3f / 8)) {
-                fsm.SetTrigger(triggerAttackId);
+        } else if (state.curr == AnimStates.ATTACK2) {
+            if (c.isRollPressed && player.CanRoll) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
+            } else if (c.isAttackPressed && (animInfo.normalizedTime >= (2f / 8))) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
             }
 
-        } else if (currentStateHash == attack2Id) { // 0.5f, 2-4th frame, 8 frames
-            player.ResetCharge();
-            if (hasStateChanged && sqrMagnitude > 0) {
-                player.Face(moveInput);
+        } else if (state.curr == AnimStates.ATTACK3) {
+            if (c.isRollPressed && player.CanRoll) {
+                fsm.ResetTrigger(AnimParams.TRIGGER_ATTACK);
+                fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
+            } else if (c.isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+                fsm.ResetTrigger(AnimParams.TRIGGER_ROLL);
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
             }
 
-            if (isRollPressed && player.canDodge) {
-                fsm.SetTrigger(triggerRollId);
-            } else if (isAttackPressed && (animInfo.normalizedTime >= (2f / 8))) {
-                fsm.SetTrigger(triggerAttackId);
+        } else if (state.curr == AnimStates.CHARGEATTACK) {
+            if (c.isRollPressed && player.CanRoll) {
+                fsm.ResetTrigger(AnimParams.TRIGGER_ATTACK);
+                fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
+            } else if (c.isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
+                fsm.ResetTrigger(AnimParams.TRIGGER_ROLL);
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
             }
 
-        } else if (currentStateHash == attack3Id) { // 0.666f, 3-6th frame, 8 frames
-            player.ResetCharge();
-            if (hasStateChanged && sqrMagnitude > 0) {
-                player.Face(moveInput);
+        } else if (state.curr == AnimStates.ROLL) {
+            if (state.hasChanged) {
+                fsm.SetBool(AnimParams.ISMOVING, false);
             }
 
-            if (isRollPressed && player.canDodge) {
-                fsm.ResetTrigger(triggerAttackId);
-                fsm.SetTrigger(triggerRollId);
-            } else if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
-                fsm.ResetTrigger(triggerRollId);
-                fsm.SetTrigger(triggerAttackId);
-            }
-
-        } else if (currentStateHash == chargeAttackId) { // 0.666f, 3-6th frame, 8 frames
-            player.ResetCharge();
-            if (hasStateChanged && sqrMagnitude > 0) {
-                player.Face(moveInput);
-            }
-
-            if (isRollPressed && player.canDodge) {
-                fsm.ResetTrigger(triggerAttackId);
-                fsm.SetTrigger(triggerRollId);
-            } else if (isAttackPressed && (animInfo.normalizedTime >= (6f / 8))) {
-                fsm.ResetTrigger(triggerRollId);
-                fsm.SetTrigger(triggerAttackId);
-            }
-
-        } else if (currentStateHash == rollId) {
-            if (hasStateChanged) {
-                fsm.SetBool(isMovingId, false);
-                if (sqrMagnitude > 0) {
-                    player.StartRoll(moveInput);
-                } else {
-                    player.StartRoll(player.faceDir);
-                }
-            }
-
-            if (isAttackReleased) {
+            if (c.isAttackReleased) {
                 if (player.IsFullyCharged) {
-                    fsm.ResetTrigger(triggerAttackId);
-                    fsm.SetTrigger(triggerChargeAttackId);
+                    fsm.ResetTrigger(AnimParams.TRIGGER_ATTACK);
+                    fsm.SetTrigger(AnimParams.TRIGGER_CHARGEATTACK);
                 } else if (player.IsCharging) {
-                    fsm.SetTrigger(triggerAttackId);
+                    fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
                 }
-            } else if (isAttackPressed && !fsm.GetBool(triggerChargeAttackId)) {
-                fsm.SetTrigger(triggerAttackId);
+            } else if (c.isAttackPressed && !fsm.GetBool(AnimParams.TRIGGER_CHARGEATTACK)) {
+                fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
             }
 
         }
 
-        playerAnimator.Animate(player);
-        prevFrameStateHash = currentStateHash;
+        frameInfo.Reset();
     }
 
 }
 
-#if UNITY_EDITOR
-public class DebugAnimationStates {
+public class AnimStates {
+    public static int ENTRY = Animator.StringToHash("Base.Entry");
+    public static int IDLE = Animator.StringToHash("Base.Idle");
+    public static int WALK = Animator.StringToHash("Base.Walk");
+    public static int ATTACK1 = Animator.StringToHash("Base.Attack1");
+    public static int ATTACK2 = Animator.StringToHash("Base.Attack2");
+    public static int ATTACK3 = Animator.StringToHash("Base.Attack3");
+    public static int CHARGEATTACK = Animator.StringToHash("Base.ChargeAttack");
+    public static int ROLL = Animator.StringToHash("Base.Roll");
+}
 
-    private static Dictionary<int, string> states = new Dictionary<int, string>();
+public class AnimParams {
+    public static int ISMOVING = Animator.StringToHash("isMoving");
+    public static int TRIGGER_ATTACK = Animator.StringToHash("triggerAttack");
+    public static int TRIGGER_CHARGEATTACK = Animator.StringToHash("triggerChargeAttack");
+    public static int TRIGGER_ROLL = Animator.StringToHash("triggerRoll");
 
-    static DebugAnimationStates() {
-        Add("Base.Entry");
-        Add("Base.Idle");
-        Add("Base.Walk");
-        Add("Base.Attack1");
-        Add("Base.Attack2");
-        Add("Base.Attack3");
-        Add("Base.ChargeAttack");
-        Add("Base.Roll");
-    }
+    public static int FACEDIRX = Animator.StringToHash("faceDirX");
+    public static int FACEDIRY = Animator.StringToHash("faceDirY");
+}
 
-    public static string Get(int fullPathHash) {
-        string name;
-        if (states.TryGetValue(fullPathHash, out name))
-            return name;
+public class PlayerFrameInfo {
+    public bool isDamaged;
+    public bool isAttacking;
+    public bool isChargeAttacking;
+    public bool isCharging;
+    public bool isFullyCharged;
+    public bool hasStoppedCharging;
 
-        return "Unknown#" + fullPathHash;
-    }
+    public void Reset() {
+        isDamaged = false;
+        isAttacking = false;
+        isChargeAttacking = false;
 
-    private static void Add(string stateName) {
-        int hash = Animator.StringToHash(stateName);
-        states.Add(hash, stateName);
+        isCharging = false;
+        isFullyCharged = false;
+        hasStoppedCharging = false;
     }
 }
-#endif

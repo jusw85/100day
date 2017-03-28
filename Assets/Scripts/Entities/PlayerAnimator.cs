@@ -8,9 +8,6 @@ public class PlayerAnimator : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
-    private static int faceDirXId = Animator.StringToHash("faceDirX");
-    private static int faceDirYId = Animator.StringToHash("faceDirY");
-
     private Flasher flasherCharge;
     private Flasher flasherFullCharge;
 
@@ -24,17 +21,17 @@ public class PlayerAnimator : MonoBehaviour {
         flasherFullCharge.FlashColor = Color.red;
     }
 
-    public void Animate(Player player) {
-        animator.SetFloat(faceDirXId, player.faceDir.x);
-        animator.SetFloat(faceDirYId, player.faceDir.y);
+    public void DoUpdate(Player player, ref PlayerFrameInfo frameInfo) {
+        animator.SetFloat(AnimParams.FACEDIRX, player.faceDir.x);
+        animator.SetFloat(AnimParams.FACEDIRY, player.faceDir.y);
         spriteRenderer.sortingOrder = Mathf.RoundToInt(player.transform.position.y * 100f) * -1;
-
-        if (player.IsFullyCharged) {
-            flasherCharge.Pause();
+        
+        if (frameInfo.isFullyCharged) {
+            flasherCharge.Stop();
             flasherFullCharge.Start();
-        } else if (player.IsCharging) {
+        } else if (frameInfo.isCharging) {
             flasherCharge.Start();
-        } else {
+        } else if (frameInfo.hasStoppedCharging) {
             flasherCharge.Stop();
             flasherFullCharge.Stop();
         }

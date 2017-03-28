@@ -49,7 +49,7 @@ public class Player : MonoBehaviour, IDamageable {
         animationController = GetComponent<AnimationController>();
 
         currentHp = maxHp;
-        canDodge = true;
+        CanRoll = true;
     }
 
     private void Start() {
@@ -72,7 +72,6 @@ public class Player : MonoBehaviour, IDamageable {
     [System.NonSerialized]
     public Vector2 faceDir = FACE_DOWN;
     public float moveSpeed = 12f;
-    public float rollSpeed = 36f;
 
     public void Move(Vector2 moveInput) {
         moverController.MoveSpeed = moveSpeed;
@@ -80,8 +79,9 @@ public class Player : MonoBehaviour, IDamageable {
         Face(moveInput);
     }
 
-    public bool canDodge { get; set; }
-    public float dodgeCooldown = 0.5f;
+    public float rollSpeed = 36f;
+    public float rollCooldown = 0.0f;
+    public bool CanRoll { get; set; }
 
     public void StartRoll(Vector2 moveInput) {
         moverController.MoveSpeed = rollSpeed;
@@ -93,13 +93,13 @@ public class Player : MonoBehaviour, IDamageable {
     public void StopRoll() {
         moverController.MoveDirection = Vector2.zero;
         moverController.resetVelocity = true;
-        StartCoroutine(DodgeCooldown());
+        StartCoroutine(RollCooldown());
     }
 
-    private IEnumerator DodgeCooldown() {
-        canDodge = false;
-        yield return new WaitForSeconds(dodgeCooldown);
-        canDodge = true;
+    private IEnumerator RollCooldown() {
+        CanRoll = false;
+        yield return new WaitForSeconds(rollCooldown);
+        CanRoll = true;
     }
 
     public void Face(Vector2 moveDir) {
@@ -120,16 +120,20 @@ public class Player : MonoBehaviour, IDamageable {
         }
     }
 
-    // TODO: possibly store prev frame data as struct and reset every update e.g. isChargingThisFrame
     private float chargeCurrentTime = 0;
     private float chargeThresholdTime = 1.0f; // threshold before considered 'charging'
     private float chargeFullTime = 2.0f; // time to fully charge
     public void AddCharge(float time) {
+        bool a = IsCharging;
+        bool b = IsFullyCharged;
         chargeCurrentTime = Mathf.Clamp(chargeCurrentTime + time, 0, chargeFullTime);
+        frameInfo.isCharging = !a && IsCharging;
+        frameInfo.isFullyCharged = !b && IsFullyCharged;
     }
 
     public void ResetCharge() {
         chargeCurrentTime = 0;
+        frameInfo.hasStoppedCharging = true;
     }
 
     public float ChargeNormalizedValue {
@@ -144,51 +148,77 @@ public class Player : MonoBehaviour, IDamageable {
         get { return chargeCurrentTime >= chargeFullTime; }
     }
 
-    public void Attack(int attackNumber) {
-        PlayerAttackEvent ev = new PlayerAttackEvent(attackNumber);
-        eventManager.Publish(Events.PLAYER_ATTACK, ev);
-    }
+    private PlayerFrameInfo frameInfo;
+    public void DoUpdate(FsmFrameInfo state, ControlManager c, ref PlayerFrameInfo frameInfo) {
+        this.frameInfo = frameInfo;
+        if (state.hasChanged) {
+            if (state.prev == AnimStates.ROLL) {
+                StopRoll();
+            }
 
-    private void Update() {
-        //if (isPaused)
-        //    return;
+            if (state.curr == AnimStates.ATTACK1) {
+                ResetCharge();
+                if (c.isMoved) {
+                    Face(c.move);
+                }
+            } else if (state.curr == AnimStates.ATTACK2) {
+                ResetCharge();
+                if (c.isMoved) {
+                    Face(c.move);
+                }
+            } else if (state.curr == AnimStates.ATTACK3) {
+                ResetCharge();
+                if (c.isMoved) {
+                    Face(c.move);
+                }
+            } else if (state.curr == AnimStates.CHARGEATTACK) {
+                ResetCharge();
+                if (c.isMoved) {
+                    Face(c.move);
+                }
+            } else if (state.curr == AnimStates.ROLL) {
+                if (c.isMoved) {
+                    StartRoll(c.move);
+                } else {
+                    StartRoll(faceDir);
+                }
+            }
+        }
 
-        //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        //Debug.Log(moveInput.sqrMagnitude + " " + moveInput.ToString("f4") + " " + moveInput.normalized);
-        //moveInput = moveInput.normalized;
+        if (state.curr == AnimStates.IDLE) {
+            if (c.isAttackHeld) {
+                AddCharge(Time.deltaTime);
+            }
+            if (c.isMoved) {
+                Move(c.move);
+            }
+            if (c.isAttackReleased) {
+                if (IsFullyCharged) {
+                    frameInfo.isChargeAttacking = true;
+                } else if (IsCharging) {
+                    frameInfo.isAttacking = true;
+                }
+                ResetCharge();
+            }
 
-        //animationController.DoAttack(false);
-        //if (!isAttackCharging && animationController.IsIdle()) {
-        //    chargeValue = initialChargeValue;
-        //    chargeSlider.value = 0f;
-        //}
-        //if (isPrimaryDown) {
-        //    animationController.DoAttack(true);
-        //    AudioManager.Instance.PlaySfx(swordSound);
-        //}
-        //if ((isPrimaryHold || isPrimaryDown) && animationController.IsIdle()) {
-        //    isAttackCharging = true;
-        //}
-        //if (isAttackCharging && isPrimaryHold) {
-        //    //chargeSlider.value += chargeRate * Time.deltaTime;
-        //    chargeValue += chargeRate * Time.deltaTime;
-        //    if (chargeValue >= 0f) {
-        //        chargeSlider.value = chargeValue;
-        //    }
-        //}
-        //if (isPrimaryUp) {
-        //    isAttackCharging = false;
-        //}
-        //if (isPrimaryUp && chargeSlider.value == 1.0f) {
-        //    animationController.DoAttack(true);
-        //    AudioManager.Instance.PlaySfx(swordSound);
-        //}
+        } else if (state.curr == AnimStates.WALK) {
+            if (c.isAttackHeld) {
+                AddCharge(Time.deltaTime);
+            }
+            if (c.isMoved) {
+                Move(c.move);
+            }
+            if (c.isAttackReleased) {
+                if (IsFullyCharged) {
+                    frameInfo.isChargeAttacking = true;
+                } else if (IsCharging) {
+                    frameInfo.isAttacking = true;
+                }
+                ResetCharge();
+            }
 
-        //Animator a = GetComponent<Animator>();
-        //a.SetBool("isAttacking2", false);
-        //if (Input.GetKeyDown(KeyCode.M)) {
-        //    a.SetBool("isAttacking2", true);
-        //}
+        }
+
     }
 
     public void Damage(GameObject damager) {
