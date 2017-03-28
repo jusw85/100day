@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Events {
     public static readonly int PLAYER_HPCHANGE = EventManager.StringToHash("player_hpchange");
-    public static readonly int PLAYER_ATTACK = EventManager.StringToHash("player_attack");
+    public static readonly int PLAY_SFX = EventManager.StringToHash("play_sfx");
 }
 
-public class PlayerAttackEvent : IGameEvent {
-    public int attackNumber;
-    public PlayerAttackEvent(int attackNumber) {
-        this.attackNumber = attackNumber;
+public class PlaySfxEvent : IGameEvent {
+    public AudioClip clip;
+    public PlaySfxEvent(AudioClip clip) {
+        this.clip = clip;
     }
 }
 

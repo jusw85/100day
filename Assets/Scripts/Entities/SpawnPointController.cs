@@ -17,7 +17,7 @@ public class SpawnPointController : MonoBehaviour {
 
     private PoolManager poolManager;
 
-    private void Start() {
+    private void Awake() {
         PoolObject poolObject = (PoolObject)spawnType.GetComponent(typeof(PoolObject));
         if (poolObject != null) {
             isPooled = true;

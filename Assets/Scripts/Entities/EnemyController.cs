@@ -46,13 +46,14 @@ public class EnemyController : PoolObject, IDamageable {
         hitbox = transform.Find("Hitbox").GetComponent<BoxCollider2D>();
 
         spriteRenderer.material.SetColor(Constants.MATERIAL_FLASHCOLOR_ID, flashColor);
+
+        poolManager = Toolbox.RegisterComponent<PoolManager>();
+        poolManager.CreatePool(bloodSplatter, 150);
     }
 
     private void Start() {
         followTarget = Player.Instance.gameObject;
 
-        poolManager = Toolbox.RegisterComponent<PoolManager>();
-        poolManager.CreatePool(bloodSplatter, 150);
     }
 
     private Vector2 lastMoveInput;
@@ -69,8 +70,8 @@ public class EnemyController : PoolObject, IDamageable {
     public float moveSpeed = 12f;
 
     public void Move(Vector2 moveInput) {
-        moverController.MoveSpeed = moveSpeed;
-        moverController.MoveDirection = moveInput;
+        moverController.Speed = moveSpeed;
+        moverController.Direction = moveInput;
         Face(moveInput);
     }
 
@@ -102,28 +103,28 @@ public class EnemyController : PoolObject, IDamageable {
         //    moverController.MoveSpeed = 0;
         //}
 
-        if (moverController.MoveSpeed > 0) {
+        if (moverController.Speed > 0) {
             fsm.SetBool(isMovingId, true);
         } else {
             fsm.SetBool(isMovingId, false);
         }
         if (trackTarget && stopFrames-- <= 0) {
-            moverController.MoveSpeed = moveSpeed;
-            moverController.MoveDirection = Vector2.zero;
+            moverController.Speed = moveSpeed;
+            moverController.Direction = Vector2.zero;
 
             if (followTarget != null) {
                 var followVector = (followTarget.transform.position - transform.position);
                 if (followVector.magnitude <= proximityStop) {
-                    moverController.MoveSpeed = 0f;
+                    moverController.Speed = 0f;
                     //Face(moverController.MoveDirection);
                     //moverController.MoveDirection = Vector2.zero;
-                    moverController.MoveDirection = followVector;
+                    moverController.Direction = followVector;
                 } else {
-                    moverController.MoveDirection = followVector;
+                    moverController.Direction = followVector;
                 }
 
             }
-            Face(moverController.MoveDirection);
+            Face(moverController.Direction);
 
             //Vector2 moveInput = moverController.MoveDirection;
             //animationController.SetIsMoving(moveInput.magnitude > 0);
@@ -138,9 +139,10 @@ public class EnemyController : PoolObject, IDamageable {
             //if (moveInput.magnitude > 0)
             //    lastMoveInput = moveInput;
         } else {
-            moverController.MoveSpeed = 0;
-            moverController.MoveDirection = Vector2.zero;
+            moverController.Speed = 0;
+            moverController.Direction = Vector2.zero;
         }
+        moverController.UpdateVelocity();
         fsm.SetFloat(faceDirXId, faceDir.x);
         fsm.SetFloat(faceDirYId, faceDir.y);
         spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y * 100f) * -1;
@@ -151,7 +153,7 @@ public class EnemyController : PoolObject, IDamageable {
         if (tag == "Player") {
             MoverController movable = other.gameObject.GetComponent<MoverController>();
             if (movable != null) {
-                movable.ExternalForce = moverController.MoveDirection * pushbackForce;
+                movable.ExternalForce = moverController.Direction * pushbackForce;
             }
             IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
             if (damageable != null) {

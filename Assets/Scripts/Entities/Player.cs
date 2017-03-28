@@ -15,10 +15,6 @@ public class Player : MonoBehaviour, IDamageable {
     public int maxHp = 6;
     private int currentHp;
 
-    public AudioClip swordSound;
-    public AudioClip[] owSounds;
-    public AudioClip[] deathSounds;
-
     [System.NonSerialized]
     public bool isPaused = false;
 
@@ -49,6 +45,8 @@ public class Player : MonoBehaviour, IDamageable {
         currentHp = maxHp;
         CanRoll = true;
         FaceDir = FACE_DOWN;
+
+        eventManager = Toolbox.RegisterComponent<EventManager>();
     }
 
     private void Start() {
@@ -59,7 +57,6 @@ public class Player : MonoBehaviour, IDamageable {
         //chargeSlider = obj2.GetComponent<Slider>();
 
         //poolManager = Toolbox.RegisterComponent<PoolManager>();
-        eventManager = Toolbox.RegisterComponent<EventManager>();
         //CreateHeartPanel();
     }
 
@@ -69,27 +66,23 @@ public class Player : MonoBehaviour, IDamageable {
     private static readonly Vector2 FACE_LEFT = new Vector2(-1f, 0f);
 
     public Vector2 FaceDir { get; set; }
-    public float moveSpeed = 12f;
+    public float walkSpeed = 12f;
 
-    public void Move(Vector2 moveInput) {
-        mover.MoveSpeed = moveSpeed;
-        mover.MoveDirection = moveInput;
-        Face(moveInput);
+    public void Walk(Vector2 moveDirection) {
+        mover.Speed = walkSpeed;
+        mover.Direction = moveDirection;
+        mover.UpdateVelocity();
+        Face(moveDirection);
     }
 
     public float rollSpeed = 36f;
     public float rollCooldown = 0.0f;
     public bool CanRoll { get; set; }
-    private Vector2 rollDirection = Vector2.zero;
 
-    public void StartRoll(Vector2 moveInput) {
-        mover.MoveSpeed = rollSpeed;
-        rollDirection = moveInput;
-        Face(moveInput);
-    }
-
-    public void Roll() {
-        mover.MoveDirection = rollDirection;
+    public void StartRoll(Vector2 moveDirection) {
+        mover.Speed = rollSpeed;
+        mover.Direction = moveDirection;
+        Face(moveDirection);
     }
 
     public void StopRoll() {
@@ -157,21 +150,25 @@ public class Player : MonoBehaviour, IDamageable {
             }
 
             if (state.curr == AnimStates.ATTACK1) {
+                frameInfo.isAttacking = true;
                 ResetCharge();
                 if (c.isMoved) {
                     Face(c.move);
                 }
             } else if (state.curr == AnimStates.ATTACK2) {
+                frameInfo.isAttacking = true;
                 ResetCharge();
                 if (c.isMoved) {
                     Face(c.move);
                 }
             } else if (state.curr == AnimStates.ATTACK3) {
+                frameInfo.isAttacking = true;
                 ResetCharge();
                 if (c.isMoved) {
                     Face(c.move);
                 }
             } else if (state.curr == AnimStates.CHARGEATTACK) {
+                frameInfo.isChargeAttacking = true;
                 ResetCharge();
                 if (c.isMoved) {
                     Face(c.move);
@@ -190,13 +187,13 @@ public class Player : MonoBehaviour, IDamageable {
                 AddCharge(Time.deltaTime);
             }
             if (c.isMoved) {
-                Move(c.move);
+                Walk(c.move);
             }
             if (c.isAttackReleased) {
                 if (IsFullyCharged) {
-                    frameInfo.isChargeAttacking = true;
+                    frameInfo.toChargeAttack = true;
                 } else if (IsCharging) {
-                    frameInfo.isAttacking = true;
+                    frameInfo.toAttack = true;
                 }
                 ResetCharge();
             }
@@ -206,19 +203,19 @@ public class Player : MonoBehaviour, IDamageable {
                 AddCharge(Time.deltaTime);
             }
             if (c.isMoved) {
-                Move(c.move);
+                Walk(c.move);
             }
             if (c.isAttackReleased) {
                 if (IsFullyCharged) {
-                    frameInfo.isChargeAttacking = true;
+                    frameInfo.toChargeAttack = true;
                 } else if (IsCharging) {
-                    frameInfo.isAttacking = true;
+                    frameInfo.toAttack = true;
                 }
                 ResetCharge();
             }
 
         } else if (state.curr == AnimStates.ROLL) {
-            Roll();
+            mover.UpdateVelocity();
 
         }
     }

@@ -303,7 +303,7 @@ MonoBehaviour:
     type: 2}
   trackTarget: 0
   moveSpeed: 2
-  proximityStop: 3
+  proximityStop: 0
 --- !u!212 &212618019328822794
 SpriteRenderer:
   m_ObjectHideFlags: 1

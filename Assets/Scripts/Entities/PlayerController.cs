@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
     private ControlManager c;
     private Player player;
     private PlayerAnimator playerAnimator;
+    private PlayerAudio playerAudio;
     private Animator fsm;
 
     private FsmFrameInfo state;
@@ -17,18 +18,18 @@ public class PlayerController : MonoBehaviour {
         fsm = GetComponent<Animator>();
         player = GetComponent<Player>();
         playerAnimator = GetComponent<PlayerAnimator>();
+        playerAudio = GetComponent<PlayerAudio>();
 
         state = new FsmFrameInfo(AnimStates.ENTRY);
         frameInfo = new PlayerFrameInfo();
 
+        c = Toolbox.RegisterComponent<ControlManager>();
 #if UNITY_EDITOR
         state.DebugInit(fsm);
 #endif
     }
 
     private void Start() {
-        c = Toolbox.RegisterComponent<ControlManager>();
-
         // refactor this camera follow, e.g. in case camera doesnt follow player during cutscenes
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         if (cameraFollow != null) cameraFollow.target = gameObject;
@@ -40,14 +41,15 @@ public class PlayerController : MonoBehaviour {
 
         player.DoUpdate(state, c, ref frameInfo);
         playerAnimator.DoUpdate(player, ref frameInfo);
+        playerAudio.DoUpdate(player, ref frameInfo);
 
         if (state.curr == AnimStates.IDLE) {
             if (c.isRollPressed && player.CanRoll) {
                 fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
             } else if (c.isAttackReleased) {
-                if (frameInfo.isChargeAttacking) {
+                if (frameInfo.toChargeAttack) {
                     fsm.SetTrigger(AnimParams.TRIGGER_CHARGEATTACK);
-                } else if (frameInfo.isAttacking) {
+                } else if (frameInfo.toAttack) {
                     fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
                 }
             } else if (c.isAttackPressed) {
@@ -60,9 +62,9 @@ public class PlayerController : MonoBehaviour {
             if (c.isRollPressed && player.CanRoll) {
                 fsm.SetTrigger(AnimParams.TRIGGER_ROLL);
             } else if (c.isAttackReleased) {
-                if (frameInfo.isChargeAttacking) {
+                if (frameInfo.toChargeAttack) {
                     fsm.SetTrigger(AnimParams.TRIGGER_CHARGEATTACK);
-                } else if (frameInfo.isAttacking) {
+                } else if (frameInfo.toAttack) {
                     fsm.SetTrigger(AnimParams.TRIGGER_ATTACK);
                 }
             } else if (c.isAttackPressed) {
@@ -149,19 +151,25 @@ public class AnimParams {
 
 public class PlayerFrameInfo {
     public bool isDamaged;
-    public bool isAttacking;
-    public bool isChargeAttacking;
+
     public bool isCharging;
     public bool isFullyCharged;
     public bool hasStoppedCharging;
 
+    public bool toAttack;
+    public bool toChargeAttack;
+
+    public bool isAttacking;
+    public bool isChargeAttacking;
+
     public void Reset() {
         isDamaged = false;
-        isAttacking = false;
-        isChargeAttacking = false;
-
         isCharging = false;
         isFullyCharged = false;
         hasStoppedCharging = false;
+        toAttack = false;
+        toChargeAttack = false;
+        isAttacking = false;
+        isChargeAttacking = false;
     }
 }
