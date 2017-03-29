@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Set script execution order to run after camera follow
@@ -25,6 +23,21 @@ public class CameraShake : MonoBehaviour {
 
     private void Shake() {
         transform.position = transform.position + Random.insideUnitSphere * shakeIntensity;
+    }
+
+    private EventManager eventManager;
+    private void Awake() {
+        eventManager = Toolbox.RegisterComponent<EventManager>();
+    }
+    private void OnEnable() {
+        eventManager.AddSubscriber(Events.PLAYER_HPCHANGE, HpChangeHandler);
+    }
+    private void OnDisable() {
+        eventManager.RemoveSubscriber(Events.PLAYER_HPCHANGE, HpChangeHandler);
+    }
+    private void HpChangeHandler(IGameEvent e) {
+        shakeIntensity = 0.1f;
+        duration = 0.25f;
     }
 
 }

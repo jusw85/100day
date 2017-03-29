@@ -8,6 +8,6 @@ public interface IDamageable {
 
 }
 
-public struct DamageInfo {
+public class DamageInfo {
     public float damage;
 }

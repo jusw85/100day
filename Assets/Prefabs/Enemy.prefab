@@ -27,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1185820704372190
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: de5fa85ad25be034da56d82db3ba7c88, type: 3}
   bloodSplatter: {fileID: 1843829896786728, guid: ae3707c0446c30a46a6415ebfd193f72,
     type: 2}
-  trackTarget: 0
+  trackTarget: 1
   moveSpeed: 2
   proximityStop: 0
 --- !u!212 &212618019328822794

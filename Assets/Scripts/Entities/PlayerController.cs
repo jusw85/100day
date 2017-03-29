@@ -167,7 +167,7 @@ public class PlayerFrameInfo {
     public bool isAttacking;
     public bool isChargeAttacking;
 
-    public DamageInfo? damageInfo;
+    public DamageInfo damageInfo;
 
     public void Reset() {
         isDamaged = false;

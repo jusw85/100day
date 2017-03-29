@@ -23,6 +23,7 @@ public class EventManager : MonoBehaviour {
         if (delegateMap.TryGetValue(channelId, out tmpDel)) {
             tmpDel -= del;
             tmpDel += del;
+            delegateMap[channelId] = tmpDel;
         } else {
             delegateMap[channelId] = del;
         }

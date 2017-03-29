@@ -1,8 +1,5 @@
-using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(MoverController))]
 public class Player : MonoBehaviour {
@@ -11,7 +8,6 @@ public class Player : MonoBehaviour {
     private float currentHp;
 
     private MoverController mover;
-
     private EventManager eventManager;
 
 
@@ -22,11 +18,6 @@ public class Player : MonoBehaviour {
     public bool isPaused = false;
 
     public GameObject heartsPanel;
-
-    //private float flashSpeed = 1.5f;
-    //private Image damageFlashImage;
-    //private Color damageFlashColour = new Color(1f, 1f, 1f, 0.6f);
-    //private Tween screenFlashTween;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -42,13 +33,6 @@ public class Player : MonoBehaviour {
         FaceDir = FACE_DOWN;
 
         eventManager = Toolbox.RegisterComponent<EventManager>();
-    }
-
-    private void Start() {
-        //var obj = GameObject.Find("ScreenFlash");
-        //damageFlashImage = obj.GetComponent<Image>();
-
-        //CreateHeartPanel();
     }
 
     private static readonly Vector2 FACE_DOWN = new Vector2(0f, -1f);
@@ -138,12 +122,6 @@ public class Player : MonoBehaviour {
         PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp);
         eventManager.Publish(Events.PLAYER_HPCHANGE, ev);
 
-        //DamageScreenFlash();
-
-        //CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
-        //cameraShake.shakeIntensity = 0.1f;
-        //cameraShake.duration = 0.25f;
-
         //if (currentHp <= 0) {
         //    MenuManager.Instance.GameOver();
         //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
@@ -153,6 +131,10 @@ public class Player : MonoBehaviour {
     private PlayerFrameInfo frameInfo;
     public void DoUpdate(FsmFrameInfo state, ControlManager c, ref PlayerFrameInfo frameInfo) {
         this.frameInfo = frameInfo;
+        if (frameInfo.damageInfo != null) {
+            Damage(frameInfo.damageInfo);
+        }
+
         if (state.hasChanged) {
             if (state.prev == AnimStates.ROLL) {
                 StopRoll();
@@ -227,18 +209,6 @@ public class Player : MonoBehaviour {
             mover.UpdateVelocity();
 
         }
-    }
-
-    public void DamageScreenFlash() {
-        //damageFlashImage.color = damageFlashColour;
-        //if (screenFlashTween != null) {
-        //    screenFlashTween.Restart();
-        //} else {
-        //    screenFlashTween = DOTween
-        //        .To(() => damageFlashImage.color, x => damageFlashImage.color = x, Color.clear, flashSpeed)
-        //        .SetAutoKill(false);
-        //    screenFlashTween.Play();
-        //}
     }
 
     //private void CreateHeartPanel() {

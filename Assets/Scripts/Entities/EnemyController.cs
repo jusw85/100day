@@ -49,6 +49,9 @@ public class EnemyController : PoolObject, IDamageable {
 
         poolManager = Toolbox.RegisterComponent<PoolManager>();
         poolManager.CreatePool(bloodSplatter, 150);
+
+        damageInfo = new DamageInfo();
+        damageInfo.damage = 10;
     }
 
     private void Start() {
@@ -157,12 +160,12 @@ public class EnemyController : PoolObject, IDamageable {
             }
             IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
             if (damageable != null) {
-                DamageInfo damageInfo = new DamageInfo();
-                damageInfo.damage = 10;
                 damageable.Damage(damageInfo);
             }
         }
     }
+
+    private DamageInfo damageInfo;
 
     public void Damage(DamageInfo damageInfo) {
         //currentHp--;
