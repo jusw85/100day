@@ -409,7 +409,7 @@ MonoBehaviour:
     ev:
       prevHp: 0
       currentHp: 0
-  maxHp: 10
+  maxHp: 100
   heartsPanel: {fileID: 1190908831339288, guid: 8b8fd545dfda73f45994cd0057a9dff6,
     type: 2}
   walkSpeed: 12

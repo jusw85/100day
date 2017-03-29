@@ -33,7 +33,7 @@ public class ProjectileController : PoolObject {
         }
         IDamageable damageable = (IDamageable)other.transform.parent.gameObject.GetComponent(typeof(IDamageable));
         if (damageable != null) {
-            damageable.Damage(gameObject);
+            //damageable.Damage(gameObject);
         }
         Destroy();
     }

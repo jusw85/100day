@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Player))]
 [RequireComponent(typeof(PlayerAnimator))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour, IDamageable {
 
     private ControlManager c;
     private Player player;
@@ -126,6 +127,10 @@ public class PlayerController : MonoBehaviour {
         frameInfo.Reset();
     }
 
+    public void Damage(DamageInfo damageInfo) {
+        frameInfo.damageInfo = damageInfo;
+    }
+
 }
 
 public class AnimStates {
@@ -162,6 +167,8 @@ public class PlayerFrameInfo {
     public bool isAttacking;
     public bool isChargeAttacking;
 
+    public DamageInfo? damageInfo;
+
     public void Reset() {
         isDamaged = false;
         isCharging = false;
@@ -171,5 +178,6 @@ public class PlayerFrameInfo {
         toChargeAttack = false;
         isAttacking = false;
         isChargeAttacking = false;
+        damageInfo = null;
     }
 }

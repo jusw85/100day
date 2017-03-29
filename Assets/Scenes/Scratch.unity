@@ -133,7 +133,7 @@ Prefab:
     - target: {fileID: 114916403603443518, guid: 8544f3c131c056648bd612ae66c966ce,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8544f3c131c056648bd612ae66c966ce, type: 2}
@@ -503,7 +503,7 @@ Prefab:
     - target: {fileID: 114947508207953618, guid: ef81e0cbd06725c46b5334ad21aade32,
         type: 2}
       propertyPath: trackTarget
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1054300697429454, guid: ef81e0cbd06725c46b5334ad21aade32, type: 2}
       propertyPath: m_IsActive

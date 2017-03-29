@@ -5,21 +5,21 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(MoverController))]
-public class Player : MonoBehaviour, IDamageable {
+public class Player : MonoBehaviour {
+
+    public float maxHp = 100;
+    private float currentHp;
+
+    private MoverController mover;
+
+    private EventManager eventManager;
+
 
     private static Player instance;
     public static Player Instance { get { return instance; } }
 
-    public NamedHpChangeEvent hpChangeEvent;
-
-    public int maxHp = 6;
-    private int currentHp;
-
     [System.NonSerialized]
     public bool isPaused = false;
-
-    private MoverController mover;
-    private AnimationController animationController;
 
     public GameObject heartsPanel;
 
@@ -27,11 +27,6 @@ public class Player : MonoBehaviour, IDamageable {
     //private Image damageFlashImage;
     //private Color damageFlashColour = new Color(1f, 1f, 1f, 0.6f);
     //private Tween screenFlashTween;
-
-    //private Slider chargeSlider;
-
-    //private PoolManager poolManager;
-    private EventManager eventManager;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -53,10 +48,6 @@ public class Player : MonoBehaviour, IDamageable {
         //var obj = GameObject.Find("ScreenFlash");
         //damageFlashImage = obj.GetComponent<Image>();
 
-        //var obj2 = GameObject.Find("ChargeSlider");
-        //chargeSlider = obj2.GetComponent<Slider>();
-
-        //poolManager = Toolbox.RegisterComponent<PoolManager>();
         //CreateHeartPanel();
     }
 
@@ -141,6 +132,24 @@ public class Player : MonoBehaviour, IDamageable {
         get { return chargeCurrentTime >= chargeFullTime; }
     }
 
+    public void Damage(DamageInfo damageInfo) {
+        float prevHp = currentHp;
+        currentHp -= damageInfo.damage;
+        PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp);
+        eventManager.Publish(Events.PLAYER_HPCHANGE, ev);
+
+        //DamageScreenFlash();
+
+        //CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
+        //cameraShake.shakeIntensity = 0.1f;
+        //cameraShake.duration = 0.25f;
+
+        //if (currentHp <= 0) {
+        //    MenuManager.Instance.GameOver();
+        //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
+        //}
+    }
+
     private PlayerFrameInfo frameInfo;
     public void DoUpdate(FsmFrameInfo state, ControlManager c, ref PlayerFrameInfo frameInfo) {
         this.frameInfo = frameInfo;
@@ -218,24 +227,6 @@ public class Player : MonoBehaviour, IDamageable {
             mover.UpdateVelocity();
 
         }
-    }
-
-    public void Damage(GameObject damager) {
-        int prevHp = currentHp--;
-        DamageScreenFlash();
-
-        PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp);
-        eventManager.Publish(Events.PLAYER_HPCHANGE, ev);
-
-        //CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
-        //cameraShake.shakeIntensity = 0.1f;
-        //cameraShake.duration = 0.25f;
-
-        //AudioManager.Instance.PlaySfx(owSounds[Random.Range(0, owSounds.Length)]);
-        //if (currentHp <= 0) {
-        //    MenuManager.Instance.GameOver();
-        //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
-        //}
     }
 
     public void DamageScreenFlash() {

@@ -42,7 +42,7 @@ public class PlayerHeartController : MonoBehaviour {
 
     public void HpChangeHandler(IGameEvent e) {
         PlayerHpChangeEvent ev = (PlayerHpChangeEvent)e;
-        int hp = ev.currentHp;
+        int hp = (int)ev.currentHp;
 
         foreach (Image heart in heartsList) {
             if (hp <= 0) {

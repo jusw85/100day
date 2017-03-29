@@ -12,18 +12,18 @@ public class PlaySfxEvent : IGameEvent {
     }
 }
 
-[System.Serializable]
+//[System.Serializable]
 public class PlayerHpChangeEvent : IGameEvent {
-    public int prevHp;
-    public int currentHp;
-    public PlayerHpChangeEvent(int prevHp, int currentHp) {
+    public float prevHp;
+    public float currentHp;
+    public PlayerHpChangeEvent(float prevHp, float currentHp) {
         this.prevHp = prevHp;
         this.currentHp = currentHp;
     }
 }
 
-[System.Serializable]
-public struct NamedHpChangeEvent {
-    public string name;
-    public PlayerHpChangeEvent ev;
-}
+//[System.Serializable]
+//public struct NamedHpChangeEvent {
+//    public string name;
+//    public PlayerHpChangeEvent ev;
+//}

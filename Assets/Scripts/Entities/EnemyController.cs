@@ -157,12 +157,14 @@ public class EnemyController : PoolObject, IDamageable {
             }
             IDamageable damageable = (IDamageable)other.gameObject.GetComponent(typeof(IDamageable));
             if (damageable != null) {
-                damageable.Damage(gameObject);
+                DamageInfo damageInfo = new DamageInfo();
+                damageInfo.damage = 10;
+                damageable.Damage(damageInfo);
             }
         }
     }
 
-    public void Damage(GameObject damager) {
+    public void Damage(DamageInfo damageInfo) {
         //currentHp--;
         //AudioManager.Instance.PlaySfx(hitSounds[Random.Range(0, hitSounds.Length)]);
 

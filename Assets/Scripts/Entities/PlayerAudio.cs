@@ -22,6 +22,9 @@ public class PlayerAudio : MonoBehaviour {
             PlaySfxEvent ev = new PlaySfxEvent(swordSound);
             eventManager.Publish(Events.PLAY_SFX, ev);
         }
-        //owSounds[Random.Range(0, owSounds.Length)]
+        if (frameInfo.damageInfo != null) {
+            PlaySfxEvent ev = new PlaySfxEvent(owSounds[Random.Range(0, owSounds.Length)]);
+            eventManager.Publish(Events.PLAY_SFX, ev);
+        }
     }
 }

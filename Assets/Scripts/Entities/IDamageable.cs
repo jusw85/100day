@@ -4,6 +4,10 @@ using UnityEngine;
 
 public interface IDamageable {
 
-    void Damage(GameObject damager);
+    void Damage(DamageInfo damageInfo);
 
+}
+
+public struct DamageInfo {
+    public float damage;
 }
