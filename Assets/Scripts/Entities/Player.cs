@@ -119,7 +119,7 @@ public class Player : MonoBehaviour {
     public void Damage(DamageInfo damageInfo) {
         float prevHp = currentHp;
         currentHp -= damageInfo.damage;
-        PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp);
+        PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp, maxHp);
         eventManager.Publish(Events.PLAYER_HPCHANGE, ev);
 
         //if (currentHp <= 0) {

@@ -16,9 +16,11 @@ public class PlaySfxEvent : IGameEvent {
 public class PlayerHpChangeEvent : IGameEvent {
     public float prevHp;
     public float currentHp;
-    public PlayerHpChangeEvent(float prevHp, float currentHp) {
+    public float maxHp;
+    public PlayerHpChangeEvent(float prevHp, float currentHp, float maxHp) {
         this.prevHp = prevHp;
         this.currentHp = currentHp;
+        this.maxHp = maxHp;
     }
 }
 
