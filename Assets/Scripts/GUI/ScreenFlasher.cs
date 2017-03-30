@@ -12,7 +12,7 @@ public class ScreenFlasher : MonoBehaviour {
     private Tween screenFlashTween;
 
     private void Awake() {
-        eventManager = Toolbox.RegisterComponent<EventManager>();
+        eventManager = Toolbox.GetOrAddComponent<EventManager>();
         flashImage = GetComponent<Image>();
     }
 

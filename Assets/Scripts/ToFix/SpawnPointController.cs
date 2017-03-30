@@ -22,7 +22,7 @@ public class SpawnPointController : MonoBehaviour {
         if (poolObject != null) {
             isPooled = true;
 
-            poolManager = Toolbox.RegisterComponent<PoolManager>();
+            poolManager = Toolbox.GetOrAddComponent<PoolManager>();
             poolManager.CreatePool(spawnType, Mathf.Max(spawnInstances, 50));
         }
     }

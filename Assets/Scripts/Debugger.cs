@@ -6,15 +6,19 @@ public class Debugger : MonoBehaviour {
 
     private BoxCollider2DVisualizer[] boxCollider2DVisualizers;
     private bool toggleHitBoxVisualizers = true;
+    public bool enableFpsDisplay = true;
 
     public void Start() {
         boxCollider2DVisualizers = FindObjectsOfType<BoxCollider2DVisualizer>();
         EnableHitboxes();
+
+        if (enableFpsDisplay) {
+            gameObject.AddChildComponent<FPSDisplay>();
+        }
     }
 
     public void Update() {
     }
-
 
     public void OnGUI() {
         GUI.Box(new Rect(10, 10, 120, 70), "Debug Menu");

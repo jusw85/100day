@@ -5,10 +5,7 @@ public class EventManager : MonoBehaviour {
 
     public delegate void EventDelegate(IGameEvent e);
 
-    private Dictionary<int, EventDelegate> delegateMap;
-    private void Awake() {
-        delegateMap = new Dictionary<int, EventDelegate>();
-    }
+    private Dictionary<int, EventDelegate> delegateMap = new Dictionary<int, EventDelegate>();
 
     public static int StringToHash(string channel) {
         return channel.GetHashCode();

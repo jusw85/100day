@@ -47,7 +47,7 @@ public class EnemyController : PoolObject, IDamageable {
 
         spriteRenderer.material.SetColor(Constants.MATERIAL_FLASHCOLOR_ID, flashColor);
 
-        poolManager = Toolbox.RegisterComponent<PoolManager>();
+        poolManager = Toolbox.GetOrAddComponent<PoolManager>();
         poolManager.CreatePool(bloodSplatter, 150);
 
         damageInfo = new DamageInfo();

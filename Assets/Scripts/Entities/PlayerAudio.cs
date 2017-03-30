@@ -10,7 +10,7 @@ public class PlayerAudio : MonoBehaviour {
     public AudioClip[] deathSounds;
 
     private void Awake() {
-        eventManager = Toolbox.RegisterComponent<EventManager>();
+        eventManager = Toolbox.GetOrAddComponent<EventManager>();
     }
 
     public void DoUpdate(Player player, ref PlayerFrameInfo frameInfo) {

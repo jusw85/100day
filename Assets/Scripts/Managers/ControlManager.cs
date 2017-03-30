@@ -12,13 +12,9 @@ public class ControlManager : MonoBehaviour {
     public bool isSpecialPressed;
 
     private PlayerActions actions;
-    private InControlManager incontrolManager;
 
     private void Awake() {
         move = Vector2.zero;
-        incontrolManager = gameObject.AddComponent<InControlManager>();
-        incontrolManager.dontDestroyOnLoad = true;
-
         actions = PlayerActions.CreateWithDefaultBindings();
     }
 

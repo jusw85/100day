@@ -6,7 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IDamageable {
 
-    private ControlManager c;
     private Player player;
     private PlayerAnimator playerAnimator;
     private PlayerAudio playerAudio;
@@ -24,7 +23,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
         state = new FsmFrameInfo(AnimStates.ENTRY);
         frameInfo = new PlayerFrameInfo();
 
-        c = Toolbox.RegisterComponent<ControlManager>();
+        GameManager manager = Toolbox.GetOrAddComponent<GameManager>();
+        manager.RegisterPlayer(this);
 #if UNITY_EDITOR
         state.DebugInit(fsm);
 #endif
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         if (cameraFollow != null) cameraFollow.target = gameObject;
     }
 
-    private void Update() {
+    public void DoUpdate(ControlManager c) {
         AnimatorStateInfo animInfo = fsm.GetCurrentAnimatorStateInfo(0);
         state.DoUpdate(animInfo.fullPathHash);
 

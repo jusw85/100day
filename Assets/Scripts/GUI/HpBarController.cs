@@ -8,7 +8,7 @@ public class HpBarController : MonoBehaviour {
 
     private void Awake() {
         slider = GetComponent<Slider>();
-        eventManager = Toolbox.RegisterComponent<EventManager>();
+        eventManager = Toolbox.GetOrAddComponent<EventManager>();
     }
 
     private void OnEnable() {

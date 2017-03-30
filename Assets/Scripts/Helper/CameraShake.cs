@@ -27,7 +27,7 @@ public class CameraShake : MonoBehaviour {
 
     private EventManager eventManager;
     private void Awake() {
-        eventManager = Toolbox.RegisterComponent<EventManager>();
+        eventManager = Toolbox.GetOrAddComponent<EventManager>();
     }
     private void OnEnable() {
         eventManager.AddSubscriber(Events.PLAYER_HPCHANGE, HpChangeHandler);

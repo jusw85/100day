@@ -9,15 +9,12 @@ public class Player : MonoBehaviour {
 
     private MoverController mover;
     private EventManager eventManager;
-
-
+    
     private static Player instance;
     public static Player Instance { get { return instance; } }
 
     [System.NonSerialized]
     public bool isPaused = false;
-
-    public GameObject heartsPanel;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -32,7 +29,7 @@ public class Player : MonoBehaviour {
         CanRoll = true;
         FaceDir = FACE_DOWN;
 
-        eventManager = Toolbox.RegisterComponent<EventManager>();
+        eventManager = Toolbox.GetOrAddComponent<EventManager>();
     }
 
     private static readonly Vector2 FACE_DOWN = new Vector2(0f, -1f);
@@ -210,12 +207,5 @@ public class Player : MonoBehaviour {
 
         }
     }
-
-    //private void CreateHeartPanel() {
-    //    GameObject hud = GameObject.Find("HUDCanvas");
-    //    GameObject heartPanel = Instantiate(heartsPanel);
-    //    heartPanel.transform.SetParent(hud.transform);
-    //    heartPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-    //}
 
 }

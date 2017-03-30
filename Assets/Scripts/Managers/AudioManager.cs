@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour {
     private void Awake() {
         bgmAudioSource = GetComponents<AudioSource>()[0];
         sfxAudioSource = GetComponents<AudioSource>()[1];
-        eventManager = Toolbox.RegisterComponent<EventManager>();
+        eventManager = Toolbox.GetOrAddComponent<EventManager>();
     }
 
     public void PlaySfx(AudioClip clip) {
