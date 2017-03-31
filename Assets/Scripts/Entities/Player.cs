@@ -5,16 +5,14 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public float maxHp = 100;
-    private float currentHp;
+    [System.NonSerialized]
+    public float currentHp;
 
     private MoverController mover;
     private EventManager eventManager;
-    
+
     private static Player instance;
     public static Player Instance { get { return instance; } }
-
-    [System.NonSerialized]
-    public bool isPaused = false;
 
     private void Awake() {
         if (instance != null && instance != this) {
@@ -119,10 +117,9 @@ public class Player : MonoBehaviour {
         PlayerHpChangeEvent ev = new PlayerHpChangeEvent(prevHp, currentHp, maxHp);
         eventManager.Publish(Events.PLAYER_HPCHANGE, ev);
 
-        //if (currentHp <= 0) {
-        //    MenuManager.Instance.GameOver();
-        //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
-        //}
+        if (currentHp <= 0) {
+            eventManager.Publish(Events.GAME_OVER, null);
+        }
     }
 
     private PlayerFrameInfo frameInfo;

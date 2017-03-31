@@ -26,5 +26,9 @@ public class PlayerAudio : MonoBehaviour {
             PlaySfxEvent ev = new PlaySfxEvent(owSounds[Random.Range(0, owSounds.Length)]);
             eventManager.Publish(Events.PLAY_SFX, ev);
         }
+        if (player.currentHp <= 0) {
+            PlaySfxEvent ev = new PlaySfxEvent(deathSounds[Random.Range(0, deathSounds.Length)]);
+            eventManager.Publish(Events.PLAY_SFX, ev);
+        }
     }
 }

@@ -10,6 +10,7 @@ public class PlayerActions : PlayerActionSet {
     public PlayerAction MoveUp;
     public PlayerAction MoveDown;
     public PlayerTwoAxisAction Move;
+    public PlayerAction Menu;
 
     public PlayerActions() {
         Attack = CreatePlayerAction("Attack");
@@ -21,6 +22,7 @@ public class PlayerActions : PlayerActionSet {
         MoveUp = CreatePlayerAction("Move Up");
         MoveDown = CreatePlayerAction("Move Down");
         Move = CreateTwoAxisPlayerAction(MoveLeft, MoveRight, MoveDown, MoveUp);
+        Menu = CreatePlayerAction("Menu");
     }
 
     //http://www.gallantgames.com/pages/incontrol-standardized-controls
@@ -67,6 +69,9 @@ public class PlayerActions : PlayerActionSet {
         playerActions.MoveRight.AddDefaultBinding(InputControlType.DPadRight);
         playerActions.MoveUp.AddDefaultBinding(InputControlType.DPadUp);
         playerActions.MoveDown.AddDefaultBinding(InputControlType.DPadDown);
+
+        playerActions.Menu.AddDefaultBinding(InputControlType.Start);
+        playerActions.Menu.AddDefaultBinding(Key.Escape);
 
         return playerActions;
     }

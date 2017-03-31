@@ -927,8 +927,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6987a4dad1496434782450fdad7c70dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableFpsDisplay: 1
-  level1: {fileID: 1816328293156630, guid: 18b17ee5f26abec41bee79b38b3a95b0, type: 2}
+  HUDPrefab: {fileID: 0}
+  MenuPrefab: {fileID: 0}
 --- !u!1 &350357348
 GameObject:
   m_ObjectHideFlags: 0

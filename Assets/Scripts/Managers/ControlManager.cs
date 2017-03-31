@@ -10,6 +10,7 @@ public class ControlManager : MonoBehaviour {
     public bool isAttackHeld;
     public bool isRollPressed;
     public bool isSpecialPressed;
+    public bool isMenuPressed;
 
     private PlayerActions actions;
 
@@ -24,6 +25,7 @@ public class ControlManager : MonoBehaviour {
         isAttackHeld = actions.Attack.IsPressed;
         isRollPressed = actions.Roll.WasPressed;
         isSpecialPressed = actions.Special.WasPressed;
+        isMenuPressed = actions.Menu.WasPressed;
 
         move = actions.Move;
         isMoved = move.sqrMagnitude > 0;

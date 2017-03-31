@@ -17,6 +17,11 @@ public class AudioManager : MonoBehaviour {
         sfxAudioSource.PlayOneShot(clip);
     }
 
+    public void PlayBgm(AudioClip clip) {
+        bgmAudioSource.clip = clip;
+        bgmAudioSource.Play();
+    }
+
     public void SetBgmVolume(float volume) {
         bgmAudioSource.volume = volume;
     }
@@ -25,16 +30,20 @@ public class AudioManager : MonoBehaviour {
         sfxAudioSource.volume = volume;
     }
 
-    public void PlaySfxEvent(IGameEvent e) {
+    private void PlaySfxEvent(IGameEvent e) {
         PlaySfxEvent ev = (PlaySfxEvent)e;
         PlaySfx(ev.clip);
     }
 
     private void OnEnable() {
+        bgmAudioSource.enabled = true;
+        sfxAudioSource.enabled = true;
         eventManager.AddSubscriber(Events.PLAY_SFX, PlaySfxEvent);
     }
 
     private void OnDisable() {
+        bgmAudioSource.enabled = false;
+        sfxAudioSource.enabled = false;
         eventManager.RemoveSubscriber(Events.PLAY_SFX, PlaySfxEvent);
     }
 
