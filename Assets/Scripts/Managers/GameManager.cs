@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject HUDPrefab;
-    public GameObject MenuPrefab;
-    public GameObject GameOverPrefab;
+    public GameObject HUDCanvas;
+    public GameObject MenuCanvas;
+    public GameObject GameoverCanvas;
 
     private ControlManager c;
     private GameObject menu;
@@ -38,16 +43,26 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CreateUI() {
-        GameObject UI = new GameObject();
-        UI.name = "UI Container";
-        CreateUIChild(UI, HUDPrefab);
-        menu = CreateUIChild(UI, MenuPrefab);
+        GameObject ui = new GameObject();
+        ui.name = "UI Container";
+        DontDestroyOnLoad(ui);
+
+        CreateOrFindChild(ui, HUDCanvas);
+        menu = CreateOrFindChild(ui, MenuCanvas);
         menu.SetActive(false);
-        gameOver = CreateUIChild(UI, GameOverPrefab);
+        UIWiring wiring = menu.GetComponent<UIWiring>();
+        wiring.AddSliderCallback("SfxSlider", audioManager.SetSfxVolume);
+        wiring.AddSliderCallback("BgmSlider", audioManager.SetBgmVolume);
+        wiring.AddButtonCallback("ResumeButton", ToggleMenu);
+        wiring.AddButtonCallback("QuitButton", Quit);
+
+        gameOver = CreateOrFindChild(ui, GameoverCanvas);
         gameOver.SetActive(false);
+        wiring = gameOver.GetComponent<UIWiring>();
+        wiring.AddButtonCallback("QuitButton", Quit);
     }
 
-    private GameObject CreateUIChild(GameObject parent, GameObject child) {
+    private GameObject CreateOrFindChild(GameObject parent, GameObject child) {
         var obj = GameObject.Find(child.name);
         if (obj == null) {
             obj = Instantiate(child);
@@ -92,6 +107,11 @@ public class GameManager : MonoBehaviour {
         gameOver.SetActive(true);
         isGameOver = true;
         Pause();
+    }
+
+    public void Restart() {
+        //pauseManager.Unpause();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private PlayerController pc;

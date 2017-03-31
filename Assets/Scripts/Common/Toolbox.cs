@@ -22,9 +22,11 @@ public class Toolbox : Singleton<Toolbox> {
 
     public static void RegisterPrefabComponent(GameObject prefab) {
         GameObject obj = GameObject.Find(prefab.name);
-        if (obj == null || !obj.activeSelf) {
+        if (obj == null) {
             obj = Instantiate(prefab, Instance.transform);
             obj.name = prefab.name;
+        } else {
+            obj.transform.SetParent(Instance.transform);
         }
         MonoBehaviour[] components = obj.GetComponentsInChildren<MonoBehaviour>();
         foreach (MonoBehaviour c in components) {

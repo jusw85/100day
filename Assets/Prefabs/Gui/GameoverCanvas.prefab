@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 223959472886309200}
   - component: {fileID: 114422353730885454}
   - component: {fileID: 114037096378342172}
+  - component: {fileID: 114283114015606854}
   m_Layer: 5
   m_Name: GameoverCanvas
   m_TagString: Untagged
@@ -240,6 +241,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: You Died
+--- !u!114 &114283114015606854
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1148676260042508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7173c7f6e06c9bb408d7990b4146f2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSelectable: {fileID: 114248532958658502}
 --- !u!114 &114397111766966024
 MonoBehaviour:
   m_ObjectHideFlags: 1
