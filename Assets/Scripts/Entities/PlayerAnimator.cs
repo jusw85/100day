@@ -15,9 +15,9 @@ public class PlayerAnimator : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
-        flasherCharge = new Flasher(spriteRenderer, 0.8f, 0.1f);
+        flasherCharge = new Flasher(spriteRenderer, 0.8f, 0.1f, -1);
         flasherCharge.FlashColor = Color.blue;
-        flasherFullCharge = new Flasher(spriteRenderer, 0.8f, 0.3f);
+        flasherFullCharge = new Flasher(spriteRenderer, 0.8f, 0.3f, -1);
         flasherFullCharge.FlashColor = Color.red;
     }
 
@@ -25,7 +25,7 @@ public class PlayerAnimator : MonoBehaviour {
         animator.SetFloat(AnimParams.FACEDIRX, player.FaceDir.x);
         animator.SetFloat(AnimParams.FACEDIRY, player.FaceDir.y);
         spriteRenderer.sortingOrder = Mathf.RoundToInt(player.transform.position.y * 100f) * -1;
-        
+
         if (frameInfo.isFullyCharged) {
             flasherCharge.Stop();
             flasherFullCharge.Start();
@@ -57,13 +57,13 @@ public class Flasher {
         set { spriteRenderer.material.SetColor(MATERIAL_FLASHCOLOR_ID, value); }
     }
 
-    public Flasher(SpriteRenderer spriteRenderer, float value, float duration) {
+    public Flasher(SpriteRenderer spriteRenderer, float value, float duration, int numLoops) {
         this.spriteRenderer = spriteRenderer;
 
         TexFlashAmount = 0f;
         flashTween = DOTween
             .To(() => TexFlashAmount, x => TexFlashAmount = x, value, duration)
-            .SetLoops(-1, LoopType.Yoyo)
+            .SetLoops(numLoops, LoopType.Yoyo)
             .SetAutoKill(false);
     }
 

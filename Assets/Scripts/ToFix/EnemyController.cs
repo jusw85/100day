@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+//[RequireComponent(typeof(Player))]
+//[RequireComponent(typeof(PlayerAnimator))]
+//[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(MoverController))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class EnemyController : PoolObject, IDamageable {
@@ -36,6 +39,10 @@ public class EnemyController : PoolObject, IDamageable {
     private Tween flashTween;
     private BoxCollider2D hitbox;
 
+
+    private EnemyAnimator enemyAnimator;
+    private Enemy enemy;
+
     private void Awake() {
         moverController = GetComponent<MoverController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -52,6 +59,9 @@ public class EnemyController : PoolObject, IDamageable {
 
         damageInfo = new DamageInfo();
         damageInfo.damage = 10;
+
+        enemyAnimator = GetComponent<EnemyAnimator>();
+        enemy = GetComponent<Enemy>();
     }
 
     private void Start() {
@@ -96,10 +106,6 @@ public class EnemyController : PoolObject, IDamageable {
         }
     }
 
-    private static int isMovingId = Animator.StringToHash("isMoving");
-    private static int faceDirXId = Animator.StringToHash("faceDirX");
-    private static int faceDirYId = Animator.StringToHash("faceDirY");
-
     public float proximityStop = 30f;
     private void Update() {
         //if (stopFrames-- > 0) {
@@ -107,9 +113,9 @@ public class EnemyController : PoolObject, IDamageable {
         //}
 
         if (moverController.Speed > 0) {
-            fsm.SetBool(isMovingId, true);
+            fsm.SetBool(AnimParams.ISMOVING, true);
         } else {
-            fsm.SetBool(isMovingId, false);
+            fsm.SetBool(AnimParams.ISMOVING, false);
         }
         if (trackTarget && stopFrames-- <= 0) {
             moverController.Speed = moveSpeed;
@@ -146,9 +152,12 @@ public class EnemyController : PoolObject, IDamageable {
             moverController.Direction = Vector2.zero;
         }
         moverController.UpdateVelocity();
-        fsm.SetFloat(faceDirXId, faceDir.x);
-        fsm.SetFloat(faceDirYId, faceDir.y);
-        spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y * 100f) * -1;
+        fsm.SetFloat(AnimParams.FACEDIRX, faceDir.x);
+        fsm.SetFloat(AnimParams.FACEDIRY, faceDir.y);
+
+        EnemyFrameInfo frameInfo = null;
+        enemyAnimator.DoUpdate(enemy, ref frameInfo);
+        //spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y * 100f) * -1;
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
@@ -218,4 +227,33 @@ public class EnemyController : PoolObject, IDamageable {
         followTarget = Player.Instance.gameObject;
     }
 
+}
+
+
+public class EnemyFrameInfo {
+    public bool isDamaged;
+
+    public bool isCharging;
+    public bool isFullyCharged;
+    public bool hasStoppedCharging;
+
+    public bool toAttack;
+    public bool toChargeAttack;
+
+    public bool isAttacking;
+    public bool isChargeAttacking;
+
+    public DamageInfo damageInfo;
+
+    public void Reset() {
+        isDamaged = false;
+        isCharging = false;
+        isFullyCharged = false;
+        hasStoppedCharging = false;
+        toAttack = false;
+        toChargeAttack = false;
+        isAttacking = false;
+        isChargeAttacking = false;
+        damageInfo = null;
+    }
 }

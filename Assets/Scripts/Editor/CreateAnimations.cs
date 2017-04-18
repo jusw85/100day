@@ -11,13 +11,14 @@ public class CreateAnimations : EditorWindow {
     public static void CreateAll() {
         //CreatePlayerIdle();
         //CreatePlayerWalk();
-        CreateMaeriIdle();
-        CreateMaeriWalk();
         //CreatePlayerSwordAttack1();
         //CreatePlayerSwordAttack2();
         //CreatePlayerSwordAttack3();
         //CreatePlayerChargeAttack();
         //CreatePlayerRoll();
+
+        //CreateMaeriIdle();
+        //CreateMaeriWalk();
 
         //CreateEnemyIdle();
         //CreateEnemyWalk();
