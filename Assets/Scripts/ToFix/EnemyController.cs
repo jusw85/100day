@@ -18,8 +18,6 @@ public class EnemyController : PoolObject, IDamageable {
     public AudioClip[] deathSounds;
 
     private MoverController moverController;
-    private SpriteRenderer spriteRenderer;
-    private AnimationController animationController;
     private Animator fsm;
 
     public GameObject bloodSplatter;
@@ -36,13 +34,10 @@ public class EnemyController : PoolObject, IDamageable {
 
     private void Awake() {
         moverController = GetComponent<MoverController>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animationController = GetComponent<AnimationController>();
         currentHp = maxHp;
 
         hitbox = transform.Find("Hitbox").GetComponent<BoxCollider2D>();
 
-        
         poolManager = Toolbox.GetOrAddComponent<PoolManager>();
         poolManager.CreatePool(bloodSplatter, 150);
 
@@ -126,19 +121,6 @@ public class EnemyController : PoolObject, IDamageable {
 
             }
             Face(moverController.Direction);
-
-            //Vector2 moveInput = moverController.MoveDirection;
-            //animationController.SetIsMoving(moveInput.magnitude > 0);
-            //animationController.SetMoveVector(moveInput);
-            //animationController.SetLastMoveVector(lastMoveInput);
-
-            //animationController.SetIsFacingRight(true);
-            //if (moveInput.x < 0 ||
-            //    (moveInput.magnitude == 0f && lastMoveInput.x < 0)) {
-            //    animationController.SetIsFacingRight(false);
-            //}
-            //if (moveInput.magnitude > 0)
-            //    lastMoveInput = moveInput;
         } else {
             moverController.Speed = 0;
             moverController.Direction = Vector2.zero;
@@ -147,6 +129,7 @@ public class EnemyController : PoolObject, IDamageable {
         fsm.SetFloat(AnimParams.FACEDIRX, faceDir.x);
         fsm.SetFloat(AnimParams.FACEDIRY, faceDir.y);
 
+        //player.DoUpdate(state, c, ref frameInfo);
         enemyAnimator.DoUpdate(enemy, ref frameInfo);
 
         frameInfo.Reset();
@@ -198,7 +181,7 @@ public class EnemyController : PoolObject, IDamageable {
         }
         hitbox.enabled = true;
     }
-    
+
     public override void OnObjectReuse() {
         currentHp = maxHp;
         followTarget = Player.Instance.gameObject;
