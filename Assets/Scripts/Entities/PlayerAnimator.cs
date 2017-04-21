@@ -61,6 +61,7 @@ public class Flasher {
         this.spriteRenderer = spriteRenderer;
 
         TexFlashAmount = 0f;
+        FlashColor = Color.white;
         flashTween = DOTween
             .To(() => TexFlashAmount, x => TexFlashAmount = x, value, duration)
             .SetLoops(numLoops, LoopType.Yoyo)
@@ -69,10 +70,14 @@ public class Flasher {
 
     public void Start() {
         if (!flashTween.IsPlaying()) {
-            TexFlashColor = FlashColor;
-            TexFlashAmount = 0f;
-            flashTween.Restart();
+            Restart();
         }
+    }
+
+    public void Restart() {
+        TexFlashColor = FlashColor;
+        TexFlashAmount = 0f;
+        flashTween.Restart();
     }
 
     public void Pause() {

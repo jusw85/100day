@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-//[RequireComponent(typeof(Player))]
-//[RequireComponent(typeof(PlayerAnimator))]
-//[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(MoverController))]
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Enemy))]
+[RequireComponent(typeof(EnemyAnimator))]
+[RequireComponent(typeof(Animator))]
 public class EnemyController : PoolObject, IDamageable {
 
     public float pushbackForce = 40f;
@@ -27,46 +25,40 @@ public class EnemyController : PoolObject, IDamageable {
     public GameObject bloodSplatter;
     private PoolManager poolManager;
 
-    private Color flashColor = Color.red;
-    public float FlashAmount {
-        get {
-            return spriteRenderer.material.GetFloat(Constants.MATERIAL_FLASHAMOUNT_ID);
-        }
-        set {
-            spriteRenderer.material.SetFloat(Constants.MATERIAL_FLASHAMOUNT_ID, value);
-        }
-    }
-    private Tween flashTween;
+
     private BoxCollider2D hitbox;
 
 
-    private EnemyAnimator enemyAnimator;
     private Enemy enemy;
+    private EnemyAnimator enemyAnimator;
+
+    private EnemyFrameInfo frameInfo;
 
     private void Awake() {
         moverController = GetComponent<MoverController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animationController = GetComponent<AnimationController>();
-        fsm = GetComponent<Animator>();
         currentHp = maxHp;
 
         hitbox = transform.Find("Hitbox").GetComponent<BoxCollider2D>();
 
-        spriteRenderer.material.SetColor(Constants.MATERIAL_FLASHCOLOR_ID, flashColor);
-
+        
         poolManager = Toolbox.GetOrAddComponent<PoolManager>();
         poolManager.CreatePool(bloodSplatter, 150);
 
         damageInfo = new DamageInfo();
         damageInfo.damage = 10;
 
-        enemyAnimator = GetComponent<EnemyAnimator>();
+
+        fsm = GetComponent<Animator>();
         enemy = GetComponent<Enemy>();
+        enemyAnimator = GetComponent<EnemyAnimator>();
+
+        frameInfo = new EnemyFrameInfo();
     }
 
     private void Start() {
         followTarget = Player.Instance.gameObject;
-
     }
 
     private Vector2 lastMoveInput;
@@ -155,9 +147,9 @@ public class EnemyController : PoolObject, IDamageable {
         fsm.SetFloat(AnimParams.FACEDIRX, faceDir.x);
         fsm.SetFloat(AnimParams.FACEDIRY, faceDir.y);
 
-        EnemyFrameInfo frameInfo = null;
         enemyAnimator.DoUpdate(enemy, ref frameInfo);
-        //spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y * 100f) * -1;
+
+        frameInfo.Reset();
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
@@ -191,8 +183,10 @@ public class EnemyController : PoolObject, IDamageable {
         //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
         //    Destroy();
         //}
+
+        frameInfo.damageInfo = damageInfo;
+
         stopFrames = 16; // should use time-based instead
-        Flash();
     }
 
     private int stopFrames = 0;
@@ -204,31 +198,13 @@ public class EnemyController : PoolObject, IDamageable {
         }
         hitbox.enabled = true;
     }
-
-    public void Flash() {
-        if (flashTween != null) {
-            flashTween.Restart();
-        } else {
-            FlashAmount = 0f;
-            flashTween = DOTween
-                .To(() => FlashAmount, x => FlashAmount = x, 1.0f, 0.05f)
-                .SetLoops(2, LoopType.Yoyo)
-                .SetAutoKill(false);
-            flashTween.Play();
-        }
-    }
-
-    private void LateUpdate() {
-        //spriteRenderer.flipX = moverController.MoveDirection.x <= 0;
-    }
-
+    
     public override void OnObjectReuse() {
         currentHp = maxHp;
         followTarget = Player.Instance.gameObject;
     }
 
 }
-
 
 public class EnemyFrameInfo {
     public bool isDamaged;

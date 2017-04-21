@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
     private MoverController mover;
     private EventManager eventManager;
 
+    // toremove
     private static Player instance;
     public static Player Instance { get { return instance; } }
 

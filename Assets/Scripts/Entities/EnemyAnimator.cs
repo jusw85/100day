@@ -1,5 +1,4 @@
 using UnityEngine;
-using DG.Tweening;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -8,17 +7,14 @@ public class EnemyAnimator : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
-    private Flasher flasherCharge;
-    private Flasher flasherFullCharge;
+    private Flasher flasherDamage;
 
     private void Awake() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
-        //flasherCharge = new Flasher(spriteRenderer, 0.8f, 0.1f);
-        //flasherCharge.FlashColor = Color.blue;
-        //flasherFullCharge = new Flasher(spriteRenderer, 0.8f, 0.3f);
-        //flasherFullCharge.FlashColor = Color.red;
+        flasherDamage = new Flasher(spriteRenderer, 1.0f, 0.05f, 2);
+        flasherDamage.FlashColor = Color.red;
     }
 
     public void DoUpdate(Enemy enemy, ref EnemyFrameInfo frameInfo) {
@@ -26,5 +22,8 @@ public class EnemyAnimator : MonoBehaviour {
         //animator.SetFloat(AnimParams.FACEDIRY, enemy.FaceDir.y);
         spriteRenderer.sortingOrder = Mathf.RoundToInt(enemy.transform.position.y * 100f) * -1;
 
+        if (frameInfo.damageInfo != null) {
+            flasherDamage.Restart();
+        }
     }
 }
