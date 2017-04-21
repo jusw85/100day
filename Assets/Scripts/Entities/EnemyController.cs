@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Enemy))]
 [RequireComponent(typeof(EnemyAnimator))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(EnemyAudio))]
 public class EnemyController : PoolObject, IDamageable {
 
     public float pushbackForce = 40f;
-    public int maxHp = 20;
-    [System.NonSerialized]
-    public int currentHp;
     public GameObject followTarget;
-
-    public AudioClip[] hitSounds;
-    public AudioClip[] deathSounds;
 
     private MoverController moverController;
     private Animator fsm;
@@ -29,12 +24,12 @@ public class EnemyController : PoolObject, IDamageable {
 
     private Enemy enemy;
     private EnemyAnimator enemyAnimator;
+    private EnemyAudio enemyAudio;
 
     private EnemyFrameInfo frameInfo;
 
     private void Awake() {
         moverController = GetComponent<MoverController>();
-        currentHp = maxHp;
 
         hitbox = transform.Find("Hitbox").GetComponent<BoxCollider2D>();
 
@@ -48,6 +43,7 @@ public class EnemyController : PoolObject, IDamageable {
         fsm = GetComponent<Animator>();
         enemy = GetComponent<Enemy>();
         enemyAnimator = GetComponent<EnemyAnimator>();
+        enemyAudio = GetComponent<EnemyAudio>();
 
         frameInfo = new EnemyFrameInfo();
     }
@@ -56,7 +52,6 @@ public class EnemyController : PoolObject, IDamageable {
         followTarget = Player.Instance.gameObject;
     }
 
-    private Vector2 lastMoveInput;
 
     public bool trackTarget = false;
 
@@ -94,16 +89,17 @@ public class EnemyController : PoolObject, IDamageable {
     }
 
     public float proximityStop = 30f;
+
+    //public void DoUpdate() 
+        // decide what to do based on state and vars
+        // update fsm state
+        // 
+    //}
     private void Update() {
         //if (stopFrames-- > 0) {
         //    moverController.MoveSpeed = 0;
         //}
 
-        if (moverController.Speed > 0) {
-            fsm.SetBool(AnimParams.ISMOVING, true);
-        } else {
-            fsm.SetBool(AnimParams.ISMOVING, false);
-        }
         if (trackTarget && stopFrames-- <= 0) {
             moverController.Speed = moveSpeed;
             moverController.Direction = Vector2.zero;
@@ -126,11 +122,18 @@ public class EnemyController : PoolObject, IDamageable {
             moverController.Direction = Vector2.zero;
         }
         moverController.UpdateVelocity();
+
+        if (moverController.Speed > 0) {
+            fsm.SetBool(AnimParams.ISMOVING, true);
+        } else {
+            fsm.SetBool(AnimParams.ISMOVING, false);
+        }
         fsm.SetFloat(AnimParams.FACEDIRX, faceDir.x);
         fsm.SetFloat(AnimParams.FACEDIRY, faceDir.y);
 
         //enemy.DoUpdate(state, c, ref frameInfo);
         enemyAnimator.DoUpdate(enemy, ref frameInfo);
+        enemyAudio.DoUpdate(enemy, ref frameInfo);
 
         frameInfo.Reset();
     }
@@ -152,9 +155,6 @@ public class EnemyController : PoolObject, IDamageable {
     private DamageInfo damageInfo;
 
     public void Damage(DamageInfo damageInfo) {
-        //currentHp--;
-        //AudioManager.Instance.PlaySfx(hitSounds[Random.Range(0, hitSounds.Length)]);
-
         //Vector3 inRot = damager.transform.eulerAngles;
         //Vector3 outRot = new Vector3(-inRot.z - 90f, 0f, 0f);
 
@@ -163,7 +163,6 @@ public class EnemyController : PoolObject, IDamageable {
 
         //poolManager.ReuseObject(bloodSplatter, transform.position, rot);
         //if (currentHp <= 0) {
-        //    AudioManager.Instance.PlaySfx(deathSounds[Random.Range(0, deathSounds.Length)]);
         //    Destroy();
         //}
 
@@ -171,6 +170,12 @@ public class EnemyController : PoolObject, IDamageable {
 
         stopFrames = 16; // should use time-based instead
     }
+
+    public override void OnObjectReuse() {
+        enemy.Reset();
+        followTarget = Player.Instance.gameObject;
+    }
+
 
     private int stopFrames = 0;
 
@@ -180,11 +185,6 @@ public class EnemyController : PoolObject, IDamageable {
             yield return null;
         }
         hitbox.enabled = true;
-    }
-
-    public override void OnObjectReuse() {
-        currentHp = maxHp;
-        followTarget = Player.Instance.gameObject;
     }
 
 }

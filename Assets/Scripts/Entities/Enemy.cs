@@ -14,9 +14,7 @@ public class Enemy : MonoBehaviour {
     private void Awake() {
         mover = GetComponent<MoverController>();
 
-        currentHp = maxHp;
-        FaceDir = FACE_DOWN;
-
+        Reset();
         eventManager = Toolbox.GetOrAddComponent<EventManager>();
     }
 
@@ -51,6 +49,11 @@ public class Enemy : MonoBehaviour {
                 FaceDir = FACE_UP;
             }
         }
+    }
+
+    public void Reset() {
+        currentHp = maxHp;
+        FaceDir = FACE_DOWN;
     }
 
     public void Damage(DamageInfo damageInfo) {

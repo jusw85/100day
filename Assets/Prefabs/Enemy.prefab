@@ -57,9 +57,9 @@ GameObject:
   - component: {fileID: 95122963255463918}
   - component: {fileID: 114468471330153436}
   - component: {fileID: 114947508207953618}
-  - component: {fileID: 114729826561157304}
   - component: {fileID: 114405777564342694}
   - component: {fileID: 114706472573125226}
+  - component: {fileID: 114977674534288748}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -280,17 +280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810788d06660fcf4d89ae28c77a695c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114729826561157304
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1436566379840416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87a2b1447b4a0634c8432599ae0fd519, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114889960841034666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -314,7 +303,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pushbackForce: 40
-  maxHp: 10
   followTarget: {fileID: 0}
   hitSounds:
   - {fileID: 8300000, guid: c18f58f588b6c5149b08795a2c5a2e44, type: 3}
@@ -330,6 +318,26 @@ MonoBehaviour:
   trackTarget: 0
   moveSpeed: 2
   proximityStop: 0
+--- !u!114 &114977674534288748
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1436566379840416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75a683724aa7802419650da2b623cedc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owSounds:
+  - {fileID: 8300000, guid: c18f58f588b6c5149b08795a2c5a2e44, type: 3}
+  - {fileID: 8300000, guid: 9630bf6dd7100194b81f9c4d5e89ca72, type: 3}
+  - {fileID: 8300000, guid: 19137ebae68f38644a4aceda4e7f0fd1, type: 3}
+  - {fileID: 8300000, guid: b63caf0b5cad6f143b0d90b2f252cdc5, type: 3}
+  deathSounds:
+  - {fileID: 8300000, guid: 84c89ff23749b6b409721c4c79551a4f, type: 3}
+  - {fileID: 8300000, guid: 11cc181ebb0fef542beb02b41a48766e, type: 3}
+  - {fileID: 8300000, guid: de5fa85ad25be034da56d82db3ba7c88, type: 3}
 --- !u!212 &212618019328822794
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Player))]
 [RequireComponent(typeof(PlayerAnimator))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerAudio))]
 public class PlayerController : MonoBehaviour, IDamageable {
 
     private Player player;
