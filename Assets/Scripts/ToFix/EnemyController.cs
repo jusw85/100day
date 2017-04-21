@@ -129,7 +129,7 @@ public class EnemyController : PoolObject, IDamageable {
         fsm.SetFloat(AnimParams.FACEDIRX, faceDir.x);
         fsm.SetFloat(AnimParams.FACEDIRY, faceDir.y);
 
-        //player.DoUpdate(state, c, ref frameInfo);
+        //enemy.DoUpdate(state, c, ref frameInfo);
         enemyAnimator.DoUpdate(enemy, ref frameInfo);
 
         frameInfo.Reset();
