@@ -19,6 +19,10 @@ public class CreateAnimations : EditorWindow {
 
         //CreateMaeriIdle();
         //CreateMaeriWalk();
+        //CreateMaeriSwordAttack1();
+        //CreateMaeriSwordAttack2();
+        //CreateMaeriSwordAttack3();
+        CreateMaeriChargeAttack();
 
         //CreateEnemyIdle();
         //CreateEnemyWalk();
@@ -61,7 +65,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreatePlayerIdle() {
         string baseClipPath = "Assets/Animations/Player/PlayerIdle";
         int frameRate = 1;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Idle";
         int[] idx = { 40, 40, 42, 42, 44, 44, 42, 42 };
@@ -78,7 +82,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreatePlayerRoll() {
         string baseClipPath = "Assets/Animations/Player/PlayerRoll";
         int frameRate = 4;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Roll";
         int[] idx = { 40, 40, 42, 42, 44, 44, 42, 42 };
@@ -99,7 +103,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreateMaeriIdle() {
         string baseClipPath = "Assets/Animations/Player/PlayerIdle";
         int frameRate = 1;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_maeri_move.png";
+        string spritePath = "Assets/Sprites/Player/spr_maeri_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Idle";
         int[] idx = { 18, 18, 19, 19, 20, 20, 21, 21 };
@@ -116,7 +120,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreateMaeriWalk() {
         string baseClipPath = "Assets/Animations/Player/PlayerWalk";
         int frameRate = 12;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_maeri_move.png";
+        string spritePath = "Assets/Sprites/Player/spr_maeri_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Walk";
         int[] idx = { 0, 5, 6, 11, 12, 17, 6, 11 };
@@ -133,7 +137,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreatePlayerWalk() {
         string baseClipPath = "Assets/Animations/Player/PlayerWalk";
         int frameRate = 12;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Walk";
         int[] idx = { 0, 7, 16, 23, 32, 39, 16, 23 };
@@ -147,10 +151,190 @@ public class CreateAnimations : EditorWindow {
         }
     }
 
+    public static void CreateMaeriSwordAttack1() {
+        string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack1";
+        int frameRate = 20;
+        string spritePath = "Assets/Sprites/Player/spr_maeri_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Attack1";
+        int[] idx = { 0, 5, 18, 23, 36, 41, 18, 23 };
+        int[] subBlendTreeIdx = { 0, 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            AnimationClip clip = clips[i].clip;
+            string clipPath = clips[i].clipPath;
+            int[] keyFrames = { 0, 1, 3 };
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            switch (i) {
+                case 0:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    break;
+                case 1:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+                case 2:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", MirrorKeyFrames(-0.25f, ParamsToKeyFrames(keyFrames, 0f, -1.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    break;
+                case 3:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+            }
+            CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreateMaeriSwordAttack2() {
+        string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack2";
+        int frameRate = 16;
+        string spritePath = "Assets/Sprites/Player/spr_maeri_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Attack2";
+        int[] idx = { 6, 11, 24, 29, 42, 47, 24, 29 };
+        int[] subBlendTreeIdx = { 0, 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            AnimationClip clip = clips[i].clip;
+            string clipPath = clips[i].clipPath;
+            int[] keyFrames = { 0, 2, 4 };
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            switch (i) {
+                case 0:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    break;
+                case 1:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+                case 2:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    break;
+                case 3:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+            }
+            CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreateMaeriSwordAttack3() {
+        string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack3";
+        int frameRate = 12;
+        string spritePath = "Assets/Sprites/Player/spr_maeri_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "Attack3";
+        int[] idx = { 12, 17, 30, 35, 48, 53, 30, 35 };
+        int[] subBlendTreeIdx = { 0, 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            AnimationClip clip = clips[i].clip;
+            string clipPath = clips[i].clipPath;
+            int[] keyFrames = { 0, 3, 6 };
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            switch (i) {
+                case 0:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    break;
+                case 1:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+                case 2:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    break;
+                case 3:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+            }
+            CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
+    public static void CreateMaeriChargeAttack() {
+        string baseClipPath = "Assets/Animations/Player/PlayerChargeAttack";
+        int frameRate = 12;
+        string spritePath = "Assets/Sprites/Player/spr_maeri_attack.png";
+        string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
+        string stateName = "ChargeAttack";
+        int[] idx = { 12, 17, 30, 35, 48, 53, 30, 35 };
+        int[] subBlendTreeIdx = { 0, 0 };
+
+        NamedAnimationClip[] clips = Create4Dir(baseClipPath, frameRate, spritePath, idx, controllerPath, stateName);
+        for (int i = 0; i < clips.Length; i++) {
+            AnimationClip clip = clips[i].clip;
+            string clipPath = clips[i].clipPath;
+            int[] keyFrames = { 0, 3, 6 };
+            AddCurve(clip, typeof(BoxCollider2D), "Bullet", "m_Enabled", ParamsToKeyFrames(keyFrames, 0f, 1f, 0f));
+            switch (i) {
+                case 0:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -3f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    break;
+                case 1:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+                case 2:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, 1.5f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 3f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 3.5f, 1f));
+                    break;
+                case 3:
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.x", MirrorKeyFrames(0, ParamsToKeyFrames(keyFrames, 0f, 2.5f, 0f)));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalPosition.y", ParamsToKeyFrames(keyFrames, 0f, -2f, 0f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.x", ParamsToKeyFrames(keyFrames, 1f, 4f, 1f));
+                    AddCurve(clip, typeof(Transform), "Bullet", "m_LocalScale.y", ParamsToKeyFrames(keyFrames, 1f, 2.5f, 1f));
+                    break;
+            }
+            CreateAnimationsUtility.SaveAnimationClip(clip, clipPath);
+            subBlendTreeIdx[subBlendTreeIdx.Length - 1] = i;
+            CreateAnimationsUtility.SetClipToAnimatorControllerBlendTree(clip, controllerPath, 0, stateName, subBlendTreeIdx);
+        }
+    }
+
     public static void CreatePlayerSwordAttack1() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack1";
         int frameRate = 20;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_attack.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Attack1";
         int[] idx = { 0, 7, 48, 55, 96, 103, 48, 55 };
@@ -195,7 +379,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreatePlayerSwordAttack2() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack2";
         int frameRate = 16;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_attack.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Attack2";
         int[] idx = { 16, 23, 64, 71, 112, 119, 64, 71 };
@@ -240,7 +424,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreatePlayerSwordAttack3() {
         string baseClipPath = "Assets/Animations/Player/PlayerSwordAttack3";
         int frameRate = 12;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_attack.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Attack3";
         int[] idx = { 8, 15, 56, 63, 104, 111, 56, 63 };
@@ -285,7 +469,7 @@ public class CreateAnimations : EditorWindow {
     public static void CreatePlayerChargeAttack() {
         string baseClipPath = "Assets/Animations/Player/PlayerChargeAttack";
         int frameRate = 12;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_attack.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_attack.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "ChargeAttack";
         int[] idx = { 8, 15, 56, 63, 104, 111, 56, 63 };
@@ -366,7 +550,7 @@ public class CreateAnimations : EditorWindow {
         int frameRate = 1;
         int numFrames = 1;
         int lastFrame = numFrames;
-        string spritePath = "Assets/Sprites/PlayerBase/spr_player_move.png";
+        string spritePath = "Assets/Sprites/Player/spr_player_move.png";
         string controllerPath = "Assets/Animations/Player/PlayerBase.controller";
         string stateName = "Idle";
         string clipPath;

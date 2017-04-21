@@ -25,7 +25,6 @@ GameObject:
   - component: {fileID: 114463622701243276}
   - component: {fileID: 114072539984702268}
   - component: {fileID: 114267928434180792}
-  - component: {fileID: 114022043741599870}
   - component: {fileID: 114925679380549190}
   - component: {fileID: 114452559096770502}
   m_Layer: 0
@@ -311,17 +310,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114022043741599870
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1063345978255250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87a2b1447b4a0634c8432599ae0fd519, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114072539984702268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -404,14 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8fe63dbb3ed4b4c88d581296b2f205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hpChangeEvent:
-    name: 
-    ev:
-      prevHp: 0
-      currentHp: 0
-  maxHp: 100
-  heartsPanel: {fileID: 1190908831339288, guid: 8b8fd545dfda73f45994cd0057a9dff6,
-    type: 2}
+  maxHp: 20
   walkSpeed: 12
   rollSpeed: 36
   rollCooldown: 0
