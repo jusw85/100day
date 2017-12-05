@@ -64,11 +64,11 @@ public class EnemyController : PoolObject, IDamageable {
     public Vector2 faceDir = FACE_DOWN;
     public float moveSpeed = 12f;
 
-    public void Move(Vector2 moveInput) {
-        moverController.Speed = moveSpeed;
-        moverController.Direction = moveInput;
-        Face(moveInput);
-    }
+    //public void Move(Vector2 moveInput) {
+    //    moverController.Speed = moveSpeed;
+    //    moverController.Direction = moveInput;
+    //    Face(moveInput);
+    //}
 
     public void Face(Vector2 moveDir) {
         Vector2 v = moveDir.normalized;

@@ -15,6 +15,7 @@ public class MoverController : MonoBehaviour {
     public void UpdateVelocity() {
         velocity = Direction.normalized * Speed;
     }
+
     private void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
         ExternalForce = Vector2.zero;
